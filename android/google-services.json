@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "627724626656",
+    "project_id": "session-10d53",
+    "storage_bucket": "session-10d53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627724626656:android:74443461c4df304ccc7e85",
+        "android_client_info": {
+          "package_name": "com.yourcompany.wizardEVAP.Session"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627724626656-gnkppq9lofa5s3mctvtff2d7nemtj0rv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClEiWZ5tOnHpB0kl19W4guYMZXBw5k6Hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627724626656-gnkppq9lofa5s3mctvtff2d7nemtj0rv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

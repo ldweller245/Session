@@ -10,7 +10,8 @@ Page {
         maximumNumberOfSelection: 1
         onSelectedCountChanged: {
             console.log("SELECTION: " +selection);
-            imagePath = selection
+            imagePath = selection.toString()
+            imagePathID = selection.toString()
 
             console.log("imagePath: " +imagePath)
         }

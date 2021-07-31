@@ -49,6 +49,10 @@ android {
 ios {
     QMAKE_INFO_PLIST = ios/Project-Info.plist
     OTHER_FILES += $$QMAKE_INFO_PLIST
+
+    FELGO_PLUGINS += firebase
+
+
 }
 
 # set application icons for win and macx
@@ -64,14 +68,17 @@ DISTFILES += \
     qml/Components/ConversationPage.qml \
     qml/Components/HomeFlickable.qml \
     qml/Components/ImagePickerPage.qml \
+    qml/Components/ViewFeedComp.qml \
     qml/Create.qml \
     qml/Explore.qml \
     qml/HomePage.qml \
     qml/Inbox.qml \
+    qml/LoadingPage.qml \
     qml/ModalPages/AddTeamPostPage.qml \
     qml/ModalPages/OtherUserProfile.qml \
     qml/ModalPages/SavedUsers.qml \
     qml/ModalPages/SearchModal.qml \
+    qml/ModalPages/SearchResults.qml \
     qml/ModalPages/ShootDetailModal.qml \
     qml/ModalPages/ShootSetupModal.qml \
     qml/ModalPages/ViewEventDetails.qml \
@@ -86,7 +93,6 @@ DISTFILES += \
     qml/SetupPages/InitialSetupPage.qml \
     qml/SetupPages/LocationPage.qml \
     qml/SetupPages/MUAPage.qml \
-    qml/SetupPages/ModelPage.qml \
     qml/SetupPages/PhotographerPage.qml \
     qml/SetupPages/RegisterPage.qml \
     qml/TabBarPages/EventLocationPage.qml \
@@ -98,4 +104,5 @@ DISTFILES += \
     qml/TabBarPages/ViewShootLocation.qml \
     qml/TabBarPages/ViewShootTeam.qml \
     qml/UserProfile.qml \
-    qml/model/DataModel.qml
+    qml/model/DataModel.qml \
+    qml/model/MyJSON.qml
