@@ -105,4 +105,5 @@ DISTFILES += \
     qml/TabBarPages/ViewShootTeam.qml \
     qml/UserProfile.qml \
     qml/model/DataModel.qml \
+    qml/model/LocationModel.qml \
     qml/model/MyJSON.qml

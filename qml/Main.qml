@@ -19,6 +19,9 @@ App {
         //onLoggedIn: regUser === true ? stack.push(setupPage) : stack.push(homePage)
 
     }
+    LocationModel {
+        id: locationModel
+    }
     HomePage {
         id: homePage
     }

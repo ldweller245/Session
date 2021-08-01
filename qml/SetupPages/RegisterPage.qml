@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.12
 import QtQuick.Layouts 1.1
 import Felgo 3.0
 import "../Components"
+import "../model"
 
 
 Page {
@@ -17,25 +18,66 @@ Page {
     property var profileImagePath
     property var maleMeasurements: []; property var femaleMeasurements: []
 
+    /*
+    JsonListModel {
+        id: locationJSONModel
+        source: locationModel.townData
+        keyField: "name"
+        fields: ["name", "county"]
+    }
+    SortFilterProxyModel {
+        id: sortedModel
+        Component.onCompleted: sourceModel = locationJSONModel
+        sorters: StringSorter { id: typeSorter; roleName: "name"; ascendingOrder: true }
+    }
+    */
+
     ParallelAnimation {id: animation; NumberAnimation {target: titleText; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}}
     NumberAnimation {id: pageReturnTransitionAnimation; target: loginPage; property: "x"; from: -app.width; to: 0; duration: 1000; easing.type: Easing.InOutBack}
 
     FloatingActionButton {
         id: floatingBack; z:15; visible: true; enabled: animation.running !== true; anchors.right: undefined; anchors.left: parent.left; anchors.leftMargin: dp(15);icon: IconType.arrowleft
-        onClicked: {
-            if(view.currentIndex !== 0) {if(role !== "Model" && view.currentIndex === 4){view.currentIndex = view.currentIndex-2}
+        onClicked: {if(view.currentIndex !== 0) {if(role !== "Model" && view.currentIndex === 4){view.currentIndex = view.currentIndex-2}
                 else {view.currentIndex = view.currentIndex-1}
                 animation.start()}
-            else {pageReturnTransitionAnimation.start()}
-        }
+            else {pageReturnTransitionAnimation.start()}}
     }
     FloatingActionButton {
         id: floatingForward; z:15; enabled: {view.currentIndex !== 4; animation.running !== true} visible: view.currentIndex !== 0; anchors.rightMargin: dp(15); icon: IconType.arrowright
-        onClicked: {if(view.currentIndex !== 4){if(role !== "Model" && view.currentIndex === 2) {view.currentIndex = view.currentIndex +2; animation.start()}
-                else {view.currentIndex = view.currentIndex+1; animation.start()}}
-            else if(view.currentIndex === 4) {
-                registerPage.registerUser(role, genderCombobox.currentText, firstnameTextEdit.text, surnameTextEdit.text, usernameTextEdit.text, emailTextEdit.text, passwordTextEdit.text, baseLocationTextEdit.text, experienceCombobox.currentText, tfpCombobox.currentText,specialities, Math.floor(slider.value), Math.floor(heightSlider.value), ethnicityCombobox.currentText, hairColorCombobox.currentText, hairLengthCombobox.currentText, skinColorCombobox.currentText, eyeColorCombobox.currentText, shoeSizeCombobox.currentText, waistCombobox.currentText, hipsCombobox.currentText, inseamCombobox.currentText, suitSizeCombobox.currentText, tattooCombobox.currentText, piercingCombobox.currentText, profileImagePath, appTextEditBio.text,bustCombobox.currentText,dressSizeCombobox.currentText)
+        onClicked: {
+            if(view.currentIndex === 0){
+                //do nothing, role select page
             }
+            else if(view.currentIndex === 1){
+                firstnameTextEdit.length > 0 && surnameTextEdit.length > 0 && usernameTextEdit.length > 0 && emailTextEdit.length > 0 && passwordTextEdit > 0 ? "" : ""
+                //checkUsername in DB
+
+            }
+            else if(view.currentIndex === 2){
+                baseLocationTextEdit.length > 0 && experienceCombobox.currentText !== "Select" && tfpCombobox.currentText !== "Select" ? " " : ""
+
+            }
+            else if(view.currentIndex === 3){
+                //model Measurements
+
+            }
+            else if(view.currentIndex === 4){
+                profileImagePath !== undefined && appTextEditBio.length > 0 ?
+                            registerPage.registerUser(role, genderCombobox.currentText, firstnameTextEdit.text, surnameTextEdit.text, usernameTextEdit.text, emailTextEdit.text, passwordTextEdit.text, baseLocationTextEdit.text, experienceCombobox.currentText, tfpCombobox.currentText,specialities, Math.floor(slider.value), Math.floor(heightSlider.value), ethnicityCombobox.currentText, hairColorCombobox.currentText, hairLengthCombobox.currentText, skinColorCombobox.currentText, eyeColorCombobox.currentText, shoeSizeCombobox.currentText, waistCombobox.currentText, hipsCombobox.currentText, inseamCombobox.currentText, suitSizeCombobox.currentText, tattooCombobox.currentText, piercingCombobox.currentText, profileImagePath, appTextEditBio.text,bustCombobox.currentText,dressSizeCombobox.currentText)
+                          : ""
+            }
+            if(view.currentIndex !== 4){
+                if(role !== "Model" && view.currentIndex === 2) {
+                    view.currentIndex = view.currentIndex +2; animation.start()
+                }
+                else {
+                    view.currentIndex = view.currentIndex+1; animation.start()
+                }
+            }
+
+
+
+
         }
     }
 
@@ -124,7 +166,7 @@ Page {
                             columns: 2
 
                             AppText {font.pixelSize: sp(12); text: "Gender: "}
-                            ComboBox {id: genderCombobox; onCurrentTextChanged: gender = currentText; model: ["Male", "Female", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35)}
+                            ComboBox {id: genderCombobox; onCurrentTextChanged: gender = currentText; model: ["Male", "Female", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                             AppText {font.pixelSize: sp(12); text: "Firstname: "}
                             AppTextField {id:firstnameTextEdit; Layout.preferredWidth: dp(200); showClearButton: true; font.pixelSize: sp(14); rightPadding: dp(35); borderColor: Theme.tintColor; borderWidth: !Theme.isAndroid ? dp(2) : 0}
@@ -160,10 +202,10 @@ Page {
                             AppTextField {id:baseLocationTextEdit; Layout.preferredWidth: dp(100); showClearButton: true; font.pixelSize: sp(14); rightPadding: dp(35); borderColor: Theme.tintColor; borderWidth: !Theme.isAndroid ? dp(2) : 0}
 
                             AppText {font.pixelSize: sp(12); text: "Experience Level: "}
-                            ComboBox {id: experienceCombobox; model: [ "none", "some", "experienced", "highly experience"]; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35)}
+                            ComboBox {id: experienceCombobox; model: ["Select", "None", "Some", "Experienced", "Highly experience"]; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                             AppText {font.pixelSize: sp(12); text: "Open TFP work? "}
-                            ComboBox {id: tfpCombobox; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); model: [ "Yes", "No", "Depends on job"]}
+                            ComboBox {id: tfpCombobox; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Yes", "No", "Depends"]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                             Rectangle {width: registerPage.width; Layout.columnSpan: 2; height: dp(Theme.navigationBar.height/2)}
 
@@ -172,14 +214,15 @@ Page {
                             Rectangle {width: registerPage.width; Layout.columnSpan: 2; height: dp(Theme.navigationBar.height/3)}
 
 
-                            AppCheckBox {text: "Catwalk"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Portrait"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Film&Tv"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Session"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{specialities.push(text)}}
+                            AppCheckBox {text: "Catwalk"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Portrait"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Film&Tv"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Session"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+
                         }
                     }
                 }
@@ -187,7 +230,7 @@ Page {
                     id: searchUserPage
                     AppFlickable {
                         id: searchUserFlickable
-                        anchors.fill: parent; contentHeight: contentCol.height
+                        anchors.fill: parent; contentHeight: contentCol.height + dp(Theme.navigationBar.height*2)
                         Column {
                             id: contentCol;
                             anchors.margins: dp(12)
@@ -195,6 +238,7 @@ Page {
                             spacing: dp(12)
                             anchors.horizontalCenter: parent.horizontalCenter
 
+                            Rectangle {width: parent.width; height: dp(Theme.navigationBar.height); color: "#00000000"}
 
                             GridLayout {
                                 columnSpacing: dp(20)
@@ -214,26 +258,26 @@ Page {
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Ethnicity: "}
-                                ComboBox {id: ethnicityCombobox; model: ["Arab", "Asian", "Black", "Mixed", "White", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35)}
+                                ComboBox {id: ethnicityCombobox; model: ["Arab", "Asian", "Black", "Mixed", "White", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Hair Colour: "}
-                                ComboBox {id: hairColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Black", "Blonde", "Brown", "Auburn", "Chesnut", "Copper", "Grey/White", "Other"]}
+                                ComboBox {id: hairColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Black", "Blonde", "Brown", "Auburn", "Chesnut", "Copper", "Grey/White", "Other"]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Hair Length: "}
-                                ComboBox {id: hairLengthCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Very Short", "Short", "Shoulder", "Long", "Very Long" ]}
+                                ComboBox {id: hairLengthCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Very Short", "Short", "Shoulder", "Long", "Very Long" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Skin Colour: "}
-                                ComboBox {id: skinColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Extremely Fair", "Fair", "Medium", "Olive", "Brown", "Black" ]}
+                                ComboBox {id: skinColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Extremely Fair", "Fair", "Medium", "Olive", "Brown", "Black" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Eye Colour: "}
-                                ComboBox {id: eyeColorCombobox;  Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Brown", "Amber", "Hazel", "Green", "Blue" ]}
+                                ComboBox {id: eyeColorCombobox;  Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Brown", "Amber", "Hazel", "Green", "Blue" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Dress: "; visible: gender !== "Male"}
-                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]; visible: gender !== "Male"}
+                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]; visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Shoe: "}
                                 ComboBox {
-                                    id: shoeSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35);
+                                    id: shoeSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
                                     model: gender === "Female" ?["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                                                :["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
 
@@ -241,43 +285,43 @@ Page {
 
                                 AppText {font.pixelSize: sp(12); text: "Waist: "}
                                 ComboBox {
-                                    id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35);
+                                    id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Hips: "; visible: gender !== "Male"}
                                 ComboBox {
-                                    id: hipsCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male";
+                                    id: hipsCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
                                     model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Bust: "; visible: gender !== "Male"}
                                 ComboBox {
-                                    id: bustCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"
+                                    id: bustCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ];
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Inseam: "; visible: gender !== "Female"}
                                 ComboBox {
-                                    id: inseamCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"
+                                    id: inseamCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Suit Size: "; visible: gender !== "Female"}
                                 ComboBox {
-                                    id: suitSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"
+                                    id: suitSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["34s", "34r", "34l","36s", "36r", "36l","38s", "38r", "38l", "40s", "40r", "40l", "42s", "42r", "42l", "44s", "44r", "44l", "46s", "46r", "46l", "48s", "48r", "48l", "50s", "50r", "50l", "52s", "52r", "52l",]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Tattoos: "}
                                 ComboBox {
-                                    id: tattooCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35)
+                                    id: tattooCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["None", "Some", "Many" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Piercings: "}
                                 ComboBox {
-                                    id: piercingCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35)
+                                    id: piercingCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["None", "Some", "Many" ]
                                 }
                             }
