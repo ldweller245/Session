@@ -11,6 +11,7 @@ Item {
     property var uuid
     property var rrole; property var rgender; property var rfirstname; property var rsurname; property var rusername; property var remail; property var rpassword; property var rbaseLocation; property var rexperience; property var rtfp; property var rspecialities; property var rage; property var rheightCM; property var rethnicity; property var rhairColor; property var rhairLength; property var rskinColor; property var reyeColor; property var rshoeSize; property var rwaist; property var rhips; property var rinseam; property var rsuitSize; property var rtattoo; property var rpiercing; property var rprofileImagePath; property var rbio; property var rbust; property var rdressSize
     property var regDetails: []
+    property var otherUserData
 
 
     function uniqueID() {
@@ -517,21 +518,21 @@ Item {
                                   "follows_user": true,
                                   "feed_count": 0,
                                   "measurements": {
-                                      "experience": rexperience,
-                                      "tfpStatus": rtfp,
-                                      "age": rage,
-                                      "heightCM": rheightCM,
-                                      "ethnicity": rethnicity,
-                                      "hairColor": rhairColor,
-                                      "hairLength": rhairLength,
-                                      "skinColor": rskinColor,
-                                      "eyeColor": reyeColor,
-                                      "shoeSize": rshoeSize,
-                                      "waist": rwaist,
-                                      "inseam": rinseam,
-                                      "suitSize": rsuitSize,
-                                      "piercing": rpiercing,
-                                      "tattoo": rtattoo
+                                      "Experience": rexperience,
+                                      "TFP": rtfp,
+                                      "Age": rage,
+                                      "Height": rheightCM,
+                                      "Ethnicity": rethnicity,
+                                      "Hair Color": rhairColor,
+                                      "Hair Length": rhairLength,
+                                      "Skin": rskinColor,
+                                      "Eyes": reyeColor,
+                                      "Shoe": rshoeSize,
+                                      "Waist": rwaist,
+                                      "Inseam": rinseam,
+                                      "Suit": rsuitSize,
+                                      "Piercings": rpiercing,
+                                      "Tattoos": rtattoo
                                   }
 
                               })
@@ -554,20 +555,20 @@ Item {
                                   "follows_user": true,
                                   "feed_count": 0,
                                   "measurements": {
-                                      "experience": rexperience,
-                                      "tfpStatus": rtfp,
-                                      "age": rage,
-                                      "heightCM": rheightCM,
-                                      "ethnicity": rethnicity,
-                                      "hairColor": rhairColor,
-                                      "hairLength": rhairLength,
-                                      "skinColor": rskinColor,
-                                      "eyeColor": reyeColor,
-                                      "shoeSize": rshoeSize,
-                                      "waist": rwaist,
-                                      "hips": rhips,
-                                      "piercing": rpiercing,
-                                      "tattoo": rtattoo
+                                      "Experience": rexperience,
+                                      "TFP": rtfp,
+                                      "Age": rage,
+                                      "Height": rheightCM,
+                                      "Ethnicity": rethnicity,
+                                      "Hair Color": rhairColor,
+                                      "Hair Length": rhairLength,
+                                      "Skin": rskinColor,
+                                      "Eyes": reyeColor,
+                                      "Shoe": rshoeSize,
+                                      "Waist": rwaist,
+                                      "Hips": rhips,
+                                      "Piercings": rpiercing,
+                                      "Tattoos": rtattoo
                                   }
                               })
 
@@ -577,6 +578,7 @@ Item {
                                   "firstname": rfirstname,
                                   "surname": rsurname,
                                   "username": rusername,
+                                  "gender": rgender,
                                   "email": remail,
                                   "location": rbaseLocation,
                                   "specialities": rspecialities,
@@ -588,24 +590,23 @@ Item {
                                   "followed_by_user": true,
                                   "follows_user": true,
                                   "feed_count": 0,
-                                  "measurements": {
-                                      "gender": rgender,
-                                      "experience": rexperience,
-                                      "tfpStatus": rtfp,
-                                      "age": rage,
-                                      "heightCM": rheightCM,
-                                      "ethnicity": rethnicity,
-                                      "hairColor": rhairColor,
-                                      "hairLength": rhairLength,
-                                      "skinColor": rskinColor,
-                                      "eyeColor": reyeColor,
-                                      "shoeSize": rshoeSize,
-                                      "waist": rwaist,
-                                      "hips": rhips,
-                                      "inseam": rinseam,
-                                      "suitSize": rsuitSize,
-                                      "piercing": rpiercing,
-                                      "tattoo": rtattoo
+                                  "measurements": {                                      
+                                      "Experience": rexperience,
+                                      "TFP": rtfp,
+                                      "Age": rage,
+                                      "Height": rheightCM,
+                                      "Ethnicity": rethnicity,
+                                      "Hair Color": rhairColor,
+                                      "Hair Length": rhairLength,
+                                      "Skin": rskinColor,
+                                      "Eyes": reyeColor,
+                                      "Shoe": rshoeSize,
+                                      "Waist": rwaist,
+                                      "Hips": rhips,
+                                      "Inseam": rinseam,
+                                      "Suit": rsuitSize,
+                                      "Piercings": rpiercing,
+                                      "Tattoos": rtattoo
                                   }
                               })
 
@@ -629,8 +630,8 @@ Item {
                               "follows_user": true,
                               "feed_count": 0,
                               "measurements": {
-                                  "experience": rexperience,
-                                  "tfpStatus": rtfp,
+                                  "Experience": rexperience,
+                                  "TFP": rtfp,
                               }
                           })
 
@@ -730,17 +731,51 @@ Item {
         db.setUserValue(/*set like count && liked_by_me_value */)
     }
 
-    function createEvent() {
+    function createEvent(event_name, event_organiser, event_date, event_time, event_overview, cover_image, event_concept, event_location, event_team) {
+        let eventID = uniqueID()        
+        /*events/e-uid"+eventID*/
+        /*"e1234567890": {
+                "eventCreator": {
+                "name": userData.name,
+                "id": userData.id
+                }
+                "eventName": event_name,
+                "eventDate": event_date,
+                "eventTime": event_time,
+                "keyContacts": {
+                    {"name": userData.name,"id": userData.id},
+                    //other User{"name": "userData.name,"id": "userData.id"}
+                    },
+                "overview": event_overview,
+                "coverImage": cover_image,
+                moodboard: ["","",""],
+                "location": {
+                    "address": ""//address,
+                    "map": "51.477928, -0.001545"
+                },               
+                "team": [
+                {"id": "u1234", "name": "Katie", "role": "hairstylist"},
+                {"id": "u2345", "name": "Edward", "role": "model"},
+                {"id": "u3456", "name": "Jo", "role": "hairstylist"},
+                {"id": "u4567", "name": "Julie", "role": "Photographer"}
+                ]
+            }*/            
+    }
+    function getEvent(eventID) {
+        db.getValue(/*events*/)
 
     }
-    function getEvent() {
+    function searchUsers(searchString) {
+        /*
+        orderByValue: true,  //order by value before limiting and filtering
+        startAt: searchString,          //return only values greater than or equal to 5
+        endAt: searchString,         //return only values less than or equal to 1000
+        limitToFirst: 20 
+        */
 
     }
-    function searchUsers() {
-
-    }
-    function getUser() {
-
+    function getUser(userID, username) {
+        db.getValue("userData/"+userID, {function(success, key, value) {if(success) {otherUserData = value}}})
     }
     function getFeed() {
 
