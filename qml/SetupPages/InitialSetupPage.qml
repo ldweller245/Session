@@ -62,7 +62,7 @@ Page {
                     AppText {
                         id: usernameTextForm
                         font.pixelSize: sp(12)
-                        text: "Username:"
+                        text: "Email:"
                     }
                     AppTextField {
                         id:usernameTextField
@@ -72,7 +72,7 @@ Page {
                         rightPadding: dp(35)
                         borderColor: Theme.tintColor
                         borderWidth: !Theme.isAndroid ? dp(2) : 0
-                        inputMode: inputModeUsername
+                        inputMode: inputModeEmail
                     }
 
                     AppText {

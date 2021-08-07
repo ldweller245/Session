@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
+import QtQuick 2.12 as DragEffect
 import QtQuick.Layouts 1.1
 import Felgo 3.0
 import "../Components"
@@ -17,6 +18,11 @@ Page {
     property var specialities: []
     property var profileImagePath
     property var maleMeasurements: []; property var femaleMeasurements: []
+
+    function checkComplete() {
+        view.currentIndex = view.currentIndex + 1
+        animation.start()
+    }
 
     /*
     JsonListModel {
@@ -45,39 +51,34 @@ Page {
     FloatingActionButton {
         id: floatingForward; z:15; enabled: {view.currentIndex !== 4; animation.running !== true} visible: view.currentIndex !== 0; anchors.rightMargin: dp(15); icon: IconType.arrowright
         onClicked: {
-            if(view.currentIndex === 0){
-                //do nothing, role select page
-            }
+            if(view.currentIndex === 0){/*do nothing, role select page*/view.currentIndex = view.currentIndex + 1; animation.start()}
             else if(view.currentIndex === 1){
-                firstnameTextEdit.length > 0 && surnameTextEdit.length > 0 && usernameTextEdit.length > 0 && emailTextEdit.length > 0 && passwordTextEdit > 0 ? "" : ""
-                //checkUsername in DB
+                firstnameTextEdit.length > 0 && surnameTextEdit.length > 0 && usernameTextEdit.length > 0 && emailTextEdit.length > 0 && passwordTextEdit.length > 0 ?
+                          dataModel.checkUsernameAvailability(usernameTextEdit.text)
+                          : nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("Make sure you've filled out everthing."))
+
 
             }
             else if(view.currentIndex === 2){
-                baseLocationTextEdit.length > 0 && experienceCombobox.currentText !== "Select" && tfpCombobox.currentText !== "Select" ? " " : ""
+                if(baseLocationTextEdit.length > 0 && experienceCombobox.currentText !== "Select" && tfpCombobox.currentText !== "Select"){
+                    if(role !== "Model"){view.currentIndex = view.currentIndex +2} else {view.currentIndex = view.currentIndex+1}; animation.start()
+                } else {
+                    nativeUtils.displayMessageBox(qsTr("Oh no"), qsTr("Seems like you've missed something?"))
+                }
 
             }
             else if(view.currentIndex === 3){
                 //model Measurements
-
+                ethnicityCombobox.currentIndex !== 0 && hairColorCombobox.currentIndex !== 0 && hairLengthCombobox.currentIndex !== 0 && skinColorCombobox.currentIndex !== 0 && eyeColorCombobox.currentIndex !== 0 && tattooCombobox.currentIndex !== 0 && piercingCombobox.currentIndex !== 0 ?
+                            view.currentIndex = view.currentIndex+1
+                          : nativeUtils.displayMessageBox(qsTr("Oh Dear!"), qsTr("Check you've filled out all forms"));
+                animation.start()
             }
             else if(view.currentIndex === 4){
                 profileImagePath !== undefined && appTextEditBio.length > 0 ?
                             registerPage.registerUser(role, genderCombobox.currentText, firstnameTextEdit.text, surnameTextEdit.text, usernameTextEdit.text, emailTextEdit.text, passwordTextEdit.text, baseLocationTextEdit.text, experienceCombobox.currentText, tfpCombobox.currentText,specialities, Math.floor(slider.value), Math.floor(heightSlider.value), ethnicityCombobox.currentText, hairColorCombobox.currentText, hairLengthCombobox.currentText, skinColorCombobox.currentText, eyeColorCombobox.currentText, shoeSizeCombobox.currentText, waistCombobox.currentText, hipsCombobox.currentText, inseamCombobox.currentText, suitSizeCombobox.currentText, tattooCombobox.currentText, piercingCombobox.currentText, profileImagePath, appTextEditBio.text,bustCombobox.currentText,dressSizeCombobox.currentText)
-                          : ""
+                          : nativeUtils.displayMessageBox(qsTr("Awh C'mon!"), qsTr("Don't be shy, tell us about you!"))
             }
-            if(view.currentIndex !== 4){
-                if(role !== "Model" && view.currentIndex === 2) {
-                    view.currentIndex = view.currentIndex +2; animation.start()
-                }
-                else {
-                    view.currentIndex = view.currentIndex+1; animation.start()
-                }
-            }
-
-
-
-
         }
     }
 
@@ -258,71 +259,71 @@ Page {
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Ethnicity: "}
-                                ComboBox {id: ethnicityCombobox; model: ["Arab", "Asian", "Black", "Mixed", "White", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: ethnicityCombobox; model: ["Select", "Arab", "Asian", "Black", "Mixed", "White", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Hair Colour: "}
-                                ComboBox {id: hairColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Black", "Blonde", "Brown", "Auburn", "Chesnut", "Copper", "Grey/White", "Other"]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: hairColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Black", "Blonde", "Brown", "Auburn", "Chesnut", "Copper", "Grey/White", "Other"]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Hair Length: "}
-                                ComboBox {id: hairLengthCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Very Short", "Short", "Shoulder", "Long", "Very Long" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: hairLengthCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Very Short", "Short", "Shoulder", "Long", "Very Long" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Skin Colour: "}
-                                ComboBox {id: skinColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Extremely Fair", "Fair", "Medium", "Olive", "Brown", "Black" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: skinColorCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Extremely Fair", "Fair", "Medium", "Olive", "Brown", "Black" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Eye Colour: "}
-                                ComboBox {id: eyeColorCombobox;  Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Brown", "Amber", "Hazel", "Green", "Blue" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: eyeColorCombobox;  Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Brown", "Amber", "Hazel", "Green", "Blue" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Dress: "; visible: gender !== "Male"}
-                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]; visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]; visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Shoe: "}
                                 ComboBox {
                                     id: shoeSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
-                                    model: gender === "Female" ?["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
-                                                               :["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: gender === "Female" ?["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                                               :["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
 
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Waist: "}
                                 ComboBox {
                                     id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Hips: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: hipsCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
-                                    model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Bust: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: bustCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ];
+                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ];
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Inseam: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: inseamCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Suit Size: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: suitSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["34s", "34r", "34l","36s", "36r", "36l","38s", "38r", "38l", "40s", "40r", "40l", "42s", "42r", "42l", "44s", "44r", "44l", "46s", "46r", "46l", "48s", "48r", "48l", "50s", "50r", "50l", "52s", "52r", "52l",]
+                                    model: ["Select", "34s", "34r", "34l","36s", "36r", "36l","38s", "38r", "38l", "40s", "40r", "40l", "42s", "42r", "42l", "44s", "44r", "44l", "46s", "46r", "46l", "48s", "48r", "48l", "50s", "50r", "50l", "52s", "52r", "52l",]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Tattoos: "}
                                 ComboBox {
                                     id: tattooCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["None", "Some", "Many" ]
+                                    model: ["Select", "None", "Some", "Many" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Piercings: "}
                                 ComboBox {
                                     id: piercingCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["None", "Some", "Many" ]
+                                    model: ["Select", "None", "Some", "Many" ]
                                 }
                             }
                         }
@@ -371,7 +372,7 @@ Page {
             }
 
             ImagePicker {
-                id: imagePicker; clip: true; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1
+                id: imagePicker; clip: true; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1;
                 onSelectedCountChanged: {console.log("SELECTION: " +selection); profileImagePath = selection.toString()}
             }
         }

@@ -35,7 +35,7 @@ ListPage {
             text: model.name
             iconSource: model.icon
             onSelected: {
-                if(mode.name === "Account Settings") {
+                if(model.name === "Account Settings") {
 
                 }
                 if(model.name === "Privacy") {

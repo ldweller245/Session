@@ -15,6 +15,7 @@ App {
 
     DataModel {
         id: dataModel
+        onNameAvailable: registerPage.checkComplete()
 
         //onLoggedIn: regUser === true ? stack.push(setupPage) : stack.push(homePage)
 
@@ -102,7 +103,7 @@ App {
     property var exploreFilter
     property var otherUserID
 
-    property var userData: dataModel.userDataJson
+    property var userData: []
     property var otherUserData: dataModel.otherUserJson[otherUserID]
     property var discoverHair: dataModel.discover_hair
     property var feed: dataModel.otherUserJson[10].feed_posts

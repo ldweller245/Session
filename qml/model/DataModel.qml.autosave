@@ -338,8 +338,6 @@ Item {
             }
         }
     }
-
-
     property var discover_hair: [
         {
             987654322: {//postID
