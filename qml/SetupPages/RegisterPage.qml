@@ -350,7 +350,7 @@ Page {
                                 id: flick; anchors.fill: parent; contentWidth: width; contentHeight: appTextEditBio.height
                                 AppTextEdit {
                                     id: appTextEditBio; width: parent.width; height: Math.max(appTextEditBio.contentHeight, flick.height); verticalAlignment: TextEdit.AlignTop; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); flickable: flick
-                                    text: "Tell everyone about yourself!"
+                                    placeholderText: "Tell everyone about yourself!";
                                 }
                             }
                         }

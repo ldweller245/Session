@@ -12,8 +12,9 @@ Page {
             console.log("SELECTION: " +selection);
             imagePath = selection.toString()
             imagePathID = selection.toString()
-
             console.log("imagePath: " +imagePath)
+            console.log(selectedCount)
+            if(selectedCount === 0) {imagePath = "undefined" }
         }
       }
     }

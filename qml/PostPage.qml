@@ -6,16 +6,25 @@ import "ModalPages"
 
 Page {
     id: page; title: "Post"
+
+    property var imageToPost
+
+    rightBarItem: TextButtonBarItem {
+        text: "UPLOAD"; textItem.font.pixelSize: sp(16); onClicked: {}
+    }
+    AppFlickable {
+        anchors.fill: parent
+        contentHeight: col.height
     Column {
-        id: col; anchors.fill: parent
+        id: col; width: parent.width
         Rectangle {
-            width: parent.width; height: (parent.height/10)*7
+            width: parent.width; height: parent.height
             AppCard {
                 id: card3; width: parent.width; height: parent.height; margin: dp(15); paper.radius: dp(5)
                 header: SimpleRow {
-                    imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-15-033-f1_670.jpeg"
-                    text: "Katie Prescott"
-                    detailText: "Hairstylist"
+                    imageSource: userData.profile_Pic_URL
+                    text: userData.username
+                    detailText: userData.role
                     enabled: false
                     image.radius: image.width/2
                     image.fillMode: Image.PreserveAspectCrop
@@ -24,14 +33,25 @@ Page {
                         backgroundColor: "transparent"
                     }
                 }
-
                 // For the media cell, we use a simple AppImage
                 media: Rectangle {
-                    width: parent.width; height: (parent.height/10)*4; color: "lightgrey"
+                    width: parent.width; height: imageToPost !== undefined ? selectedImage.height : width; color: "lightgrey"
                     Icon {
                         icon: IconType.upload
                         anchors.centerIn: parent
                         scale: 2
+                    }
+                    AppImage {
+                        id: selectedImage
+                        visible: source !== undefined ? true : false
+                        source: imageToPost
+                        width: parent.width
+                        height: source !== undefined ? Image.height : width
+                        anchors.centerIn: parent
+                        autoTransform: true
+                        smooth: true
+                        onSourceChanged: console.log("SELECTION DIMENSIONS::: Width"+ sourceSize.width +" Height: " + sourceSize.height)
+                        fillMode: Image.PreserveAspectFit
                     }
                     MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
                 }
@@ -61,32 +81,20 @@ Page {
                 }
             }
         }
-        Rectangle {
-            id: sourceGridHolder; width: parent.width; height: parent.height /10*3
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Qt.rgba(0,0,0,0) }
-                GradientStop { position: 0.43; color: Qt.rgba(0,0,0,0.30) }
-                GradientStop { position: 1.0; color: Qt.rgba(0,0,0,0.8) }
-            }
-
-            IconButton {z:5; icon: IconType.expand; anchors.right: parent.right; anchors.top: parent.top; onClicked: imagePickerModal.open()}
-            Rectangle {
-                anchors.fill: parent; anchors.margins: dp(6); color: "#00000000"
-                ImagePicker {
-                    z:4; id: imagePicker; clip: true; columns: 2; anchors.fill: parent
-                }
-            }
-        }
     }
+}
+
     AppModal {
         id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
         NavigationStack {
             ImagePickerPage {
+                id: imagePicker
                 title: "CHOOSE IMAGE"; clip: true
                 rightBarItem: TextButtonBarItem {
-                    text: "Close"; textItem.font.pixelSize: sp(16); onClicked: imagePickerModal.close()
+                    text: "Close"; textItem.font.pixelSize: sp(16); onClicked: {imageToPost = imagePath; imagePickerModal.close()}
                 }
             }
+
         }
     }
     AppModal {

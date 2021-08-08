@@ -12,59 +12,59 @@ Page {
             width: parent.width
             height: spacerH*2
             AppText {
-                text: "Team:"
+                text: "Add Team:"
                 padding: dp(15)
             }
         }
     }
-    Component {
-        id: footerItem
-        Rectangle {
+    Column {
+        id: contentCol
+        width: parent.width
+        AppText {
+            padding: dp(15)
+            text: "Hair:"
+        }
+        AppListView {
             width: parent.width
-            height: spacerH*2
-            AppButton {
-                minimumHeight: parent.height
-                minimumWidth: parent.width
-                anchors.fill: parent
-                text: "Add Team"
-                flat: false
+            height: hairRow.height
+            header: headerItem
+            delegate: SimpleRow {
+                id: hairRow
             }
         }
-    }
 
-    AppListView {
-        id: teamList
-        anchors.fill: parent
-        model: sortedModel
-        header: headerItem
-        footer: footerItem
-        delegate: SimpleRow {
-            id: delegateRow
-            text: model.name
-            detailText: model.role
-            enabled: false
-            showDisclosure: false
+        AppText {
+            padding: dp(15)
+            text: "Makeup:"
+        }
+        AppListView {
+            width: parent.width
+            header: headerItem
+            delegate: SimpleRow {
 
-            imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
-            image.radius: image.width/2
-            image.fillMode: Image.PreserveAspectCrop
-
-            Rectangle {
-                height: parent.height
-                width: height
-                anchors.right: parent.right
-                color: "transparent"
-                IconButton {
-                    icon: IconType.envelope
-                }
-            }
-
-            style: StyleSimpleRow {
-                showDisclosure: false
-                backgroundColor: "transparent"
             }
         }
-        section.property: "role"
-        section.delegate: SimpleSection { }
+        AppText {
+            padding: dp(15)
+            text: "Wardrobe:"
+        }
+        AppListView {
+            width: parent.width
+            header: headerItem
+            delegate: SimpleRow {
+
+            }
+        }
+        AppText {
+            padding: dp(15)
+            text: "Photography:"
+        }
+        AppListView {
+            width: parent.width
+            header: headerItem
+            delegate: SimpleRow {
+
+            }
+        }
     }
 }

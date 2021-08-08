@@ -5,26 +5,16 @@ import "../TabBarPages"
 Page {
     id: shootSetupModal
 
+    signal createEvent(var eventName, var eventOrganiser, var eventDate, var eventTime, var everOverview, var coverImage, var eventConcept, var eventLocation, var eventTeam)
+
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: shootSetupModal.width
     property var jsonData: [{"id": 1, "name": "Katie", "role": "Hair"},{"id": 2,"name": "Jo", "role": "Hair"},{"id": 3,"name": "Tracey", "role": "Photography"},{"id": 4,"name": "Edward", "role": "Model"},{"id": 5,"name": "Turtle", "role": "Director"}]
 
-    JsonListModel {
-        id: jsonModel
-        source: shootSetupModal.jsonData
-        keyField: "id"
-        fields: ["id", "name", "role"]
-    }
-    SortFilterProxyModel {
-        id: sortedModel
-        // Note: when using JsonListModel, the sorters or filter might not be applied correctly when directly assigning sourceModel
-        // use the Component.onCompleted handler instead to initialize SortFilterProxyModel
-        Component.onCompleted: sourceModel = jsonModel
-        sorters: StringSorter { id: typeSorter; roleName: "role"; ascendingOrder: true }
-    }
     TabControl {
         anchors.fill: parent
         NavigationItem {
+            id: eventOverview
             title: "Overview"
             EventOverviewPage {
             }

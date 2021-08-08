@@ -4,6 +4,8 @@ import Felgo 3.0
 Page {
     id: overviewItem
 
+    signal createEvent(var eventName, var eventOrganiser, var eventDate, var eventTime, var eventOver, var coverImage, var eventConcept, var eventLocation, var eventTeam)
+
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: overviewItem.width
 
@@ -30,9 +32,9 @@ Page {
             }
             Rectangle {
                 width: parent.width
-                height: textEdit.height
+                height: eventTitle.height
                 AppTextField {
-                    id: textEdit
+                    id: eventTitle
                     placeholderText: "Enter event name"
                     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -101,11 +103,6 @@ Page {
                 }
                 SwipeOptionsContainer {
                     id: container
-                    rightOption: SwipeButton {
-                        id: rightSwipe
-                        icon: IconType.phone
-                    }
-
                     SimpleRow {
                         imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
                         text: "Katie Prescott"
@@ -118,7 +115,6 @@ Page {
                             showDisclosure: false
                             backgroundColor: "transparent"
                         }
-                        onSelected: container.showRightOption()
                     }
                 }
             }
