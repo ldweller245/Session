@@ -46,18 +46,20 @@ Page {
         onClicked: {if(view.currentIndex !== 0) {if(role !== "Model" && view.currentIndex === 4){view.currentIndex = view.currentIndex-2}
                 else {view.currentIndex = view.currentIndex-1}
                 animation.start()}
-            else {pageReturnTransitionAnimation.start()}}
+            else {pageReturnTransitionAnimation.start()}
+            registerPage.forceActiveFocus()}
     }
     FloatingActionButton {
         id: floatingForward; z:15; enabled: {view.currentIndex !== 4; animation.running !== true} visible: view.currentIndex !== 0; anchors.rightMargin: dp(15); icon: IconType.arrowright
         onClicked: {
             if(view.currentIndex === 0){/*do nothing, role select page*/view.currentIndex = view.currentIndex + 1; animation.start()}
             else if(view.currentIndex === 1){
-                firstnameTextEdit.length > 0 && surnameTextEdit.length > 0 && usernameTextEdit.length > 0 && emailTextEdit.length > 0 && passwordTextEdit.length > 0 ?
-                          dataModel.checkUsernameAvailability(usernameTextEdit.text)
-                          : nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("Make sure you've filled out everthing."))
-
-
+                if(usernameTextEdit.text.indexOf('.')){nativeUtils.displayMessageBox(qsTr("Sorry..."), qsTr("No full stops in usernames!"))}
+                else {
+                    firstnameTextEdit.length > 0 && surnameTextEdit.length > 0 && usernameTextEdit.length > 0 && emailTextEdit.length > 0 && passwordTextEdit.length > 0 ?
+                                dataModel.checkUsernameAvailability(usernameTextEdit.text)
+                              : nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("Make sure you've filled out everthing."))
+                }
             }
             else if(view.currentIndex === 2){
                 if(baseLocationTextEdit.length > 0 && experienceCombobox.currentText !== "Select" && tfpCombobox.currentText !== "Select"){
@@ -79,6 +81,7 @@ Page {
                             registerPage.registerUser(role, genderCombobox.currentText, firstnameTextEdit.text, surnameTextEdit.text, usernameTextEdit.text, emailTextEdit.text, passwordTextEdit.text, baseLocationTextEdit.text, experienceCombobox.currentText, tfpCombobox.currentText,specialities, Math.floor(slider.value), Math.floor(heightSlider.value), ethnicityCombobox.currentText, hairColorCombobox.currentText, hairLengthCombobox.currentText, skinColorCombobox.currentText, eyeColorCombobox.currentText, shoeSizeCombobox.currentText, waistCombobox.currentText, hipsCombobox.currentText, inseamCombobox.currentText, suitSizeCombobox.currentText, tattooCombobox.currentText, piercingCombobox.currentText, profileImagePath, appTextEditBio.text,bustCombobox.currentText,dressSizeCombobox.currentText)
                           : nativeUtils.displayMessageBox(qsTr("Awh C'mon!"), qsTr("Don't be shy, tell us about you!"))
             }
+            registerPage.forceActiveFocus()
         }
     }
 
@@ -220,9 +223,9 @@ Page {
                             AppCheckBox {text: "Film&Tv"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
                             AppCheckBox {text: "Session"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
                             AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
-                            AppCheckBox {text: "Fashion"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Street"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Editorial"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
+                            AppCheckBox {text: "Avant Garde"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
 
                         }
                     }
@@ -274,44 +277,44 @@ Page {
                                 ComboBox {id: eyeColorCombobox;  Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Brown", "Amber", "Hazel", "Green", "Blue" ]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Dress: "; visible: gender !== "Male"}
-                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]; visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
+                                ComboBox {id: dressSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32" ]; visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
                                 AppText {font.pixelSize: sp(12); text: "Shoe: "}
                                 ComboBox {
                                     id: shoeSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
-                                    model: gender === "Female" ?["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
-                                                               :["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: gender === "Female" ?["Select", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10+"]
+                                                               :["Select", "3", "4", "5", "6", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12", "13", "14", "15+" ]
 
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Waist: "}
                                 ComboBox {
                                     id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "24", "25", "26", "28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "40" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Hips: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: hipsCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
-                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "24", "25", "26", "28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "40" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Bust: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: bustCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ];
+                                    model: ["Select", "26", "28", "30", "32", "34", "36", "38", "40"];
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Inseam: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: inseamCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["Select", "0", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26" ]
+                                    model: ["Select", "30", "32", "34" ]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Suit Size: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: suitSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
-                                    model: ["Select", "34s", "34r", "34l","36s", "36r", "36l","38s", "38r", "38l", "40s", "40r", "40l", "42s", "42r", "42l", "44s", "44r", "44l", "46s", "46r", "46l", "48s", "48r", "48l", "50s", "50r", "50l", "52s", "52r", "52l",]
+                                    model: ["Select", "28S", "28R", "28L", "30S", "30R", "30L", "32S", "32R", "32L","34S", "34R", "34L","36S", "36R", "36L","38S", "38R", "38L","40S", "40R", "40L","42S", "42R", "42L","44S", "44R", "44L","46S", "46R", "46L",]
                                 }
 
                                 AppText {font.pixelSize: sp(12); text: "Tattoos: "}
@@ -350,7 +353,7 @@ Page {
                                 id: flick; anchors.fill: parent; contentWidth: width; contentHeight: appTextEditBio.height
                                 AppTextEdit {
                                     id: appTextEditBio; width: parent.width; height: Math.max(appTextEditBio.contentHeight, flick.height); verticalAlignment: TextEdit.AlignTop; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); flickable: flick
-                                    placeholderText: "Tell everyone about yourself!";
+                                    placeholderText: "Tell everyone about yourself!"; wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                 }
                             }
                         }

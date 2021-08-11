@@ -13,78 +13,28 @@ import "UserPages"
 App {
     id: app
 
-    DataModel {
-        id: dataModel
-        onNameAvailable: registerPage.checkComplete()
-
-        //onLoggedIn: regUser === true ? stack.push(setupPage) : stack.push(homePage)
-
-    }
-    LocationModel {
-        id: locationModel
-    }
-    HomePage {
-        id: homePage
-    }
-    HomeFlickable {
-        id: homeFlickable
-    }
-    OtherUserProfile {
-        id: otherUserProfile
-        onUpdateList: userFeedArrChanged()
-    }
+    DataModel {id: dataModel; onNameAvailable: registerPage.checkComplete()}
+    LocationModel {id: locationModel}
+    HomePage {id: homePage}
+    HomeFlickable {id: homeFlickable}
+    OtherUserProfile {id: otherUserProfile; onUpdateList: {}}
     LoadingPage {
-        z: 25
-        id: loaderPage
-        visible: loaderPage.opacity > 0.1 ? true : false
-        Timer {
-            interval: 7000
-            running: true
-            repeat: false
-            onTriggered: loaderAnim.start()
-        }
+        z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false
+        Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}
     }
     ParallelAnimation {
         id: loaderAnim
-        NumberAnimation {
-            target: loaderPage
-            properties: "opacity"
-            from: 1
-            to: 0
-            duration: 1000
-        }
-        NumberAnimation {
-            target: loaderPage
-            properties: "scale"
-            from: 1
-            to: 0
-            duration: 1000
-        }
+        NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
+        NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
     }
-
     InitialSetupPage {
-        id: loginPage
-        z: 24
-        onLoginUser: dataModel.loginUser(email, password)
-        //onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, dressSize, shoeSize, waist, hips, bust, inseam, suitSize, tattoo, piercing, profileImagePath,bio)
-
+        id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password)
         //onResetPassword: dataModel.resetPassword(email)
-        /*onLogin: {
-            if(isRegister) {
-                dataModel.registerUser(email, password, firstname, surname, groupName, subGroupName)
-            } else {
-                dataModel.loginUser(email, password)
-            }
-        }*/
     }
     RegisterPage {
-        z: 23
-        id: registerPage
-        visible: false
+        z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
-
     }
-
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
         Theme.navigationBar.backgroundColor = "#f8f8f8"
@@ -103,37 +53,22 @@ App {
     property var exploreFilter
     property var otherUserID
 
-    property var userData: []
     property var otherUserData: dataModel.otherUserJson[otherUserID]
-    property var discoverHair: dataModel.discover_hair
     property var feed: dataModel.otherUserJson[10].feed_posts
-    property var feed2: Object.values(dataModel.feedJson)
-    property var userFeedArr: []
+    property var searchArr: []
+
+    property var userData: [] //current users data
+    property var masterFeed: [] //filtered master feed
+    property var userFeed: [] //users personal feed view
+
+
+    property var timeTumblerSelection //time tumbler for event time
 
 
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
 
-    property var testImageSource: []
-    Component.onCompleted: {
-        for(var i in discoverHair){
-            for(var ia in discoverHair[i]){
-                testImageSource.push(discoverHair[i][ia].display_url)
-            }
-        }
-    }
-
-    function populateView() {
-        userFeedArr = []
-        let posts = otherUserData.feed_posts
-        for(var i in posts) {
-            userFeedArr.push(posts[i].display_url)
-        }
-        console.log(userFeedArr)
-    }
-
     Navigation {       
         id: navigationRoot; navigationMode: navigationModeTabs
-
         NavigationItem {            
             icon: IconType.compass; title: "Explore"
             NavigationStack {HomePage { } }
@@ -144,7 +79,7 @@ App {
         }
         NavigationItem {
             icon: IconType.cameraretro; title: "Post"
-            NavigationStack { PostPage { } }
+            NavigationStack { PostPage { onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)} }
         }
         NavigationItem {
             icon: IconType.paintbrush; title: "Studio"
@@ -156,9 +91,6 @@ App {
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"}
     }
-
-
-
 
     MouseArea {
         id: moreClickable; width: navigationRoot.width/6; height: dp(Theme.navigationTabBar.height); anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.bottomMargin: nativeUtils.safeAreaInsets.bottom // take care of potential safearea (e.g. iPhone 10 and up)

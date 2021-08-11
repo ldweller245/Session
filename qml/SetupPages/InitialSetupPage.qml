@@ -98,6 +98,7 @@ Page {
                         Layout.alignment: Qt.AlignHCenter
                         text: "login"
                         onClicked: {
+                            loginPage.forceActiveFocus();
                             usernameTextField.length > 0 && passwordTextField.length > 0 ?
                                         loginPage.loginUser(usernameTextField.text, passwordTextField.text)
                                       : ""

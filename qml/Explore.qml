@@ -12,7 +12,7 @@ Page {
       return str;
     }
     JsonListModel {
-        id: jsonModel; source: feed2; keyField: "id"
+        id: jsonModel; source: masterFeed; keyField: "id"
         fields: ["id", "owner", "display_url","profile_Pic_URL", "tag", "timestamp","post_description", "team", "liked_by", "location"]
     }
     SortFilterProxyModel {

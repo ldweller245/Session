@@ -68,6 +68,7 @@ DISTFILES += \
     qml/Components/ConversationPage.qml \
     qml/Components/HomeFlickable.qml \
     qml/Components/ImagePickerPage.qml \
+    qml/Components/TimeTumbler.qml \
     qml/Components/ViewFeedComp.qml \
     qml/Create.qml \
     qml/Explore.qml \

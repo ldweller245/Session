@@ -21,6 +21,12 @@ Page {
     SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "model"}}}
     SortFilterProxyModel {id: locationSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "location"}}}
 
+    rightBarItem: IconButtonBarItem {
+        icon: IconType.search
+        onClicked: {}
+    }
+
+
     AppFlickable {
         anchors.fill: parent; contentHeight: content.height
         Column {

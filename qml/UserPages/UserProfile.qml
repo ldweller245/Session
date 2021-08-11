@@ -51,8 +51,10 @@ Page {
                             width: parent.width
                             columns: selectedView === singleColumnButton ? 1 : 2
                             Repeater {
-                                model: userData.feed_count
-                                AppImage {MouseArea{anchors.fill: parent; onClicked: PictureViewer.show(userProfilePage, "https://static.wixstatic.com/media/d26481_fceae00c691448708c46c8a3b83b75b2~mv2.jpeg/v1/fill/w_824,h_972,al_c,q_85,usm_0.66_1.00_0.01/d26481_fceae00c691448708c46c8a3b83b75b2~mv2.webp")} width: selectedView === singleColumnButton ? parent.width : parent.width /2; fillMode: Image.PreserveAspectFit; source: "https://static.wixstatic.com/media/d26481_fceae00c691448708c46c8a3b83b75b2~mv2.jpeg/v1/fill/w_824,h_972,al_c,q_85,usm_0.66_1.00_0.01/d26481_fceae00c691448708c46c8a3b83b75b2~mv2.webp"}
+                                model: userData.feedCount
+                                AppImage {MouseArea{anchors.fill: parent; onClicked: PictureViewer.show(userProfilePage, Object.values(userData.feed_posts)[index].downloadUrl)} width: selectedView === singleColumnButton ? parent.width : parent.width /2; fillMode: Image.PreserveAspectFit; source: Object.values(userData.feed_posts)[index].downloadUrl;
+                                Component.onCompleted: console.debug(JSON.stringify(Object.values(userData.feed_posts)[index].downloadUrl))
+                                }
 
                             }
                         }

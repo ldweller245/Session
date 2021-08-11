@@ -32,6 +32,18 @@ Item {
     property var regUserDetails: []
     property var otherUserData
 
+    property var userID: userData.id
+
+    readonly property string realtimeUserData: "userData/" + userData.id
+    readonly property string realtimeMasterFeed: "masterFeed/"
+    readonly property string realtimeUserFeed: "userFeeds/" + userData.id
+    readonly property string realtimeChats: "chats/"
+
+    Timer {
+        interval: 60000; running: true; repeat: true
+        onTriggered: getMasterFeed()
+    }
+
 
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
@@ -42,7 +54,19 @@ Item {
     FirebaseDatabase {
         id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
-        realtimeValueKeys: []; onRealtimeValueChanged: { }
+        realtimeValueKeys: [realtimeUserData];
+        onRealtimeValueChanged: {
+            if(key === realtimeUserData) {
+                console.log("REALTIMEUSERUPDATE")
+                userData = []; userData = value
+            }
+            else if(key === realtimeMasterFeed) {
+                masterFeed = []; masterFeed = value}
+            else if(key === realtimeChats) {}
+            else if(key === realtimeUserFeed) {
+                userFeed = value
+            }
+        }
         onFirebaseReady: {
             //remember to delete
             //remember to delete
@@ -58,11 +82,12 @@ Item {
         onUserRegistered: {
             if(!success) {nativeUtils.displayMessageBox(qsTr("Somethings gone wrong!"), qsTr("Seems like: %1").arg(message), 1)}
             else {
-                storage.uploadFile(rprofileImagePath, uuid + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+                storage.uploadFile(rprofileImagePath, "images/"+uuid + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
                     if(!finished) {
                     } else if (finished && success) {remoteFilePath = downloadUrl; addToNameList(uuid, rusername) ; db.setUserValue("details", regUserDetails); db.setValue("userData/"+uuid+"/profile_Pic_URL", remoteFilePath); userData = regDetails; registerPage.visible = false; loginPage.visible = false}
                 })
             }
+            getMasterFeed()
         }
         onLoggedIn: {
             userData = [];
@@ -79,6 +104,7 @@ Item {
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
                                 }
                             })
+            getMasterFeed()
             console.debug("User login " + success + " - " + message);
             if(success) {registerPage.visible = false; loginPage.visible = false}
         }
@@ -460,7 +486,7 @@ Item {
                                   "has_blocked_user": false,
                                   "followed_by_user": true,
                                   "follows_user": true,
-                                  "feed_count": 0,
+                                  "feedCount": 0,
                                   "follower_count": 0,
                                   "follows_count": 0,
                                   "measurements": {
@@ -498,7 +524,7 @@ Item {
                                   "has_blocked_user": false,
                                   "followed_by_user": true,
                                   "follows_user": true,
-                                  "feed_count": 0,
+                                  "feedCount": 0,
                                   "follower_count": 0,
                                   "follows_count": 0,
                                   "measurements": {
@@ -536,7 +562,7 @@ Item {
                                   "has_blocked_user": false,
                                   "followed_by_user": true,
                                   "follows_user": true,
-                                  "feed_count": 0,
+                                  "feedCount": 0,
                                   "follower_count": 0,
                                   "follows_count": 0,
                                   "measurements": {
@@ -577,7 +603,7 @@ Item {
                               "has_blocked_user": false,
                               "followed_by_user": true,
                               "follows_user": true,
-                              "feed_count": 0,
+                              "feedCount": 0,
                               "followers": {
                                   "follower_count": 0,
                                   "follower_list": {}
@@ -626,19 +652,19 @@ Item {
         */
     }
     function createPost(postImagePath, img_height, img_width, post_description, team, location, tag) {
-        let updateFeedCount = userData.feed_count +1
+        let updateFeedCount = userData.feedCount +1
         let postID = "p-uid"+uniqueID()
 
-        storage.uploadFile(postImagePath, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+        storage.uploadFile(postImagePath, "images/"+userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
             if(!finished) {} else if (finished && success) {
-                db.setValue("userData/"+uuid+"feed_count", updateFeedCount)
+                db.setValue("userData/"+ userData.id+"/feedCount/", updateFeedCount)
                 let userPost = {
                     "id": postID,
                     "dimensions":{
                         "height":img_height,
                         "width":img_width
                     },
-                    "display_url":"", downloadUrl,
+                    "downloadUrl": downloadUrl,
                     "owner":{
                         "id": userData.id,
                         "username": userData.username
@@ -664,8 +690,8 @@ Item {
                     "tag": tag,
                     "location": location
                 }
-                db.setValue("master_feed/"+postID, userPost)
-                db.setValue("userData/"+uuid+"feed_posts/"+postID, userPost)
+                db.setValue("masterFeed/"+postID, userPost)
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost)
                 fanPosts(userData.id, userPost, postID)
             }
         })
@@ -679,9 +705,9 @@ Item {
                         "tag": tag})
     }
     function deletePost(postID) {
-        let updateFeedCount = userData.feed_count -1
+        let updateFeedCount = userData.feedCount -1
         db.setUserValue(postID, null)
-        db.setUserValue("feed_count", updateFeedCount)
+        db.setUserValue("feedCount", updateFeedCount)
     }
     function likePost(postID) {
         let likeCount
@@ -728,14 +754,22 @@ Item {
 
     }
     function searchUsers(searchString) {
+        console.log("Search String: "+ searchString)
+        db.getValue("public/nameList", {
 
-        /*
-        orderByValue: true,  //order by value before limiting and filtering
-        startAt: searchString,          //return only values greater than or equal to 5
-        endAt: searchString,         //return only values less than or equal to 1000
-        limitToFirst: 20
-        */
+                        orderByKeys: true,
+                        //startAt: JSON.stringify(searchString),
+                        //endAt: JSON.stringify(searchString) + "~",
+                        limitToFirst: 3
 
+                    }, function(success, key, value) {
+                        if(success) {
+                            console.log("nameList: " + Object.keys(value))
+                            searchArr = []
+                            searchArr = value
+                            console.debug("searchArr: "+JSON.stringify(searchArr))
+                        }
+                    })
     }
     function getUser(userID, username) {
         db.getValue("userData/"+userID, {function(success, key, value) {if(success) {otherUserData = value}}})
@@ -744,16 +778,17 @@ Item {
         db.getValue("feeds/"+uuid)
     }
     function getMasterFeed() {
-        db.getValue("master_feed", {
-                        orderByKey: true,  //order by key before limiting
-                        //startAt: "c",      //return only keys alphabetically after "c"
-                        //endAt: "m",        //return only keys alphabetically before "m"
-                        limitToFirst: 100,   //return only first 5 sub-keys
+        db.getValue("masterFeed/", {
+                        //orderByKeys: true,  //order by key before limiting
+                        //limitToFirst: 100,   //return only first 5 sub-keys
                     }, function(success, key, value) {
-                        if(success) {
+                        if(success) {                            
+                            masterFeed = value
+                            console.log("MASTER FEED: <br><br>" +JSON.stringify(masterFeed))
                             console.debug("Read user value for key", key, "from DB:", value)
                         }
                     })
+
     }
     function addToNameList(id, userName) {
         db.setValue("public/nameList/"+userName, id)
@@ -761,8 +796,6 @@ Item {
     function checkUsernameAvailability(name) {
         let searchKey = name.charAt(0)
         db.getValue("public/nameList/"+name, {
-                        //startAt: searchKey,      //return only keys alphabetically after "x"
-                        //return only keys alphabetically before "x"
                     }, function(success, key, value) {
                         if(success) {nativeUtils.displayMessageBox(qsTr("Try Again!"), qsTr("Username already exists"))}
                         else {dataModel.nameAvailable()}

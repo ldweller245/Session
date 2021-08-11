@@ -6,7 +6,7 @@ Page {
     id: userProfilePage
 
     property var selectedView: singleColumnButton
-    property int userFeedLength: otherUserData.feed_count
+    property int userFeedLength: otherUserData.feeCount
 
     signal updateList()
 

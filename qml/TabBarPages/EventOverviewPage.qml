@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Felgo 3.0
+import "../Components"
 
 Page {
     id: overviewItem
@@ -76,22 +77,14 @@ Page {
                 }
                 AppTextField {
                     id: timeTextField
-                    placeholderText: new Date().toTimeString()
+                    placeholderText: "select time"
                     enabled: false
+                    text: timeTumblerSelection = undefined ? "" : timeTumblerSelection
                 }
                 IconButton {
                     id: timeIconButton
                     icon: IconType.clocko
-                    onClicked: {
-                        nativeUtils.displayTimePicker()
-                    }
-                }
-
-                Connections {
-                    target: nativeUtils
-                    onDatePickerFinished: {
-                        if(accepted) timeTextField.text = date
-                    }
+                    onClicked: timeTumblerModal.open()
                 }
             }
             Rectangle {width: spacerW; height: spacerH}
@@ -139,6 +132,7 @@ Page {
                         AppTextEdit {
                             id: appTextEdit
                             width: parent.width
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             height: Math.max(appTextEdit.contentHeight, flick.height)
                             verticalAlignment: TextEdit.AlignTop
                             // This enables the text field to automatically scroll if cursor moves outside while typing
@@ -158,4 +152,16 @@ Page {
             Rectangle {width: spacerW; height: spacerH}
         }
     }
+    AppModal {
+        id: timeTumblerModal; fullscreen: false; pushBackContent: navigationRoot
+        modalHeight: overviewItem.height / 2.5;
+        NavigationStack {
+            TimeTumbler {
+
+            }
+        }
+
+
+    }
+
 }
