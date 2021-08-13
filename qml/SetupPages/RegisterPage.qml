@@ -286,7 +286,6 @@ Page {
                                                                :["Select", "3", "4", "5", "6", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12", "13", "14", "15+" ]
 
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Waist: "}
                                 ComboBox {
                                     id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2

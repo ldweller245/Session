@@ -4,7 +4,7 @@ import QtQuick.Dialogs 1.0
 import QtGraphicalEffects 1.0
 import Felgo 3.0
 import "Components"
-
+import "CanvasTemplates"
 Page {
     id: studioPage
 
@@ -13,6 +13,7 @@ Page {
     readonly property real spacerW: studioPage.width
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     property var colourModel: ["black",  "#595959", "#7f7f7f","#a5a5a5", "#cccccc", "#f2f2f2", "white", "#f94144", "#f3722c", "#f8961e", "#f9844a","#f9c74f", "#90be6d", "#43aa8b", "#4d908e","#577590", "#277da1", "#777da7", "#e7cee3"]
+    property var canvasIcons: ["../assets/CanvasIcons/1x1.png", "../assets/CanvasIcons/2x2.png", "../assets/CanvasIcons/2x2_1.png", "../assets/CanvasIcons/2x2_2.png", "../assets/CanvasIcons/2x2_3.png", "../assets/CanvasIcons/2x2_4.png", "../assets/CanvasIcons/2x2_5.png", "../assets/CanvasIcons/3x1.png", "../assets/CanvasIcons/3x1_1.png", "../assets/CanvasIcons/3x2.png", "../assets/CanvasIcons/3x2_1.png", "../assets/CanvasIcons/3x2_2.png", "../assets/CanvasIcons/3x3.png", "../assets/CanvasIcons/4x4.png", "../assets/CanvasIcons/4x4_1.png", "../assets/CanvasIcons/4x4_2.png", "../assets/CanvasIcons/5x5.png", "../assets/CanvasIcons/5x5_1.png", "../assets/CanvasIcons/6x6_1.png", "../assets/CanvasIcons/6x6_2.png", ]
 
 
     //canvas variables
@@ -21,17 +22,95 @@ Page {
     property var currentSelectedItem: false
     property var itemFocus
 
+    rightBarItem: IconButtonBarItem {
+        icon: IconType.save
+        onClicked: {printCanvas.save("collage" + ".png"); console.debug("saved")}
+    }
+    ParallelAnimation {
+        id: animation
+        NumberAnimation {target: floatingButtonRow; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
+        NumberAnimation {target: colourPickerCol; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
+        NumberAnimation {target: eyeDropperIconButton; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
+    }
     Column {
         id: contentCol; anchors.fill: parent
         Rectangle {width: spacerW; height: spacerH}
         AppText {id: titleText; width: parent.width; text: "Create and edit your moodboards here!"; horizontalAlignment: Text.AlignHCenter}
         Rectangle {id: spacerRect; width: spacerW; height: spacerH}
         Rectangle {
-            scale: 0.96; width: spacerW; height: spacerW / 10 * 8
-            AppPaper {id: canvas; anchors.fill: parent; background.color: canvasBG === undefined ? "white" :  canvasBG}
+            scale: 0.96; width: spacerW; height: width
+            AppPaper {
+                id: canvas;
+                anchors.fill: parent;
+                background.color: canvasBG === undefined ? "#cccccc" :  canvasBG
+                Canvas {
+                    id: printCanvas
+                    anchors.fill: parent
+                    renderTarget: Canvas.Image
+                    Loader {id: loaderCanvas; anchors.fill: parent ;source: "../qml/CanvasTemplates/Canvas1x1.qml"}
+                    /*Canvas1x1 {id: loaderCanvas; clip: true; anchors.fill: parent}*/
+                }
+            }
         }
     }
+    Rectangle {
+        width: parent.width - colourPickerRect.width; height: dp(Theme.navigationBar.height)
+        anchors.bottom: menuButton.top
+        Rectangle {
+            z:2; anchors.fill: parent
+            gradient: Gradient {orientation: Gradient.Horizontal
+                GradientStop {position: 0.0; color: "white"}
+                GradientStop {position: 0.2; color: "transparent"}
+                GradientStop {position: 0.65; color: "transparent"}
+                GradientStop {position: 1.0; color: "white"}
+            }
+        }
+        AppFlickable {
+            anchors.fill: parent; contentWidth: canvasRow.width; flickableDirection: Flickable.HorizontalFlick
+            Row {
+                id: canvasRow
+                height: dp(Theme.navigationBar.height)
+                Rectangle {height: parent.height; width: height/2; color: "transparent"}
 
+                Repeater {
+                    id: canvasIconRepeater
+                    model: canvasIcons.length
+                        AppImage {
+                            height: canvasRow.height; width: height; scale: 0.9; source: Qt.resolvedUrl(canvasIcons[index])
+                            MouseArea {
+                                anchors.fill: parent;
+                                onClicked: {
+                                    console.log("clicked" + index)
+                                    if(index === 0) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas1x1.qml"}
+                                    else if(index === 1) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2.qml"}
+                                    else if(index === 2) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_1.qml"}
+                                    else if(index === 3) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_2.qml"}
+                                    else if(index === 4) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_3.qml"}
+                                    else if(index === 5) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_4.qml"}
+                                    else if(index === 6) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_5.qml"}
+                                    else if(index === 7) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1.qml"}
+                                    else if(index === 8) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1_1.qml"}
+                                    else if(index === 9) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2.qml"}
+                                    else if(index === 10) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_1.qml"}
+                                    else if(index === 11) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_2.qml"}
+                                    else if(index === 12) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x3.qml"}
+                                    else if(index === 13) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4.qml"}
+                                    else if(index === 14) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_1.qml"}
+                                    else if(index === 15) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_2.qml"}
+                                    else if(index === 16) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5.qml"}
+                                    else if(index === 17) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5_1.qml"}
+                                    else if(index === 18) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_1.qml"}
+                                    else if(index === 19) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_2.qml"}
+
+                                }
+                            }
+                        }
+                }
+                Rectangle {height: parent.height; width: height/2; color: "transparent"}
+
+            }
+        }
+    }
     FloatingActionButton {
         id: menuButton; anchors.right: undefined; visible: true; anchors.horizontalCenter: parent.horizontalCenter; icon: IconType.bars
         onClicked: {
@@ -130,23 +209,17 @@ Page {
         }
         Rectangle {
             id: eyeDropperIconButton; z:3; height: width; width: parent.width; color: "white"; anchors.bottom: parent.bottom
-            IconButton {icon: IconType.eyedropper; onClicked: colorDialog.visible = true}
+            IconButton {id:eyedropIcon; icon: IconType.eyedropper; onClicked: colorDialog.visible = true}
         }
     }
 
     ColorDialog {
         id: colorDialog; title: "Please choose a color"
-        onAccepted: {console.log("You chose: " + colorDialog.color); canvasBG = colorDialog.color; colorDialog.visible = false}
+        onAccepted: {console.log("You chose: " + colorDialog.color); canvasBG = colorDialog.color;eyedropIcon.color = colorDialog.color ; colorDialog.visible = false}
         onRejected: {console.log("Canceled"); colorDialog.visible = false}
         Component.onCompleted: visible = false
     }
 
-    ParallelAnimation {
-        id: animation
-        NumberAnimation {target: floatingButtonRow; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-        NumberAnimation {target: colourPickerCol; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-        NumberAnimation {target: eyeDropperIconButton; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-    }
 
     AppModal {
         id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
@@ -154,56 +227,13 @@ Page {
             ImagePickerPage {
                 id: imagePicker; title: "CHOOSE IMAGE"; clip: true
                 rightBarItem: TextButtonBarItem {
-                    text: "Close"; textItem.font.pixelSize: sp(16)
+                    text: "Select"; textItem.font.pixelSize: sp(16)
                     onClicked: {
-                        var newObject = Qt.createQmlObject('import QtQuick 2.0; import QtQuick 2.12; import Felgo 3.0;     AppImage {z:5; id: moodImage2; parent: canvas; fillMode: Image.PreserveAspectFit; autoTransform: true; source: imagePath; width: studioPage.width/ 2
-        Rectangle {z:4; visible: moodImage2.focus === true || dragHandler2.active; anchors.fill: parent; border.width: 5; border.color: "steelblue"; color: moodImage2.focus === true || dragHandler2.active ? "#354682B4" : "transparent"}
-        PinchArea {
-            MouseArea {
-                onClicked: {
-                    moodImage2.forceActiveFocus()
-                }
-                anchors.fill: parent
-            }
-            property var startpinchangle
-            property var rotangle
-            property var currentangle
-            anchors.fill: parent
-            onPinchStarted: {
-                startpinchangle = pinch.angle
-                rotangle = moodImage2.rotation
-            }
-            onPinchUpdated: {
-                if (startpinchangle != null){
-                    currentangle = rotangle - (pinch.angle - startpinchangle)
-                    moodImage2.rotation = currentangle
-                }
-            }
-            onPinchFinished:{
-                console.log("Current angle: " + Math.abs(currentangle))
-                if (Math.abs(currentangle) < 1 ||
-                        Math.abs(Math.abs(currentangle) - 180) < 1){
+                        if(currentRect === "rect1"){rect1Imgsource = imagePath}
+                        else if(currentRect === "rect2"){rect2Imgsource = imagePath}
+                        else if(currentRect === "rect3"){rect3Imgsource = imagePath}
+                        else if(currentRect === "rect4"){rect4Imgsource = imagePath}
 
-                }
-            }
-        }
-
-        Rectangle {z:5;visible: moodImage2.focus === true;width: dp(30);height: dp(30);color: "#354682B4";anchors.verticalCenter:parent.top;anchors.horizontalCenter: parent.left;IconButton {anchors.fill: parent ; icon: IconType.expand ; rotation: 90 }
-            MouseArea {
-                anchors.fill: parent;
-                drag{
-                    target: parent;
-                    axis: Drag.XAndYAxis
-                }
-                onPositionChanged: {
-                    if(drag.active){var delta = Math.max(mouseX, mouseY);
-                        var newWidth = moodImage2.width - delta;var newHeight = moodImage2.height - delta;if (newWidth < width || newHeight < height)return;moodImage2.width = newWidth;moodImage2.x = moodImage2.x + delta;moodImage2.height = newHeight;moodImage2.y = moodImage2.y + delta}}}}
-        Rectangle {z:5; visible: moodImage2.focus === true; width: dp(30); height: dp(30); color: "#354682B4"; anchors.verticalCenter:parent.bottom; anchors.horizontalCenter: parent.left;IconButton {anchors.fill: parent; icon: IconType.trash; onClicked: {moodImage2.destroy()}}}
-        Rectangle {z:5; visible: moodImage2.focus === true; width: dp(30); height: dp(30); color: "#354682B4"; anchors.verticalCenter:parent.bottom; anchors.horizontalCenter: parent.right;IconButton {anchors.fill: parent;icon: IconType.edit}}
-        DragHandler {id: dragHandler2}}
- ',
-                                                           studioPage,
-                                                           "dynamicSnippet");
                         imagePickerModal.close()
                     }
                 }

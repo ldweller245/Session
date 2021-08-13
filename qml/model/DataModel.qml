@@ -540,6 +540,8 @@ Item {
                                       "Shoe": rshoeSize,
                                       "Waist": rwaist,
                                       "Hips": rhips,
+                                      "Bust": rbust,
+                                      "Dress": rdressSize,
                                       "Piercings": rpiercing,
                                       "Tattoos": rtattoo
                                   }
@@ -580,6 +582,8 @@ Item {
                                       "Hips": rhips,
                                       "Inseam": rinseam,
                                       "Suit": rsuitSize,
+                                      "Bust": rbust,
+                                      "Dress": rdressSize,
                                       "Piercings": rpiercing,
                                       "Tattoos": rtattoo
                                   }

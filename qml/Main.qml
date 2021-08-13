@@ -9,6 +9,7 @@ import "SetupPages"
 import "model"
 import "Plugins"
 import "UserPages"
+import "CanvasTemplates"
 
 App {
     id: app
@@ -35,6 +36,12 @@ App {
         z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
+    Canvas1x1 {
+        id: canvas1x1
+    }
+
+
+
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
         Theme.navigationBar.backgroundColor = "#f8f8f8"
@@ -61,8 +68,15 @@ App {
     property var masterFeed: [] //filtered master feed
     property var userFeed: [] //users personal feed view
 
-
     property var timeTumblerSelection //time tumbler for event time
+
+    //Variables for CREATE section, moodboards ect
+    property var currentRect
+
+    property var rect1Imgsource
+    property var rect2Imgsource
+    property var rect3Imgsource
+    property var rect4Imgsource
 
 
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
