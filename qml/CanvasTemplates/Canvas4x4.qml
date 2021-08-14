@@ -50,31 +50,34 @@ Page {
             Row {
                 width: parent.width; height: parent.height / 2
                 Rectangle {
-                    height: parent.height; width: height; color: "white"; scale: rect3Scale
-                    AppImage {
-                        id: rect3Img; source: rect3Imgsource
-                        anchors.fill: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectCrop
+                    height: parent.height; width: height; color: "white"; scale: rect3Scale; border.width: currentRect === "rect3" ? dp(5) : 0; border.color: "steelblue";
+                    AppImage {id: rect3Img; source: rect3Imgsource; anchors.fill: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectCrop}
+                    MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if(currentRect === "rect3"){currentRect = "none"}
+                        else {currentRect = "rect3"; slider.value = parent.scale}
+                        }
                     }
                     IconButton {
                         icon: IconType.edit
                         anchors.bottom: parent.bottom; anchors.right: parent.right
-                        onClicked: {
-                            imagePickerModal.open()
-                            if(currentRect === "rect3"){currentRect = "none"}
-                            else {currentRect = "rect3"; slider.value = parent.scale}
-                        }
+                        onClicked: {imagePickerModal.open(); currentRect = "rect3"}
                     }
                 }
                 Rectangle {
-                    height: parent.height; width: height; color: "white"; scale: rect4Scale
+                    height: parent.height; width: height; color: "white"; scale: rect4Scale; border.width: currentRect === "rect4" ? dp(5) : 0; border.color: "steelblue";
+                    MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if(currentRect === "rect4"){currentRect = "none"}
+                        else {currentRect = "rect4"; slider.value = parent.scale}
+                        }
+                    }
                     IconButton {
                         icon: IconType.edit
                         anchors.bottom: parent.bottom; anchors.right: parent.right
-                        onClicked: {
-                            imagePickerModal.open()
-                            if(currentRect === "rect4"){currentRect = "none"}
-                            else {currentRect = "rect4"; slider.value = parent.scale}
-                        }
+                        onClicked: {imagePickerModal.open(); currentRect = "rect4"}
                     }
                     AppImage {id: rect4Img; source: rect4Imgsource;anchors.fill: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectCrop}
                 }
