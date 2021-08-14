@@ -5,8 +5,6 @@ import "../Components"
 Page {
     id: canvas
 
-    property var rect1Scale: 0.9
-
     Rectangle {
         id: frameBase; width: parent.width; height: width; anchors.centerIn: parent; color: canvasBG === undefined ? "#cccccc" :  canvasBG
         Rectangle {
