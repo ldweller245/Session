@@ -86,6 +86,20 @@ App {
     property var rect10Imgsource
     property var rect11Imgsource
     property var rect12Imgsource
+    
+    property var rect1Scale: 0.9
+    property var rect2Scale: 0.9
+    property var rect3Scale: 0.9
+    property var rect4Scale: 0.9
+    property var rect5Scale: 0.9
+    property var rect6Scale: 0.9
+    property var rect7Scale: 0.9
+    property var rect8Scale: 0.9
+    property var rect9Scale: 0.9
+    property var rect10Scale: 0.9
+    property var rect11Scale: 0.9
+    property var rect12Scale: 0.9
+    
 
 
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
