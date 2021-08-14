@@ -73,6 +73,14 @@ Page {
                 else if(currentRect === "rect2") {rect2Scale = slider.position}
                 else if(currentRect === "rect3") {rect3Scale = slider.position}
                 else if(currentRect === "rect4") {rect4Scale = slider.position}
+                else if(currentRect === "rect5") {rect5Scale = slider.position}
+                else if(currentRect === "rect6") {rect6Scale = slider.position}
+                else if(currentRect === "rect7") {rect7Scale = slider.position}
+                else if(currentRect === "rect8") {rect8Scale = slider.position}
+                else if(currentRect === "rect9") {rect9Scale = slider.position}
+                else if(currentRect === "rect10") {rect10Scale = slider.position}
+                else if(currentRect === "rect11") {rect11Scale = slider.position}
+                else if(currentRect === "rect12") {rect12Scale = slider.position}
             }
         }
         AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Position: "+Math.round(slider.position * 10) / 10}
