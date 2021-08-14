@@ -51,7 +51,7 @@ Page {
             id: sliderRow; height: dp(Theme.navigationBar.height); width: parent.width
             visible: currentRect !== "none" ? true : false
             opacity: currentRect !== "none" ? true : false
-            AppText {text: "Size: "+Math.round(slider.position * 10) / 10}
+            AppText {text: "Scale: "+Math.round(slider.position * 10) / 10}
             AppSlider {
                 id: slider; from: 0; to: 1
                 onMoved: {

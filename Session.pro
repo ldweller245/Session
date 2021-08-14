@@ -65,7 +65,25 @@ macx {
 
 DISTFILES += \
     qml/Canvas1x1.qml \
+    qml/CanvasTemplates/Canvas2x2.qml \
+    qml/CanvasTemplates/Canvas2x2_1.qml \
+    qml/CanvasTemplates/Canvas2x2_2.qml \
+    qml/CanvasTemplates/Canvas2x2_3.qml \
+    qml/CanvasTemplates/Canvas2x2_4.qml \
+    qml/CanvasTemplates/Canvas2x2_5.qml \
+    qml/CanvasTemplates/Canvas3x1.qml \
+    qml/CanvasTemplates/Canvas3x1_1.qml \
+    qml/CanvasTemplates/Canvas3x2.qml \
+    qml/CanvasTemplates/Canvas3x2_1.qml \
+    qml/CanvasTemplates/Canvas3x2_2.qml \
+    qml/CanvasTemplates/Canvas3x3.qml \
     qml/CanvasTemplates/Canvas4x4.qml \
+    qml/CanvasTemplates/Canvas4x4_1.qml \
+    qml/CanvasTemplates/Canvas4x4_2.qml \
+    qml/CanvasTemplates/Canvas5x5.qml \
+    qml/CanvasTemplates/Canvas5x5_1.qml \
+    qml/CanvasTemplates/Canvas6x6_1.qml \
+    qml/CanvasTemplates/Canvas6x6_2.qml \
     qml/Collaborate.qml \
     qml/Components/ConversationPage.qml \
     qml/Components/HomeFlickable.qml \
