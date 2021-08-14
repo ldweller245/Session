@@ -16,17 +16,15 @@ Page {
     property var colourModel: ["black",  "#595959", "#7f7f7f","#a5a5a5", "#cccccc", "#f2f2f2", "white", "#f94144", "#f3722c", "#f8961e", "#f9844a","#f9c74f", "#90be6d", "#43aa8b", "#4d908e","#577590", "#277da1", "#777da7", "#e7cee3"]
     property var canvasIcons: ["../assets/CanvasIcons/1x1.png", "../assets/CanvasIcons/2x2.png", "../assets/CanvasIcons/2x2_1.png", "../assets/CanvasIcons/2x2_2.png", "../assets/CanvasIcons/2x2_3.png", "../assets/CanvasIcons/2x2_4.png", "../assets/CanvasIcons/2x2_5.png", "../assets/CanvasIcons/3x1.png", "../assets/CanvasIcons/3x1_1.png", "../assets/CanvasIcons/3x2.png", "../assets/CanvasIcons/3x2_1.png", "../assets/CanvasIcons/3x2_2.png", "../assets/CanvasIcons/3x3.png", "../assets/CanvasIcons/4x4.png", "../assets/CanvasIcons/4x4_1.png", "../assets/CanvasIcons/4x4_2.png", "../assets/CanvasIcons/5x5.png", "../assets/CanvasIcons/5x5_1.png", "../assets/CanvasIcons/6x6_1.png", "../assets/CanvasIcons/6x6_2.png", ]
 
-
     //canvas variables
     property var canvasBG
     property var canvasText
     property var currentSelectedItem: false
     property var itemFocus
 
-    rightBarItem: IconButtonBarItem {
-        icon: IconType.save
-        onClicked: {printCanvas.save("collage" + ".png"); console.debug("saved")}
-    }
+    property int canvasIndex: 0
+
+    rightBarItem: IconButtonBarItem {icon: IconType.save; onClicked: {printCanvas.save("collage" + ".png"); console.debug("saved")}}
     Column {
         id: contentCol; anchors.fill: parent
         Rectangle {width: spacerW; height: spacerH}
@@ -48,9 +46,7 @@ Page {
     Column {
         width: parent.width; anchors.bottom: parent.bottom; bottomPadding: dp(10)
         Row {
-            id: sliderRow; height: dp(Theme.navigationBar.height); width: parent.width
-            visible: currentRect !== "none" ? true : false
-            opacity: currentRect !== "none" ? true : false
+            id: sliderRow; height: dp(Theme.navigationBar.height); width: parent.width; visible: currentRect !== "none" ? true : false; opacity: currentRect !== "none" ? true : false
             AppText {text: "Scale: "+Math.round(slider.position * 10) / 10}
             AppSlider {
                 id: slider; from: 0; to: 1
@@ -120,33 +116,38 @@ Page {
                     Rectangle {height: parent.height; width: height/2; color: "transparent"}
                     Repeater {
                         id: canvasIconRepeater; model: canvasIcons.length
-                        AppImage {
-                            height: canvasRow.height; width: height; source: Qt.resolvedUrl(canvasIcons[index])
-                            MouseArea {
-                                anchors.fill: parent;
-                                onClicked: {
-                                    mediaplayer.play();
-                                    console.log("clicked" + index)
-                                    if(index === 0) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas1x1.qml"}
-                                    else if(index === 1) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2.qml"}
-                                    else if(index === 2) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_1.qml"}
-                                    else if(index === 3) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_2.qml"}
-                                    else if(index === 4) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_3.qml"}
-                                    else if(index === 5) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_4.qml"}
-                                    else if(index === 6) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_5.qml"}
-                                    else if(index === 7) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1.qml"}
-                                    else if(index === 8) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1_1.qml"}
-                                    else if(index === 9) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2.qml"}
-                                    else if(index === 10) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_1.qml"}
-                                    else if(index === 11) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_2.qml"}
-                                    else if(index === 12) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x3.qml"}
-                                    else if(index === 13) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4.qml"}
-                                    else if(index === 14) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_1.qml"}
-                                    else if(index === 15) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_2.qml"}
-                                    else if(index === 16) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5.qml"}
-                                    else if(index === 17) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5_1.qml"}
-                                    else if(index === 18) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_1.qml"}
-                                    else if(index === 19) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_2.qml"}
+                        Rectangle {
+                            height: canvasRow.height; width: height;
+                            Rectangle {z:2; anchors.fill: parent; color: "#EBCFB2"; opacity: 0.5; visible: canvasIndex === index ? true : false}
+                            AppImage {
+                                z: 1; anchors.fill: parent; source: Qt.resolvedUrl(canvasIcons[index])
+                                MouseArea {
+                                    anchors.fill: parent;
+                                    onClicked: {
+                                        canvasIndex = index
+                                        mediaplayer.play();
+                                        console.log("clicked" + index)
+                                        if(index === 0) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas1x1.qml"}
+                                        else if(index === 1) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2.qml"}
+                                        else if(index === 2) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_1.qml"}
+                                        else if(index === 3) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_2.qml"}
+                                        else if(index === 4) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_3.qml"}
+                                        else if(index === 5) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_4.qml"}
+                                        else if(index === 6) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_5.qml"}
+                                        else if(index === 7) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1.qml"}
+                                        else if(index === 8) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x1_1.qml"}
+                                        else if(index === 9) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2.qml"}
+                                        else if(index === 10) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_1.qml"}
+                                        else if(index === 11) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x2_2.qml"}
+                                        else if(index === 12) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas3x3.qml"}
+                                        else if(index === 13) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4.qml"}
+                                        else if(index === 14) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_1.qml"}
+                                        else if(index === 15) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas4x4_2.qml"}
+                                        else if(index === 16) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5.qml"}
+                                        else if(index === 17) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5_1.qml"}
+                                        else if(index === 18) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_1.qml"}
+                                        else if(index === 19) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_2.qml"}
+                                    }
                                 }
                             }
                         }
