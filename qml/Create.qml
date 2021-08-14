@@ -44,7 +44,7 @@ Page {
             }
         }
     }
-    MediaPlayer {id: mediaplayer; loops: 1; source: "../assets/CanvasTransition.mp4"}
+    MediaPlayer {id: mediaplayer; loops: 1; source: "../assets/CanvasTransition2.mp4"}
     Column {
         width: parent.width; anchors.bottom: parent.bottom; bottomPadding: dp(10)
         Row {
