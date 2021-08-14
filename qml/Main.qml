@@ -71,12 +71,21 @@ App {
     property var timeTumblerSelection //time tumbler for event time
 
     //Variables for CREATE section, moodboards ect
+    property var sliderValue
     property var currentRect
 
     property var rect1Imgsource
     property var rect2Imgsource
     property var rect3Imgsource
     property var rect4Imgsource
+    property var rect5Imgsource
+    property var rect6Imgsource
+    property var rect7Imgsource
+    property var rect8Imgsource
+    property var rect9Imgsource
+    property var rect10Imgsource
+    property var rect11Imgsource
+    property var rect12Imgsource
 
 
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
