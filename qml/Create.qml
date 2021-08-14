@@ -2,18 +2,11 @@ import QtQuick 2.0
 import QtQuick 2.12
 import QtQuick.Dialogs 1.0
 import QtGraphicalEffects 1.0
+import QtMultimedia 5.9
 import Felgo 3.0
 import "Components"
 import "CanvasTemplates"
-
-
-     FlickablePage {
-
-       // set contentHeight of flickable to allow scrolling
-       flickable.contentHeight: column.height
-
-       // set false to hide the scroll indicator, it is visible by default
-       scrollIndicator.visible: true
+Page {
     id: studioPage
 
     title: "Studio"
@@ -34,12 +27,6 @@ import "CanvasTemplates"
         icon: IconType.save
         onClicked: {printCanvas.save("collage" + ".png"); console.debug("saved")}
     }
-    ParallelAnimation {
-        id: animation
-        NumberAnimation {target: floatingButtonRow; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-        NumberAnimation {target: colourPickerCol; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-        NumberAnimation {target: eyeDropperIconButton; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}
-    }
     Column {
         id: contentCol; anchors.fill: parent
         Rectangle {width: spacerW; height: spacerH}
@@ -48,67 +35,97 @@ import "CanvasTemplates"
         Rectangle {
             scale: 0.96; width: spacerW; height: width
             AppPaper {
-                id: canvas;
-                anchors.fill: parent;
-                background.color: canvasBG === undefined ? "#cccccc" :  canvasBG
+                id: canvas; anchors.fill: parent; background.color: canvasBG === undefined ? "#cccccc" :  canvasBG
                 Canvas {
-                    id: printCanvas
-                    anchors.fill: parent
-                    renderTarget: Canvas.Image
+                    id: printCanvas; anchors.fill: parent; renderTarget: Canvas.Image
                     Loader {id: loaderCanvas; anchors.fill: parent ;source: "../qml/CanvasTemplates/Canvas1x1.qml"}
-                    /*Canvas1x1 {id: loaderCanvas; clip: true; anchors.fill: parent}*/
+                }
+                VideoOutput {visible: mediaplayer.playbackState == MediaPlayer.PlayingState ? true : false; anchors.fill: parent; source: mediaplayer}
+            }
+        }
+    }
+    MediaPlayer {id: mediaplayer; loops: 1; source: "../assets/CanvasTransition.mp4"}
+    Column {
+        width: parent.width; anchors.bottom: parent.bottom; bottomPadding: dp(10)
+        Row {
+            id: sliderRow; height: dp(Theme.navigationBar.height); width: parent.width
+            visible: currentRect !== "none" ? true : false
+            opacity: currentRect !== "none" ? true : false
+            AppText {text: "Size: "+Math.round(slider.position * 10) / 10}
+            AppSlider {
+                id: slider; from: 0; to: 1
+                onMoved: {
+                    if(currentRect === "rect1") {rect1Scale = slider.position}
+                    else if(currentRect === "rect2") {rect2Scale = slider.position}
+                    else if(currentRect === "rect3") {rect3Scale = slider.position}
+                    else if(currentRect === "rect4") {rect4Scale = slider.position}
+                    else if(currentRect === "rect5") {rect5Scale = slider.position}
+                    else if(currentRect === "rect6") {rect6Scale = slider.position}
+                    else if(currentRect === "rect7") {rect7Scale = slider.position}
+                    else if(currentRect === "rect8") {rect8Scale = slider.position}
+                    else if(currentRect === "rect9") {rect9Scale = slider.position}
+                    else if(currentRect === "rect10") {rect10Scale = slider.position}
+                    else if(currentRect === "rect11") {rect11Scale = slider.position}
+                    else if(currentRect === "rect12") {rect12Scale = slider.position}
                 }
             }
+            Behavior on opacity {NumberAnimation {duration: 1000; easing.type: Easing.InOutBack}}
         }
-    }
-    Rectangle {
-        width: parent.width - colourPickerRect.width; height: dp(Theme.navigationBar.height)
-        anchors.bottom: menuButton.top
         Rectangle {
-            z:2; anchors.fill: parent
-            gradient: Gradient {orientation: Gradient.Horizontal
-                GradientStop {position: 0.0; color: "white"}
-                GradientStop {position: 0.2; color: "transparent"}
-                GradientStop {position: 0.65; color: "transparent"}
-                GradientStop {position: 1.0; color: "white"}
+            id: colourChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height)
+            Rectangle {
+                z:2; anchors.fill: parent
+                gradient: Gradient {orientation: Gradient.Horizontal
+                    GradientStop {position: 0.0; color: "white"}
+                    GradientStop {position: 0.2; color: "transparent"}
+                    GradientStop {position: 0.65; color: "transparent"}
+                    GradientStop {position: 1.0; color: "white"}
+                }
+            }
+            AppFlickable {
+                id: colourChoiceFlickable; anchors.fill: parent; contentWidth: colourRow.width; flickableDirection: Flickable.HorizontalFlick
+                Row {
+                    id: colourRow; spacing: dp(10); height: dp(Theme.navigationBar.height)
+                    Rectangle {height: parent.height; width: height/2; color: "transparent"}
+                    Repeater {
+                        model: colourModel.length
+                        Rectangle {
+                            border.color: "black"; border.width: 2; height: spacerH; width: height; radius: width/2; color: colourModel[index]
+                            MouseArea {anchors.fill: parent; onClicked: canvasBG = colourModel[index]}
+                        }
+                    }
+                    Rectangle {height: parent.height; width: height/2; color: "transparent"}
+                }
+            }
+            Rectangle {
+                id: eyeDropperIconButton; z:3; height: parent.height; width: height; color: "white"; anchors.bottom: parent.bottom
+                IconButton {id:eyedropIcon; icon: IconType.eyedropper; onClicked: colorDialog.visible = true}
             }
         }
-         Column {
-        AppSlider {
-            id: slider; from: 0; to: 1
-            onMoved: {
-                if(currentRect === "rect1") {rect1Scale = slider.position}
-                else if(currentRect === "rect2") {rect2Scale = slider.position}
-                else if(currentRect === "rect3") {rect3Scale = slider.position}
-                else if(currentRect === "rect4") {rect4Scale = slider.position}
-                else if(currentRect === "rect5") {rect5Scale = slider.position}
-                else if(currentRect === "rect6") {rect6Scale = slider.position}
-                else if(currentRect === "rect7") {rect7Scale = slider.position}
-                else if(currentRect === "rect8") {rect8Scale = slider.position}
-                else if(currentRect === "rect9") {rect9Scale = slider.position}
-                else if(currentRect === "rect10") {rect10Scale = slider.position}
-                else if(currentRect === "rect11") {rect11Scale = slider.position}
-                else if(currentRect === "rect12") {rect12Scale = slider.position}
+        Rectangle {
+            id: canvasChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height)
+            Rectangle {
+                z:2; anchors.fill: parent
+                gradient: Gradient {orientation: Gradient.Horizontal
+                    GradientStop {position: 0.0; color: "white"}
+                    GradientStop {position: 0.2; color: "transparent"}
+                    GradientStop {position: 0.65; color: "transparent"}
+                    GradientStop {position: 1.0; color: "white"}
+                }
             }
-        }
-        AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Position: "+Math.round(slider.position * 10) / 10}
-        AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Current Selection: " + currentRect}
-    }
-        AppFlickable {
-            anchors.fill: parent; contentWidth: canvasRow.width; flickableDirection: Flickable.HorizontalFlick
-            Row {
-                id: canvasRow
-                height: dp(Theme.navigationBar.height)
-                Rectangle {height: parent.height; width: height/2; color: "transparent"}
-
-                Repeater {
-                    id: canvasIconRepeater
-                    model: canvasIcons.length
+            AppFlickable {
+                id: canvasChoiceFlickable; anchors.fill: parent; contentWidth: canvasRow.width; flickableDirection: Flickable.HorizontalFlick
+                Row {
+                    id: canvasRow; spacing: dp(10); height: dp(Theme.navigationBar.height)
+                    Rectangle {height: parent.height; width: height/2; color: "transparent"}
+                    Repeater {
+                        id: canvasIconRepeater; model: canvasIcons.length
                         AppImage {
-                            height: canvasRow.height; width: height; scale: 0.9; source: Qt.resolvedUrl(canvasIcons[index])
+                            height: canvasRow.height; width: height; source: Qt.resolvedUrl(canvasIcons[index])
                             MouseArea {
                                 anchors.fill: parent;
                                 onClicked: {
+                                    mediaplayer.play();
                                     console.log("clicked" + index)
                                     if(index === 0) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas1x1.qml"}
                                     else if(index === 1) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2.qml"}
@@ -130,16 +147,48 @@ import "CanvasTemplates"
                                     else if(index === 17) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas5x5_1.qml"}
                                     else if(index === 18) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_1.qml"}
                                     else if(index === 19) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas6x6_2.qml"}
-
                                 }
                             }
                         }
+                    }
+                    Rectangle {height: parent.height; width: height/2; color: "transparent"}
                 }
-                Rectangle {height: parent.height; width: height/2; color: "transparent"}
-
             }
         }
     }
+    ColorDialog {
+        id: colorDialog; title: "Please choose a color"; Component.onCompleted: visible = false
+        onAccepted: {console.log("You chose: " + colorDialog.color); canvasBG = colorDialog.color;eyedropIcon.color = colorDialog.color ; colorDialog.visible = false}
+        onRejected: {console.log("Canceled"); colorDialog.visible = false}
+    }
+    AppModal {
+        id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
+        NavigationStack {
+            ImagePickerPage {
+                id: imagePicker; title: "CHOOSE IMAGE"; clip: true
+                rightBarItem: TextButtonBarItem {
+                    text: "Select"; textItem.font.pixelSize: sp(16)
+                    onClicked: {
+                        if(currentRect === "rect1"){rect1Imgsource = imagePath}
+                        else if(currentRect === "rect2"){rect2Imgsource = imagePath}
+                        else if(currentRect === "rect3"){rect3Imgsource = imagePath}
+                        else if(currentRect === "rect4"){rect4Imgsource = imagePath}
+                        else if(currentRect === "rect5"){rect5Imgsource = imagePath}
+                        else if(currentRect === "rect6"){rect6Imgsource = imagePath}
+                        else if(currentRect === "rect7"){rect7Imgsource = imagePath}
+                        else if(currentRect === "rect8"){rect8Imgsource = imagePath}
+                        else if(currentRect === "rect9"){rect9Imgsource = imagePath}
+                        else if(currentRect === "rect10"){rect10Imgsource = imagePath}
+                        else if(currentRect === "rect11"){rect11Imgsource = imagePath}
+                        else if(currentRect === "rect12"){rect12Imgsource = imagePath}
+                        imagePickerModal.close()
+                    }
+                }
+            }
+        }
+    }
+}
+/*
     FloatingActionButton {
         id: menuButton; anchors.right: undefined; visible: true; anchors.horizontalCenter: parent.horizontalCenter; icon: IconType.bars
         onClicked: {
@@ -209,64 +258,9 @@ import "CanvasTemplates"
         FloatingActionButton {visible: true; anchors.right: undefined; icon: IconType.sliders}
     }
 
-    Rectangle {
-        id: colourPickerRect; visible: false; height: parent.height - ((spacerRect.height*2) + canvas.height + titleText.height); width: spacerH * 2; anchors.right: parent.right; anchors.bottom: parent.bottom; color: "transparent"
-        Rectangle {
-            z:2; anchors.fill: parent
-            gradient: Gradient {
-                GradientStop {position: 0.0; color: "white"}
-                GradientStop {position: 0.2; color: "transparent"}
-                GradientStop {position: 0.65; color: "transparent"}
-                GradientStop {position: 1.0; color: "white"}
-            }
-        }
-
-        AppFlickable {
-            anchors.fill: parent; contentHeight: colourPickerCol.height
-            Column {
-                id: colourPickerCol; spacing: dp(10)
-                Rectangle {height: spacerH; width: height; color: "transparent"}
-                Repeater {
-                    model: colourModel.length
-                    Rectangle {
-                        border.color: "black"; border.width: 2; height: spacerH; width: height; radius: width/2; color: colourModel[index]
-                        MouseArea {anchors.fill: parent; onClicked: canvasBG = colourModel[index]}
-                    }
-                }
-                Rectangle {height: spacerH*2; width: height; color: "transparent"}
-            }
-        }
-        Rectangle {
-            id: eyeDropperIconButton; z:3; height: width; width: parent.width; color: "white"; anchors.bottom: parent.bottom
-            IconButton {id:eyedropIcon; icon: IconType.eyedropper; onClicked: colorDialog.visible = true}
-        }
-    }
-
-    ColorDialog {
-        id: colorDialog; title: "Please choose a color"
-        onAccepted: {console.log("You chose: " + colorDialog.color); canvasBG = colorDialog.color;eyedropIcon.color = colorDialog.color ; colorDialog.visible = false}
-        onRejected: {console.log("Canceled"); colorDialog.visible = false}
-        Component.onCompleted: visible = false
-    }
 
 
-    AppModal {
-        id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
-        NavigationStack {
-            ImagePickerPage {
-                id: imagePicker; title: "CHOOSE IMAGE"; clip: true
-                rightBarItem: TextButtonBarItem {
-                    text: "Select"; textItem.font.pixelSize: sp(16)
-                    onClicked: {
-                        if(currentRect === "rect1"){rect1Imgsource = imagePath}
-                        else if(currentRect === "rect2"){rect2Imgsource = imagePath}
-                        else if(currentRect === "rect3"){rect3Imgsource = imagePath}
-                        else if(currentRect === "rect4"){rect4Imgsource = imagePath}
 
-                        imagePickerModal.close()
-                    }
-                }
-            }
-        }
-    }
-}
+
+
+  */

@@ -72,7 +72,7 @@ App {
 
     //Variables for CREATE section, moodboards ect
     property var sliderValue
-    property var currentRect
+    property var currentRect: "none"
 
     property var rect1Imgsource
     property var rect2Imgsource

@@ -23,8 +23,4 @@ Page {
             }
         }
     }
-    Column {
-        AppSlider {id: slider; from: 0; to: 1; onMoved: rect1Scale = slider.position}
-        AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Selected Size: "+Math.round(slider.position * 100) / 100}
-    }
 }

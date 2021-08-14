@@ -65,9 +65,6 @@ macx {
 
 DISTFILES += \
     qml/Canvas1x1.qml \
-    qml/CanvasTemplates/Canvas2EqualH.qml \
-    qml/CanvasTemplates/Canvas2LeftHeavy.qml \
-    qml/CanvasTemplates/Canvas2RightHeavy.qml \
     qml/CanvasTemplates/Canvas4x4.qml \
     qml/Collaborate.qml \
     qml/Components/ConversationPage.qml \
