@@ -5,7 +5,15 @@ import QtGraphicalEffects 1.0
 import Felgo 3.0
 import "Components"
 import "CanvasTemplates"
-Page {
+
+
+     FlickablePage {
+
+       // set contentHeight of flickable to allow scrolling
+       flickable.contentHeight: column.height
+
+       // set false to hide the scroll indicator, it is visible by default
+       scrollIndicator.visible: true
     id: studioPage
 
     title: "Studio"
