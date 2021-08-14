@@ -79,17 +79,4 @@ Page {
             }
         }
     }
-    Column {
-        AppSlider {
-            id: slider; from: 0; to: 1
-            onMoved: {
-                if(currentRect === "rect1") {rect1Scale = slider.position}
-                else if(currentRect === "rect2") {rect2Scale = slider.position}
-                else if(currentRect === "rect3") {rect3Scale = slider.position}
-                else if(currentRect === "rect4") {rect4Scale = slider.position}
-            }
-        }
-        AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Position: "+Math.round(slider.position * 10) / 10}
-        AppText {anchors.horizontalCenter: parent.horizontalCenter; text: "Current Selection: " + currentRect}
-    }
 }
