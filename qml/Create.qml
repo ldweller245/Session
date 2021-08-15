@@ -10,6 +10,7 @@ Page {
     id: studioPage
 
     title: "Studio"
+    //backgroundColor: "#242526"
 
     readonly property real imageFolderPath: FileUtils.PicturesLocation
 
@@ -30,7 +31,7 @@ Page {
 
     Column {
         id: contentCol; anchors.fill: parent
-        Rectangle {id: spacerRect; width: spacerW; height: spacerH}
+        Rectangle {id: spacerRect; width: spacerW; height: spacerH; color: "transparent"}
         Rectangle {
             scale: 0.96; width: spacerW; height: spacerW + spacerW/5
             AppPaper {
@@ -69,13 +70,13 @@ Page {
             Behavior on opacity {NumberAnimation {duration: 1000; easing.type: Easing.InOutBack}}
         }
         Rectangle {
-            id: colourChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height)
+            id: colourChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height); color: "transparent"
             Rectangle {
                 z:2; anchors.fill: parent
                 gradient: Gradient {orientation: Gradient.Horizontal
                     GradientStop {position: 0.0; color: "white"}
                     GradientStop {position: 0.1; color: "transparent"}
-                    GradientStop {position: 0.75; color: "transparent"}
+                    GradientStop {position: 0.95; color: "transparent"}
                     GradientStop {position: 1.0; color: "white"}
                 }
             }
@@ -83,7 +84,7 @@ Page {
                 id: colourChoiceFlickable; anchors.fill: parent; contentWidth: colourRow.width; flickableDirection: Flickable.HorizontalFlick
                 Row {
                     id: colourRow; spacing: dp(10); height: dp(Theme.navigationBar.height)
-                    Rectangle {height: parent.height; width: height/2; color: "transparent"}
+                    Rectangle {height: parent.height; width: height; color: "transparent"}
                     Repeater {
                         model: colourModel.length
                         Rectangle {
@@ -100,7 +101,7 @@ Page {
             }
         }
         Rectangle {
-            id: canvasChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height)
+            id: canvasChoiceRect; width: parent.width; height: dp(Theme.navigationBar.height); color: "transparent"
             Rectangle {
                 z:2; anchors.fill: parent
                 gradient: Gradient {orientation: Gradient.Horizontal

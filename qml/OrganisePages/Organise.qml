@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Felgo 3.0
-import "ModalPages"
+import "../ModalPages"
 
 Page {
     id: organisePage
@@ -15,25 +15,25 @@ Page {
             columns: 2
             anchors.fill: parent
             AppImage {
-                source: "../assets/OrganiseIcons/ShootsIcon.png"
+                source: "../../assets/OrganiseIcons/ShootsIcon.png"
                 fillMode: Image.PreserveAspectFit
                 width: parent.width/2
                 height: parent.height/2
             }
             AppImage {
-                source: "../assets/OrganiseIcons/CalendarIcons.png"
+                source: "../../assets/OrganiseIcons/CalendarIcons.png"
                 fillMode: Image.PreserveAspectFit
                 width: parent.width/2
                 height: parent.height/2
             }
             AppImage {
-                source: "../assets/OrganiseIcons/CastingsIcon.png"
+                source: "../../assets/OrganiseIcons/CastingsIcon.png"
                 fillMode: Image.PreserveAspectFit
                 width: parent.width/2
                 height: parent.height/2
             }
             AppImage {
-                source: "../assets/OrganiseIcons/InvoiceIcon.png"
+                source: "../../assets/OrganiseIcons/InvoiceIcon.png"
                 fillMode: Image.PreserveAspectFit
                 width: parent.width/2
                 height: parent.height/2
