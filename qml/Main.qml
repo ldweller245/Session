@@ -37,6 +37,15 @@ App {
     ShootsOrganise {
         id:shootOrganisePage
     }
+    CalendarOrganise {
+        id: calendarOrganisePage
+    }
+    CastingsOrganise {
+        id: castingOrganisePage
+    }
+    InvoiceOrganise {
+        id: invoiceOrganisePage
+    }
 
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
