@@ -10,6 +10,7 @@ import "model"
 import "Plugins"
 import "UserPages"
 import "CanvasTemplates"
+import "OrganisePages"
 
 App {
     id: app
