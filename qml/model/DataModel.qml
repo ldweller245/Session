@@ -835,8 +835,8 @@ Item {
         db.setValue("userData/"+userID+"/followers/followers_count", followerCount)
         db.setValue("userData/"+userID+"/followers/followers_list/"+userData.id+"/", {"id": userData.id, "name": userData.username})
 
-        //add their feed to yours
-        db.getValue("userFeeds/"+userID, {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
+        //add their feed to yours        
+        db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
     }
     function startChat (chatName, participantID) {
         let chatID = "c-uid"+uniqueID()
