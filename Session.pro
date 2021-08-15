@@ -109,6 +109,7 @@ DISTFILES += \
     qml/OrganisePages/CalendarOrganise.qml \
     qml/OrganisePages/CastingsOrganise.qml \
     qml/OrganisePages/InvoiceOrganise.qml \
+    qml/OrganisePages/ShootsOrganise.qml \
     qml/Plugins/MapBoxPlugin.qml \
     qml/PostPage.qml \
     qml/SettingsPage.qml \
