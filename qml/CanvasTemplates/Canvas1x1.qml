@@ -5,9 +5,9 @@ import "../Components"
 Page {
     id: canvas
     Rectangle {
-        id: frameBase; width: parent.width; height: width; anchors.centerIn: parent; color: canvasBG === undefined ? "#cccccc" :  canvasBG
+        id: frameBase; width: parent.width; height: parent.height; anchors.centerIn: parent; color: canvasBG === undefined ? "#cccccc" :  canvasBG
         Rectangle {
-            height: parent.height; width: height; color: "white"; scale: rect1Scale; border.width: currentRect === "rect1" ? dp(5) : 0; border.color: "steelblue";
+            height: parent.height; width: parent.width; color: "white"; scale: rect1Scale; border.width: currentRect === "rect1" ? dp(5) : 0; border.color: "steelblue";
             Rectangle{z: 2; anchors.fill: parent; color: "steelblue"; opacity: currentRect === "rect1" ? 0.5 : 0}
             AppImage {z: 1; id: rect1Img; source: rect1Imgsource; anchors.fill: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectCrop}
             MouseArea {

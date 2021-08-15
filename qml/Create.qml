@@ -11,6 +11,8 @@ Page {
 
     title: "Studio"
 
+    readonly property real imageFolderPath: FileUtils.PicturesLocation
+
     readonly property real spacerW: studioPage.width
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     property var colourModel: ["black",  "#595959", "#7f7f7f","#a5a5a5", "#cccccc", "#f2f2f2", "white", "#f94144", "#f3722c", "#f8961e", "#f9844a","#f9c74f", "#90be6d", "#43aa8b", "#4d908e","#577590", "#277da1", "#777da7", "#e7cee3"]
@@ -24,30 +26,29 @@ Page {
 
     property int canvasIndex: 0
 
-    rightBarItem: IconButtonBarItem {icon: IconType.save; onClicked: {printCanvas.save("collage" + ".png"); console.debug("saved")}}
+    rightBarItem: IconButtonBarItem {icon: IconType.save; onClicked: {printCanvas.grabToImage(function(result){console.debug("result: " + result); result.saveToFile("content://media/external/images/media/"+Date.now()+".png")}); console.debug("saved")}}
+
     Column {
         id: contentCol; anchors.fill: parent
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {id: titleText; width: parent.width; text: "Create and edit your moodboards here!"; horizontalAlignment: Text.AlignHCenter}
         Rectangle {id: spacerRect; width: spacerW; height: spacerH}
         Rectangle {
-            scale: 0.96; width: spacerW; height: width
+            scale: 0.96; width: spacerW; height: spacerW + spacerW/5
             AppPaper {
                 id: canvas; anchors.fill: parent; background.color: canvasBG === undefined ? "#cccccc" :  canvasBG
                 Canvas {
                     id: printCanvas; anchors.fill: parent; renderTarget: Canvas.Image
                     Loader {id: loaderCanvas; anchors.fill: parent ;source: "../qml/CanvasTemplates/Canvas1x1.qml"}
                 }
-                VideoOutput {visible: mediaplayer.playbackState == MediaPlayer.PlayingState ? true : false; anchors.fill: parent; source: mediaplayer}
+                AlphaVideo {id: mediaplayer; loops: 1; source: "../assets/CanvasTransitionAlpha.mp4"; visible: mediaplayer.playbackState == MediaPlayer.PlayingState ? true : false; anchors.fill: parent; fillMode: VideoOutput.Stretch}
             }
         }
     }
-    MediaPlayer {id: mediaplayer; loops: 1; source: "../assets/CanvasTransition2.mp4"}
     Column {
         width: parent.width; anchors.bottom: parent.bottom; bottomPadding: dp(10)
         Row {
             id: sliderRow; height: dp(Theme.navigationBar.height); width: parent.width; visible: currentRect !== "none" ? true : false; opacity: currentRect !== "none" ? true : false
-            AppText {text: "Scale: "+Math.round(slider.position * 10) / 10}
+            Rectangle {height: parent.height; width: height/2; color: "transparent"}
+            AppText {text: "Scale: "+Math.round(slider.position * 100) / 100}
             AppSlider {
                 id: slider; from: 0; to: 1
                 onMoved: {
@@ -73,8 +74,8 @@ Page {
                 z:2; anchors.fill: parent
                 gradient: Gradient {orientation: Gradient.Horizontal
                     GradientStop {position: 0.0; color: "white"}
-                    GradientStop {position: 0.2; color: "transparent"}
-                    GradientStop {position: 0.65; color: "transparent"}
+                    GradientStop {position: 0.1; color: "transparent"}
+                    GradientStop {position: 0.75; color: "transparent"}
                     GradientStop {position: 1.0; color: "white"}
                 }
             }
@@ -104,8 +105,8 @@ Page {
                 z:2; anchors.fill: parent
                 gradient: Gradient {orientation: Gradient.Horizontal
                     GradientStop {position: 0.0; color: "white"}
-                    GradientStop {position: 0.2; color: "transparent"}
-                    GradientStop {position: 0.65; color: "transparent"}
+                    GradientStop {position: 0.05; color: "transparent"}
+                    GradientStop {position: 0.95; color: "transparent"}
                     GradientStop {position: 1.0; color: "white"}
                 }
             }
@@ -123,10 +124,13 @@ Page {
                                 z: 1; anchors.fill: parent; source: Qt.resolvedUrl(canvasIcons[index])
                                 MouseArea {
                                     anchors.fill: parent;
-                                    onClicked: {
-                                        canvasIndex = index
-                                        mediaplayer.play();
-                                        console.log("clicked" + index)
+                                    enabled: mediaplayer.playbackState == MediaPlayer.PlayingState ? false : true
+                                    onClicked: {canvasIndex = index; mediaplayer.play(); timer.running = true; console.log("clicked" + index)}
+                                }
+                                Timer {
+                                    id: timer; interval: 1000; repeat: false; running: false
+                                    onTriggered: {
+                                        console.log("timer triggered! INDEX: " + index)
                                         if(index === 0) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas1x1.qml"}
                                         else if(index === 1) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2.qml"}
                                         else if(index === 2) {loaderCanvas.source = "../qml/CanvasTemplates/Canvas2x2_1.qml"}

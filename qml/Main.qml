@@ -28,20 +28,11 @@ App {
         NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
         NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
     }
-    InitialSetupPage {
-        id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password)
-        //onResetPassword: dataModel.resetPassword(email)
-    }
+    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
     RegisterPage {
         z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
-    Canvas1x1 {
-        id: canvas1x1
-    }
-
-
-
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
         Theme.navigationBar.backgroundColor = "#f8f8f8"
@@ -98,14 +89,13 @@ App {
     property var rect9Scale: 0.9
     property var rect10Scale: 0.9
     property var rect11Scale: 0.9
-    property var rect12Scale: 0.9
+    property var rect12Scale: 0.9   
+    //END OF VARIABLES FOR CREATE SEGMENT
     
-
-
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
 
     Navigation {       
-        id: navigationRoot; navigationMode: navigationModeTabs
+        id: navigationRoot; navigationMode: navigationModeTabs       
         NavigationItem {            
             icon: IconType.compass; title: "Explore"
             NavigationStack {HomePage { } }

@@ -109,12 +109,7 @@ DISTFILES += \
     qml/Plugins/MapBoxPlugin.qml \
     qml/PostPage.qml \
     qml/SettingsPage.qml \
-    qml/SetupPages/ClothesPage.qml \
-    qml/SetupPages/HairdresserPage.qml \
     qml/SetupPages/InitialSetupPage.qml \
-    qml/SetupPages/LocationPage.qml \
-    qml/SetupPages/MUAPage.qml \
-    qml/SetupPages/PhotographerPage.qml \
     qml/SetupPages/RegisterPage.qml \
     qml/TabBarPages/EventLocationPage.qml \
     qml/TabBarPages/EventOverviewPage.qml \

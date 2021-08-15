@@ -67,7 +67,6 @@ Page {
                 } else {
                     nativeUtils.displayMessageBox(qsTr("Oh no"), qsTr("Seems like you've missed something?"))
                 }
-
             }
             else if(view.currentIndex === 3){
                 //model Measurements
@@ -107,51 +106,63 @@ Page {
                         columns: 2; anchors.fill: parent; spacing: dp(5); scale: 0.8
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white"
-                            IconButton {
-                                icon: IconType.cameraretro; anchors.fill: parent; scale: 1
-                                onClicked: {role = "Photographer"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/PhotographerIcon.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "Photographer"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Photographer"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white"
-                            IconButton {
-                                icon: IconType.user; anchors.fill: parent; scale: 1
-                                onClicked: {role = "Model"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/Model.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "Model"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Model"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white";
-                            IconButton {
-                                icon: IconType.scissors; anchors.fill: parent; scale: 1
-                                onClicked: {role = "Hairdresser"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/HairdresserIcon.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "Hairdresser"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Hairdresser"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white"
-                            IconButton {
-                                icon: IconType.paintbrush; anchors.fill: parent; scale: 1
-                                onClicked: {role = "mua"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/MUA.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "mua"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Makeup Artist"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white"
-                            IconButton {
-                                icon: IconType.usersecret; anchors.fill: parent; scale: 1
-                                onClicked: {role = "Wardrobe"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/ClothesStylist.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "Wardrobe"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Clothes Stylist"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                         Rectangle {
                             width: parent.width / 2; height: width; color: "white"
-                            IconButton {
-                                icon: IconType.mapmarker; anchors.fill: parent; scale: 1
-                                onClicked: {role = "Location"; view.currentIndex = 1; animation.start()}
+                            AppImage {
+                                z:3
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: "../../assets/RoleIcons/Studio.png"
+                                MouseArea {anchors.fill: parent; onClicked: {role = "Location"; view.currentIndex = 1; animation.start()}}
                             }
-                            AppText {text: "Location"; width: parent.width; anchors.bottom: parent.bottom; padding: dp(15); horizontalAlignment: Text.AlignHCenter}
                         }
                     }
                 }
@@ -163,7 +174,6 @@ Page {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.verticalCenterOffset: -dp(Theme.navigationBar.height)
-
                         GridLayout {
                             columnSpacing: dp(20)
                             rowSpacing: dp(15)
@@ -201,20 +211,14 @@ Page {
                             columnSpacing: dp(20)
                             rowSpacing: dp(15)
                             columns: 2
-
                             AppText {font.pixelSize: sp(12); text: "Where are you based? "}
                             AppTextField {id:baseLocationTextEdit; Layout.preferredWidth: dp(100); showClearButton: true; font.pixelSize: sp(14); rightPadding: dp(35); borderColor: Theme.tintColor; borderWidth: !Theme.isAndroid ? dp(2) : 0}
-
                             AppText {font.pixelSize: sp(12); text: "Experience Level: "}
                             ComboBox {id: experienceCombobox; model: ["Select", "None", "Some", "Experienced", "Highly experience"]; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
-
                             AppText {font.pixelSize: sp(12); text: "Open TFP work? "}
                             ComboBox {id: tfpCombobox; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); model: ["Select", "Yes", "No", "Depends"]; Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
-
                             Rectangle {width: registerPage.width; Layout.columnSpan: 2; height: dp(Theme.navigationBar.height/2)}
-
                             AppText {font.pixelSize: sp(14); text: "Choose your specialities or favourite areas to work in!"; Layout.columnSpan: 2; Layout.alignment: Qt.AlignHCenter}
-
                             Rectangle {width: registerPage.width; Layout.columnSpan: 2; height: dp(Theme.navigationBar.height/3)}
 
 
@@ -226,7 +230,6 @@ Page {
                             AppCheckBox {text: "Street"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
                             AppCheckBox {text: "Editorial"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
                             AppCheckBox {text: "Avant Garde"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(specialities.includes(text) !== true){specialities.push(text)}}else {let index = specialities.indexOf(text); if (index > -1) {specialities.splice(index, 1)}}}}
-
                         }
                     }
                 }
@@ -236,31 +239,20 @@ Page {
                         id: searchUserFlickable
                         anchors.fill: parent; contentHeight: contentCol.height + dp(Theme.navigationBar.height*2)
                         Column {
-                            id: contentCol;
-                            anchors.margins: dp(12)
-                            anchors.top: titleText.bottom
-                            spacing: dp(12)
-                            anchors.horizontalCenter: parent.horizontalCenter
-
+                            id: contentCol; anchors.margins: dp(12); anchors.top: titleText.bottom; spacing: dp(12); anchors.horizontalCenter: parent.horizontalCenter
                             Rectangle {width: parent.width; height: dp(Theme.navigationBar.height); color: "#00000000"}
-
                             GridLayout {
-                                columnSpacing: dp(20)
-                                rowSpacing: dp(15)
-                                columns: 2
-
+                                columnSpacing: dp(20); rowSpacing: dp(15); columns: 2
                                 AppText {font.pixelSize: sp(12); text: "Age: "}
                                 Column {
                                     AppSlider {id: slider; from: 18; to: 100}
                                     AppText {anchors.horizontalCenter: parent.horizontalCenter; text: Math.floor(slider.value)}
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Height Range (cm): "}
                                 Column {
                                     AppSlider {id: heightSlider; from: 0; to: 300}
                                     AppText {anchors.horizontalCenter: parent.horizontalCenter; text:Math.floor(heightSlider.value)+"cm"}
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Ethnicity: "}
                                 ComboBox {id: ethnicityCombobox; model: ["Select", "Arab", "Asian", "Black", "Mixed", "White", "Other"]; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
 
@@ -284,44 +276,37 @@ Page {
                                     id: shoeSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
                                     model: gender === "Female" ?["Select", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10+"]
                                                                :["Select", "3", "4", "5", "6", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12", "13", "14", "15+" ]
-
                                 }
                                 AppText {font.pixelSize: sp(12); text: "Waist: "}
                                 ComboBox {
                                     id: waistCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["Select", "24", "25", "26", "28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "40" ]
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Hips: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: hipsCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2;
                                     model: ["Select", "24", "25", "26", "28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "40" ]
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Bust: "; visible: gender !== "Male"}
                                 ComboBox {
                                     id: bustCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Male"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["Select", "26", "28", "30", "32", "34", "36", "38", "40"];
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Inseam: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: inseamCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["Select", "30", "32", "34" ]
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Suit Size: "; visible: gender !== "Female"}
                                 ComboBox {
                                     id: suitSizeCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); visible: gender !== "Female"; Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["Select", "28S", "28R", "28L", "30S", "30R", "30L", "32S", "32R", "32L","34S", "34R", "34L","36S", "36R", "36L","38S", "38R", "38L","40S", "40R", "40L","42S", "42R", "42L","44S", "44R", "44L","46S", "46R", "46L",]
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Tattoos: "}
                                 ComboBox {
                                     id: tattooCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
                                     model: ["Select", "None", "Some", "Many" ]
                                 }
-
                                 AppText {font.pixelSize: sp(12); text: "Piercings: "}
                                 ComboBox {
                                     id: piercingCombobox; Layout.preferredWidth: dp(200); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2
@@ -372,7 +357,6 @@ Page {
                     MouseArea {anchors.fill: parent; onClicked: {imagePickerModal.close()}}
                 }
             }
-
             ImagePicker {
                 id: imagePicker; clip: true; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1;
                 onSelectedCountChanged: {console.log("SELECTION: " +selection); profileImagePath = selection.toString()}

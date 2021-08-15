@@ -26,7 +26,6 @@ Page {
         onClicked: {}
     }
 
-
     AppFlickable {
         anchors.fill: parent; contentHeight: content.height
         Column {

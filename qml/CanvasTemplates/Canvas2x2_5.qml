@@ -5,7 +5,7 @@ import "../Components"
 Page {
     id: canvas
     Rectangle {
-        id: frameBase; width: parent.width; height: width; anchors.centerIn: parent; color: canvasBG === undefined ? "#cccccc" :  canvasBG
+        id: frameBase; width: parent.width; height: parent.height; anchors.centerIn: parent; color: canvasBG === undefined ? "#cccccc" :  canvasBG
         Column {
             anchors.fill: parent
             Row {

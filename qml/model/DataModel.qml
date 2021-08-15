@@ -39,16 +39,14 @@ Item {
     readonly property string realtimeUserFeed: "userFeeds/" + userData.id
     readonly property string realtimeChats: "chats/"
 
-    Timer {
+    /*Timer {
         interval: 60000; running: true; repeat: true
         onTriggered: getMasterFeed()
-    }
-
+    }*/
 
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
-
     FirebaseConfig {id: firebaseConfig; storageBucket: "session-10d53.appspot.com";  projectId: "session-10d53"; databaseUrl: "https://session-10d53-default-rtdb.europe-west1.firebasedatabase.app/"; apiKey: Qt.platform.os === "android" ? "AIzaSyClEiWZ5tOnHpB0kl19W4guYMZXBw5k6Hw": "AIzaSyCWy_CbVSdDFJGwtTvhiNJYtK3VA6Ehj4Q"; applicationId:  Qt.platform.os === "android" ? "1:627724626656:android:74443461c4df304ccc7e85": "1:627724626656:ios:1a1ec445bbaf1efbcc7e85"}
 
     FirebaseDatabase {
@@ -487,8 +485,14 @@ Item {
                                   "followed_by_user": true,
                                   "follows_user": true,
                                   "feedCount": 0,
-                                  "follower_count": 0,
-                                  "follows_count": 0,
+                                  "followers": {
+                                      "follower_count": 0,
+                                      "follower_list": {}
+                                  },
+                                  "follows": {
+                                      "follow_count": 0,
+                                      "follow_list": {}
+                                  },
                                   "measurements": {
                                       "Experience": rexperience,
                                       "TFP": rtfp,
@@ -525,8 +529,14 @@ Item {
                                   "followed_by_user": true,
                                   "follows_user": true,
                                   "feedCount": 0,
-                                  "follower_count": 0,
-                                  "follows_count": 0,
+                                  "followers": {
+                                      "follower_count": 0,
+                                      "follower_list": {}
+                                  },
+                                  "follows": {
+                                      "follow_count": 0,
+                                      "follow_list": {}
+                                  },
                                   "measurements": {
                                       "Experience": rexperience,
                                       "TFP": rtfp,
@@ -565,8 +575,14 @@ Item {
                                   "followed_by_user": true,
                                   "follows_user": true,
                                   "feedCount": 0,
-                                  "follower_count": 0,
-                                  "follows_count": 0,
+                                  "followers": {
+                                      "follower_count": 0,
+                                      "follower_list": {}
+                                  },
+                                  "follows": {
+                                      "follow_count": 0,
+                                      "follow_list": {}
+                                  },
                                   "measurements": {
                                       "Experience": rexperience,
                                       "TFP": rtfp,
@@ -643,6 +659,9 @@ Item {
         console.log("logged out")
         registerPage.visible = true
         loginPage.visible = true
+    }
+    function resetPassword(email) {
+        firebaseAuth.sendPasswordResetMail(email)
     }
     function updateFeed() {
         /*
@@ -792,7 +811,6 @@ Item {
                             console.debug("Read user value for key", key, "from DB:", value)
                         }
                     })
-
     }
     function addToNameList(id, userName) {
         db.setValue("public/nameList/"+userName, id)
@@ -816,6 +834,9 @@ Item {
         db.getValue("userData/"+userID+"/followers/followers_count", followerCount = value+1)
         db.setValue("userData/"+userID+"/followers/followers_count", followerCount)
         db.setValue("userData/"+userID+"/followers/followers_list/"+userData.id+"/", {"id": userData.id, "name": userData.username})
+
+        //add their feed to yours
+        db.getValue("userFeeds/"+userID, {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
     }
     function startChat (chatName, participantID) {
         let chatID = "c-uid"+uniqueID()
@@ -845,7 +866,7 @@ Item {
                     })
     }
     function sendMessage(chatID,messageContent) {
-        messageID = uniqueID()
+        let messageID = uniqueID()
         db.setValue("chats/"+chatID+"/"+messageID+"/", messageContent)
     }
     function fanPosts(posterID, post, postID){
