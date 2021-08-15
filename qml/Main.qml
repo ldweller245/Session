@@ -34,6 +34,10 @@ App {
         z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
+    ShootsOrganise {
+        id:shootOrganisePage
+    }
+
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
         Theme.navigationBar.backgroundColor = "#f8f8f8"
@@ -97,25 +101,25 @@ App {
 
     Navigation {       
         id: navigationRoot; navigationMode: navigationModeTabs       
-        NavigationItem {            
+        NavigationItem {
             icon: IconType.compass; title: "Explore"
-            NavigationStack {HomePage { } }
+            NavigationStack {id: exploreStack; HomePage { } }
         }
-        NavigationItem {
+        NavigationItem {            
             icon: IconType.group; title: "Collaborate"
-            NavigationStack { Collaborate { } }
+            NavigationStack {id: collabStack;  Collaborate { } }
         }
-        NavigationItem {
+        NavigationItem {            
             icon: IconType.cameraretro; title: "Post"
-            NavigationStack { PostPage { onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)} }
+            NavigationStack {id: postStack; PostPage { onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)} }
         }
-        NavigationItem {
+        NavigationItem {            
             icon: IconType.paintbrush; title: "Studio"
-            NavigationStack { Create { } }
+            NavigationStack {id: studioStack;  Create { } }
         }
         NavigationItem {
             icon: IconType.book; title: "Organise"
-            NavigationStack { Organise { } }
+            NavigationStack {id:organiseStack; Organise { } }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"}
     }

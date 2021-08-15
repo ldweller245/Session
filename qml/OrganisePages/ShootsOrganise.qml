@@ -7,39 +7,6 @@ Page {
 
     title: "Organise"
 
-    Rectangle {
-        z:6
-        anchors.fill: parent
-        Grid {
-            columns: 2
-            anchors.fill: parent
-            AppImage {
-                source: "../../assets/OrganiseIcons/ShootsIcon.png"
-                fillMode: Image.PreserveAspectFit
-                width: parent.width/2
-                height: parent.height/2
-            }
-            AppImage {
-                source: "../../assets/OrganiseIcons/CalendarIcons.png"
-                fillMode: Image.PreserveAspectFit
-                width: parent.width/2
-                height: parent.height/2
-            }
-            AppImage {
-                source: "../../assets/OrganiseIcons/CastingsIcon.png"
-                fillMode: Image.PreserveAspectFit
-                width: parent.width/2
-                height: parent.height/2
-            }
-            AppImage {
-                source: "../../assets/OrganiseIcons/InvoiceIcon.png"
-                fillMode: Image.PreserveAspectFit
-                width: parent.width/2
-                height: parent.height/2
-            }
-        }
-    }
-
     AppFlickable {
         anchors.fill: parent; contentHeight: exploreColumn.height
         Column {
