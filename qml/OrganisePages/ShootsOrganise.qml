@@ -7,7 +7,6 @@ Page {
 
     title: "Organise"
 
-
     Rectangle {
         z:6
         anchors.fill: parent
