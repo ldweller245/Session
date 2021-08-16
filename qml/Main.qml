@@ -1,4 +1,6 @@
 import Felgo 3.0
+import QtMultimedia 5.9
+
 import QtQuick 2.0
 import "../sketch.js" as Sketch
 import "Components"
@@ -15,11 +17,11 @@ import "OrganisePages"
 App {
     id: app
 
+    //Comps
     DataModel {id: dataModel; onNameAvailable: registerPage.checkComplete()}
     LocationModel {id: locationModel}
     HomePage {id: homePage}
     HomeFlickable {id: homeFlickable}
-    OtherUserProfile {id: otherUserProfile; onUpdateList: {}}
     LoadingPage {
         z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false
         Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}
@@ -29,11 +31,19 @@ App {
         NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
         NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
     }
-    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
     RegisterPage {
         z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
+    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
+
+    //explorePageExts
+    Explore {id: explorePage}
+    ViewPostModal {id: viewPostPage}
+    OtherUserProfile {id: otherUserProfile; onUpdateList: {}}
+
+
+    //organisePageExts
     ShootsOrganise {
         id:shootOrganisePage
     }
@@ -124,7 +134,8 @@ App {
         }
         NavigationItem {            
             icon: IconType.paintbrush; title: "Studio"
-            NavigationStack {id: studioStack;  Create { } }
+            onSelected: {studioLoadAnim.play()}
+            NavigationStack {id: studioStack; visible: studioLoadAnim.playbackState == MediaPlayer.PlayingState ? false : true; Create { } }
         }
         NavigationItem {
             icon: IconType.book; title: "Organise"
@@ -145,6 +156,8 @@ App {
         NumberAnimation {target: notificationButton; property: "rotation"; from: 0; to: 360; duration: 1000}
         NumberAnimation {target: inboxButton; property: "rotation"; from: 0; to: 360; duration: 1000}
     }
+    AlphaVideo {id: studioLoadAnim; loops: 1; source: "../assets/CanvasTransitionAlpha.mp4"; visible: studioLoadAnim.playbackState == MediaPlayer.PlayingState ? true : false; anchors.fill: parent; fillMode: VideoOutput.Stretch}
+
 
     Column {
         id: floatingColumn; z: 5; spacing: dp(5); width: settingsButton.width; height: settingsButton.height * 4; anchors.right: parent.right; anchors.bottom: moreClickable.top; anchors.bottomMargin: dp(Theme.navigationTabBar.height) / 2; anchors.rightMargin: dp(3); visible: false; enabled: !animation.running

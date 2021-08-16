@@ -25,7 +25,6 @@ Page {
         icon: IconType.search
         onClicked: {}
     }
-
     AppFlickable {
         anchors.fill: parent; contentHeight: content.height
         Column {
@@ -40,12 +39,12 @@ Page {
                         AppText {
                             id: titleText; width: homePage.width; text: "<b>"+Object.values(arr[index]) + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); bottomPadding: dp(10)
                             MouseArea {
-                                anchors.fill: parent
+                                anchors.fill: parent                               
                                 onClicked: {
+                                    exploreStack.push(explorePage)
                                     exploreFilter = Object.keys(arr[index]).toString()
-                                    console.log(exploreFilter)
-                                    exploreModalPage.title = Object.values(arr[index]).toString()
-                                    exploreModal.open()
+                                    explorePage.title = Object.values(arr[index]).toString()
+                                    //exploreModal.open()
                                 }
                             }
                         }
@@ -66,8 +65,12 @@ Page {
                                     AppImage {
                                         anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.display_url
                                         MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {viewPostID = model.id; viewPostModal.open()}
+                                            anchors.fill: parent                                            
+                                            onClicked: {
+                                                exploreStack.push(viewPostPage)
+                                                viewPostID = model.id;
+                                                //viewPostModal.open()
+                                            }
                                         }
                                     }
                                 }
@@ -78,7 +81,7 @@ Page {
             }
         }
     }
-    AppModal {
+    /*AppModal {
         id: exploreModal; fullscreen: true; pushBackContent: navigationRoot
         NavigationStack {
             Explore {
@@ -100,4 +103,5 @@ Page {
             }
         }
     }
+    */
 }

@@ -6,7 +6,6 @@ Page {
     id: organisePage
 
     title: "Organise"
-
     AppFlickable {
         anchors.fill: parent; contentHeight: exploreColumn.height
         Column {
