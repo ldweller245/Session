@@ -36,17 +36,25 @@ App {
     }
     Explore {id: explorePage}
     ViewPostModal {id: viewPostPage}
-    ShootsOrganise {
+    Component {
         id:shootOrganisePage
+        ShootsOrganise {
+        }
     }
-    CalendarOrganise {
+    Component {
         id: calendarOrganisePage
+        CalendarOrganise {
+        }
     }
-    CastingsOrganise {
+    Component {
         id: castingOrganisePage
+        CastingsOrganise {
+        }
     }
-    InvoiceOrganise {
+    Component {
         id: invoiceOrganisePage
+        InvoiceOrganise {
+        }
     }
 
     onInitTheme: {
@@ -104,26 +112,26 @@ App {
     property var rect9Scale: 0.9
     property var rect10Scale: 0.9
     property var rect11Scale: 0.9
-    property var rect12Scale: 0.9   
+    property var rect12Scale: 0.9
     //END OF VARIABLES FOR CREATE SEGMENT
     
     property var arr: [{"hair": "Hairstylists"}, {"makeup": "Makeup Artists"}, {"wardrobe":"Clothes Stylists"}, {"photo": "Photographers"}, {"model":"Models"},{"location": "Locations"}]
 
-    Navigation {       
-        id: navigationRoot; navigationMode: navigationModeTabs       
+    Navigation {
+        id: navigationRoot; navigationMode: navigationModeTabs
         NavigationItem {
             icon: IconType.compass; title: "Explore"
             NavigationStack {id: exploreStack; HomePage { } }
         }
-        NavigationItem {            
+        NavigationItem {
             icon: IconType.group; title: "Collaborate"
             NavigationStack {id: collabStack;  Collaborate { } }
         }
-        NavigationItem {            
+        NavigationItem {
             icon: IconType.cameraretro; title: "Post"
             NavigationStack {id: postStack; PostPage { onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)} }
         }
-        NavigationItem {            
+        NavigationItem {
             icon: IconType.paintbrush; title: "Studio"
             onSelected: {studioLoadAnim.play()}
             NavigationStack {id: studioStack; Create { } }

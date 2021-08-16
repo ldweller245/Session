@@ -7,41 +7,56 @@ import "ModalPages"
 Page {
     id: collabPage
 
-    title: "Collaborate"
+    title: "COLLABORATE"
+
+    JsonListModel {
+        id: jsonModel
+    }
+    SortFilterProxyModel {
+        id: sortedModel
+        Component.onCompleted: sourceModel = jsonModel
+    }
+
     ExclusiveGroup {id: searchGroup}
-    Column {
-        id: searchColumn; width: parent.width; height: parent.height; spacing: dp(Theme.navigationBar.height)/2
-        Rectangle {id: spacerRect; width: parent.width; height:dp(Theme.navigationBar.height) / 2}
-        AppText {text: "<b>I AM SEEKING"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
-        Rectangle {
-            width: parent.width; height: searchGrid.height
-            Grid {
-                id: searchGrid; spacing: dp(5); anchors.horizontalCenter: parent.horizontalCenter; columns: 2
-                AppCheckBox {text: "Hair Stylist"; exclusiveGroup: searchGroup}
-                AppCheckBox {text: "Makeup Artist"; exclusiveGroup: searchGroup}
-                AppCheckBox {text: "Wardrobe"; exclusiveGroup: searchGroup}
-                AppCheckBox {text: "Photographer"; exclusiveGroup: searchGroup}
-                AppCheckBox {text: "Model"; exclusiveGroup: searchGroup}
-                AppCheckBox {text: "Videographer"; exclusiveGroup: searchGroup}
-            }
-        }
-        Row {
-            width: parent.width
+
+    Component {
+        id: headerComponent
+        Column {
+            id: searchColumn; width: collabPage.width; height: collabPage.height; spacing: dp(Theme.navigationBar.height)/2
+            Rectangle {id: spacerRect; width: parent.width; height:dp(Theme.navigationBar.height) / 2}
+            AppText {text: "<b>I AM SEEKING"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
             Rectangle {
-                width: parent.width/2; height: searchButton.height
-                AppButton {id: searchButton; text: "View Saved"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: savedModal.open()}
-            }
-            Rectangle {
-                width: parent.width/2; height: searchButton.height
-                AppButton {
-                    text: "Start Search"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: searchModal.open()
+                width: parent.width; height: searchGrid.height
+                Grid {
+                    id: searchGrid; spacing: dp(5); anchors.horizontalCenter: parent.horizontalCenter; columns: 2
+                    AppCheckBox {text: "Hair Stylist"; exclusiveGroup: searchGroup}
+                    AppCheckBox {text: "Makeup Artist"; exclusiveGroup: searchGroup}
+                    AppCheckBox {text: "Wardrobe"; exclusiveGroup: searchGroup}
+                    AppCheckBox {text: "Photographer"; exclusiveGroup: searchGroup}
+                    AppCheckBox {text: "Model"; exclusiveGroup: searchGroup}
+                    AppCheckBox {text: "Videographer"; exclusiveGroup: searchGroup}
                 }
             }
+            Row {
+                width: parent.width
+                Rectangle {
+                    width: parent.width/2; height: searchButton.height
+                    AppButton {id: searchButton; text: "View Saved"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: savedModal.open()}
+                }
+                Rectangle {
+                    width: parent.width/2; height: searchButton.height
+                    AppButton {
+                        text: "Start Search"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: searchModal.open()
+                    }
+                }
+            }
+            AppText {text: "<b>BROWSE CASTINGS"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
         }
-        AppText {text: "<b>DISCOVER NEAR YOU"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
-        AppCard {
-            id: card; width: parent.width; margin: dp(15); paper.radius: dp(5); swipeEnabled: true; cardSwipeArea.rotationFactor: 0.1
-            cardSwipeArea.onSwipedOut: {console.debug("card swiped out: " + direction)}
+    }
+    AppListView {
+        anchors.fill: parent; header: headerComponent; headerPositioning: ListView.PullBackHeader; model: 30
+        delegate: AppCard {
+            id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
             header: SimpleRow {
                 text: "Katie Prescott"; detailText: "Hairstylist, London"; enabled: false; style: StyleSimpleRow {
                     showDisclosure: false; backgroundColor: "transparent"
@@ -55,7 +70,6 @@ Page {
             actions: Row {AppButton {text: "Follow"; flat: true}}
         }
     }
-
     AppModal {
         id: searchModal; pushBackContent: navigationRoot; fullscreen: true
         NavigationStack {

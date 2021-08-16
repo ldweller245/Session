@@ -878,4 +878,24 @@ Item {
                         }
                     })
     }
+    function addCalendarItem(){
+
+    }
+    function removeCalendarItem(){
+
+    }
+    function editCalendarItem(){
+
+    }
+    function createCasting(){
+
+    }
+    function editCasting(){
+
+    }
+    function deleteCasting(){
+
+    }
+
+
 }

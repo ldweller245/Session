@@ -5,7 +5,7 @@ import "OrganisePages"
 
 Page {
     id: organisePage
-    title: "Organise"
+    title: "ORGANISE"
     Rectangle {
         anchors.fill: parent
         Grid {

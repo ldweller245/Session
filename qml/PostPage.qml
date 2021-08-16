@@ -5,7 +5,7 @@ import "Components"
 import "ModalPages"
 
 Page {
-    id: page; title: "Post"
+    id: page; title: "POST"
 
     property var imageToPost
     property var imageSourceWidth

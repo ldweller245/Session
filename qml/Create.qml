@@ -9,7 +9,7 @@ import "CanvasTemplates"
 Page {
     id: studioPage
 
-    title: "Studio"
+    title: "STUDIO"
     //backgroundColor: "#242526"
 
     readonly property real imageFolderPath: FileUtils.PicturesLocation

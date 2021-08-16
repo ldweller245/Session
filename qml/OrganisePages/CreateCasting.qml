@@ -13,10 +13,11 @@ Page {
     property var castingRoles: []
     AppFlickable {
         id: flickable
-        width: parent.width
+        anchors.fill: parent
         contentHeight: contentCol.height
         Column {
             id: contentCol
+            width: parent.width
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
             AppText {width: spacerW; text: "What's the casting for?&nbsp;&nbsp;&nbsp;>"} //title
             Rectangle {
@@ -38,7 +39,7 @@ Page {
                 AppCheckBox {text: "Studio"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
             }
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
-            AppText {width: spacerW; text: "When & where the event?&nbsp;&nbsp;&nbsp;>"}//location and date
+            AppText {width: spacerW; text: "When & where the event?"+ "&nbsp;&nbsp;&nbsp;>"}//location and date
             Rectangle {
                 width: parent.width; height: locationTitle.height
                 AppTextField {id: locationTitle; placeholderText: "Tell us where!"; anchors.horizontalCenter: parent.horizontalCenter}
@@ -67,7 +68,7 @@ Page {
                 IconButton {id: timeIconButton; icon: IconType.clocko; onClicked: {timeTumblerPopup.visible = true; timeTumblerPopup.opacity = 1}}
             }
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
-            AppText {width: spacerW; text: "Finally, give us the details...&nbsp;&nbsp;&nbsp;>"}//details and image
+            AppText {width: spacerW; text: "Finally, give us the details..."+"&nbsp;&nbsp;&nbsp;>"}//details and image
             Column {
                 width: createCastingPage.width
                 Rectangle {
