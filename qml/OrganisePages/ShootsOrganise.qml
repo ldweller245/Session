@@ -33,7 +33,7 @@ Page {
                     }
                     media: Rectangle {
                         width: parent.width; height: organisePage.height / 3
-                        AppImage {width: parent.width; height: parent.height; fillMode: Image.PreserveAspectFit; source: "../assets/MapTest.PNG"}
+                        AppImage {width: parent.width; height: parent.height; fillMode: Image.PreserveAspectFit; source: "../../assets/MapTest.PNG"}
                         AppButton{text: "View Map"; anchors.bottom: parent.bottom; anchors.right: parent.right; flat: false; anchors.margins: dp(15)}
                     }
                     actions: Row {

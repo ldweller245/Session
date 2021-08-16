@@ -6,7 +6,7 @@ Page {
     title: "New Page"
     AppText {
         anchors.centerIn: parent
-        text: "invocie"
+        text: "invoice"
     }
 
 }

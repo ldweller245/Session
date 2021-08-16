@@ -239,7 +239,7 @@ Page {
                         id: searchUserFlickable
                         anchors.fill: parent; contentHeight: contentCol.height + dp(Theme.navigationBar.height*2)
                         Column {
-                            id: contentCol; anchors.margins: dp(12); anchors.top: titleText.bottom; spacing: dp(12); anchors.horizontalCenter: parent.horizontalCenter
+                            id: contentCol; anchors.margins: dp(12); anchors.top: parent.top; spacing: dp(12); anchors.horizontalCenter: parent.horizontalCenter
                             Rectangle {width: parent.width; height: dp(Theme.navigationBar.height); color: "#00000000"}
                             GridLayout {
                                 columnSpacing: dp(20); rowSpacing: dp(15); columns: 2

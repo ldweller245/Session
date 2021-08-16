@@ -105,11 +105,8 @@ Page {
                             columns: selectedView === singleColumnButton ? 1 :2
                             Repeater {
                                 id: repeater
-                                model: userFeedArr
+                                model: 10
                                 Component.onCompleted: {
-                                    populateView();
-                                    userFeedArrChanged()
-                                    console.log("create")
                                 }
                                 AppImage {
                                     id: postImage

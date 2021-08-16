@@ -7,10 +7,9 @@ Page {
     id: homePage
     title: "EXPLORE"
 
-
     JsonListModel {
         id: jsonModel
-        source: feed2
+        source: userFeed
         keyField: "id"
         fields: ["id", "owner", "display_url", "timestamp","tag", "post_description", "team", "liked_by", "location"]
     }
