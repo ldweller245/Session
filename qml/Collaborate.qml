@@ -19,8 +19,11 @@ Page {
     ExclusiveGroup {id: searchGroup}
     Component {
         id: headerComponent
+        Rectangle {
+            z:4
+            width: collabPage.width; height: collabPage.height/2
         Column {
-            id: searchColumn; width: collabPage.width; height: collabPage.height; spacing: dp(Theme.navigationBar.height)/2
+            id: searchColumn; width: parent.width; height: parent.height; spacing: dp(Theme.navigationBar.height)/2
             Rectangle {id: spacerRect; width: parent.width; height:dp(Theme.navigationBar.height) / 2}
             AppText {text: "<b>I AM SEEKING"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
             Rectangle {
@@ -48,6 +51,7 @@ Page {
             }
             AppText {text: "<b>BROWSE CASTINGS"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
         }
+    }
     }
     AppListView {
         anchors.fill: parent; header: headerComponent; headerPositioning: ListView.PullBackHeader; model: 30
