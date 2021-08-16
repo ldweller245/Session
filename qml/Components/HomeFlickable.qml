@@ -8,18 +8,13 @@ Item {
 
     property var exploreFilter
 
-    JsonListModel {
-        id: jsonModel
-        source: userFeed; keyField: "id";fields: ["id", "dimensions", "owner", "downloadUrl", "timestamp","tag", "post_description", "team", "liked_by", "location", "owner"]
-    }
+    JsonListModel {id: jsonModel; source: userFeed; keyField: "id";fields: ["id", "dimensions", "owner", "downloadUrl", "timestamp","tag", "post_description", "team", "liked_by", "location", "owner"]}
     SortFilterProxyModel {
-        id: sortedModel
-        Component.onCompleted: {sourceModel = jsonModel}
+        id: sortedModel; Component.onCompleted: {sourceModel = jsonModel}
         filters: ExpressionFilter {expression: model.tag === exploreFilter}
     }
     AppListView {
-        model: sortedModel
-        spacing: dp(15); orientation: ListView.Horizontal; anchors.fill: parent
+        model: sortedModel; spacing: dp(15); orientation: ListView.Horizontal; anchors.fill: parent
         delegate: Rectangle {
             height: (item.width / 10)*5; width: (item.width / 10)*4
             AppImage {

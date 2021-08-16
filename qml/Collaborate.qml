@@ -16,9 +16,7 @@ Page {
         id: sortedModel
         Component.onCompleted: sourceModel = jsonModel
     }
-
     ExclusiveGroup {id: searchGroup}
-
     Component {
         id: headerComponent
         Column {
@@ -45,9 +43,7 @@ Page {
                 }
                 Rectangle {
                     width: parent.width/2; height: searchButton.height
-                    AppButton {
-                        text: "Start Search"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: searchModal.open()
-                    }
+                    AppButton {text: "Start Search"; flat: false; anchors.horizontalCenter: parent.horizontalCenter; onClicked: searchModal.open()}
                 }
             }
             AppText {text: "<b>BROWSE CASTINGS"; width: parent.width; horizontalAlignment: Text.AlignHCenter}
@@ -63,10 +59,7 @@ Page {
                 }
             }
             media: AppImage {width: parent.width; height: width / 2; fillMode: Image.PreserveAspectFit; source: "https://payload.cargocollective.com/1/10/333868/13868492/6496-13-032-f2-copy_670.jpeg"}
-            content: AppText{
-                width: parent.width; padding: dp(15); wrapMode: Text.WordWrap; maximumLineCount: 2; elide: Text.ElideRight
-                text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
-            }
+            content: AppText{width: parent.width; padding: dp(15); wrapMode: Text.WordWrap; maximumLineCount: 2; elide: Text.ElideRight; text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")}
             actions: Row {AppButton {text: "Follow"; flat: true}}
         }
     }

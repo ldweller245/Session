@@ -10,19 +10,12 @@ FlickablePage {
     scrollIndicator.visible: false
 
     Column {
-        id: contentCol
-        spacing: dp(15)
-        Rectangle {
-            width: parent.width
-            height: dp(Theme.navigationBar.height)
-        }
-
+        id: contentCol; spacing: dp(15)
+        Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)}
         Row {
             width: searchUserPage.width
             AppText {
-                padding: dp(15)
-                text: "Gender: "
-                width: parent.width/3
+                padding: dp(15); text: "Gender: "; width: parent.width/3
 
             }
             ComboBox {

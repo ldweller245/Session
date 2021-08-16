@@ -10,7 +10,6 @@ Page {
     id: studioPage
 
     title: "STUDIO"
-    //backgroundColor: "#242526"
 
     readonly property real imageFolderPath: FileUtils.PicturesLocation
 

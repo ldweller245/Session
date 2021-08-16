@@ -5,7 +5,8 @@ import "../CanvasTemplates"
 Page {
       id: imagePickerPage
       ImagePicker {
-        id: imagePicker; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1
+        id: imagePicker; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1;
+        onSelectionChanged: if(selectedCount === 1){selection = undefined}
         onSelectedCountChanged: {console.log("SELECTION: " +selection);imagePath = selection.toString(); imagePathID = selection.toString(); console.log("imagePath: " +imagePath); console.log(selectedCount); if(selectedCount === 0) {imagePath = "undefined" }}
       }
     }
