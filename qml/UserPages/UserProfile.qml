@@ -1,12 +1,39 @@
 import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Controls 1.4
-
+import QtQuick.Layouts 1.1
 
 Page {
     id: userProfilePage
 
     property var selectedView: singleColumnButton
+
+    function isEven(n) {
+        return n % 2 == 0;
+    }
+
+    function isOdd(n) {
+        return Math.abs(n % 2) == 1;
+    }
+
+    JsonListModel {
+        id: userJsonModel
+        source: userData.feed_posts
+        keyField: "id"
+        fields: ["id", "downloadUrl", "dimensions", "liked_by", "owner", "post_description", "tag", "team", "timestamp"]
+    }
+    SortFilterProxyModel {
+        id: sortedModelOdd
+        Component.onCompleted: sourceModel = userJsonModel
+        sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
+        filters: ExpressionFilter {expression: isOdd(index)}
+    }
+    SortFilterProxyModel {
+        id: sortedModelEven
+        Component.onCompleted: sourceModel = userJsonModel
+        sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
+        filters: ExpressionFilter {expression: isEven(index)}
+    }
 
     Column {
         anchors.fill: parent; spacing: 10
@@ -43,22 +70,117 @@ Page {
                 id: portfolioTab; title: "PORTFOLIO"
                 Item {
                     width: userProfilePage.width
-                    AppFlickable {
-                        id: userFeedFlickable; width: parent.width; height: parent.height; contentHeight: userFeed.height
-                        Grid {
-                            id: userFeed
+                    ScrollView {
+                        anchors.fill: parent
+                        Row {
+                            anchors.fill: parent
                             spacing: dp(5)
-                            width: parent.width
-                            columns: selectedView === singleColumnButton ? 1 : 2
-                            Repeater {
-                                model: userData.feedCount
-                                AppImage {MouseArea{anchors.fill: parent; onClicked: PictureViewer.show(userProfilePage, Object.values(userData.feed_posts)[index].downloadUrl)} width: selectedView === singleColumnButton ? parent.width : parent.width /2; fillMode: Image.PreserveAspectFit; source: Object.values(userData.feed_posts)[index].downloadUrl;
-                                Component.onCompleted: console.debug(JSON.stringify(Object.values(userData.feed_posts)[index].downloadUrl))
-                                }
+                            anchors.margins: dp(5)
+                            AppListView {
+                                id: evenModelView
+                                model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96
+                                width: parent.width/2; spacing: dp(5); scrollIndicatorVisible: false;
+                                delegate: AppCard {
+                                    id: card
+                                    width: parent.width
+                                    margin: dp(15)
+                                    paper.radius: dp(5)
 
+                                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
+                                    header: SimpleRow {
+                                      imageSource: userData.profile_Pic_URL
+                                      text: userData.username
+                                      enabled: false
+                                      image.radius: image.width/2
+                                      image.fillMode: Image.PreserveAspectCrop
+                                      style: StyleSimpleRow {
+                                        showDisclosure: false
+                                        backgroundColor: "transparent"
+                                      }
+                                    }
+                                    // For the media cell, we use a simple AppImage
+                                    media: AppImage {
+                                      width: parent.width
+                                      fillMode: Image.PreserveAspectFit
+                                      source: model.downloadUrl
+                                    }
+
+                                    // For the content cell, we use some placeholder text
+                                    content: AppText{
+                                      width: parent.width
+                                      padding: dp(15)
+                                      text: model.post_description
+                                    }
+
+                                    // Some useless buttons to display in the actions cell
+                                    actions: Row {
+                                      IconButton {
+                                        icon: IconType.thumbsup
+                                      }
+                                      IconButton {
+                                        icon: IconType.sharealt
+                                      }
+                                      AppButton {
+                                        text: "Follow"
+                                        flat: true
+                                      }
+                                    }
+                                  }
+                            }
+                            AppListView {
+                                id: oddModelView
+                                model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96
+                                width: parent.width/2; spacing: dp(5);scrollIndicatorVisible: false;
+                                delegate: AppCard {
+                                    id: card
+                                    width: parent.width
+                                    margin: dp(15)
+                                    paper.radius: dp(5)
+
+                                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
+                                    header: SimpleRow {
+                                      imageSource: userData.profile_Pic_URL
+                                      text: userData.username
+                                      enabled: false
+                                      image.radius: image.width/2
+                                      image.fillMode: Image.PreserveAspectCrop
+                                      style: StyleSimpleRow {
+                                        showDisclosure: false
+                                        backgroundColor: "transparent"
+                                      }
+                                    }
+                                    // For the media cell, we use a simple AppImage
+                                    media: AppImage {
+                                      width: parent.width
+                                      fillMode: Image.PreserveAspectFit
+                                      source: model.downloadUrl
+                                    }
+
+                                    // For the content cell, we use some placeholder text
+                                    content: AppText{
+                                      width: parent.width
+                                      padding: dp(15)
+                                      text: model.post_description
+                                    }
+
+                                    // Some useless buttons to display in the actions cell
+                                    actions: Row {
+                                      IconButton {
+                                        icon: IconType.thumbsup
+                                      }
+                                      IconButton {
+                                        icon: IconType.sharealt
+                                      }
+                                      AppButton {
+                                        text: "Follow"
+                                        flat: true
+                                      }
+                                    }
+                                  }
                             }
                         }
                     }
+
                 }
             }
             NavigationItem {

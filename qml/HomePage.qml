@@ -11,13 +11,13 @@ Page {
         id: jsonModel
         source: userFeed
         keyField: "id"
-        fields: ["id", "owner", "display_url", "timestamp","tag", "post_description", "team", "liked_by", "location"]
+        fields: ["id", "owner", "downloadUrl", "timestamp","tag", "post_description", "team", "liked_by", "location"]
     }
     SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "hair"; }}}
     SortFilterProxyModel {id: makeupSortedModel;Component.onCompleted: {sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "makeup"}}}
     SortFilterProxyModel {id: wardrobeSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "wardrobe"}}}
     SortFilterProxyModel {id: photoSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "photo"}}}
-    SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "model"}}}
+    SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {app.userFeedChanged(); console.log("<br>"+jsonModel.count+"<br>") ;sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Model"}}}
     SortFilterProxyModel {id: locationSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "location"}}}
 
     rightBarItem: IconButtonBarItem {
@@ -62,7 +62,7 @@ Page {
                                 delegate: Rectangle {
                                     height: (item.width / 10)*5; width: (item.width / 10)*4
                                     AppImage {
-                                        anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.display_url
+                                        anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
                                         MouseArea {
                                             anchors.fill: parent                                            
                                             onClicked: {
