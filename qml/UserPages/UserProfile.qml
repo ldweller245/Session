@@ -18,7 +18,7 @@ Page {
 
     JsonListModel {
         id: userJsonModel
-        source: userData.feed_posts
+        source: userFeed
         keyField: "id"
         fields: ["id", "downloadUrl", "dimensions", "liked_by", "owner", "post_description", "tag", "team", "timestamp"]
     }
@@ -69,13 +69,14 @@ Page {
             NavigationItem {
                 id: portfolioTab; title: "PORTFOLIO"
                 Item {
-                    width: userProfilePage.width
-                    ScrollView {
+                    anchors.fill: parent
+                    AppFlickable {
+                        contentHeight: scrollRow.height
                         anchors.fill: parent
                         Row {
-                            anchors.fill: parent
-                            spacing: dp(5)
-                            anchors.margins: dp(5)
+                            id: scrollRow
+                            width: userProfilePage.width
+                            height: userProfilePage.height
                             AppListView {
                                 id: evenModelView
                                 model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96

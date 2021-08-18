@@ -36,7 +36,11 @@ App {
         z: 23; id: registerPage; visible: false
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
-    Explore {id: explorePage}
+    Component {
+        id: explorePage
+        Explore {
+        }
+    }
     ViewPostModal {id: viewPostPage}
     Component {
         id:shootOrganisePage
@@ -75,6 +79,7 @@ App {
     property var imagePathID
     property var viewPostID
     property var exploreFilter
+    property var explorePageTitle
     property var otherUserID
 
     property var otherUserData: dataModel.otherUserJson[otherUserID]

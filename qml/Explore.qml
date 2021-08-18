@@ -7,8 +7,10 @@ import "model"
 Page {
     id: explorePage
 
-    //Object.keys(model.team) + " " + Object.values(model.team) === team roles + team members
-
+    Component.onCompleted: {
+  //      scrollViewLoader.sourceComponent = scrollComponent
+        console.log("EXPLORE ON.COMPLETED")
+    }
     function truncateString(str, num) {
         return str;
     }
@@ -42,37 +44,35 @@ Page {
         ]
         sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
     }
-    ScrollView {
+    AppFlickable {
         anchors.fill: parent
+        contentHeight: scrollRow.height
         Row {
-            anchors.fill: parent
-            spacing: dp(5)
-            anchors.margins: dp(5)
+            id: scrollRow; width: explorePage.width; height: explorePage.height;
             AppListView {
-                id: evenModelView; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (parent.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
-                delegate: Rectangle {
-                    width: parent.width
-                    height: evenImage.height + evenText.height
-                    Column {
-                        anchors.fill: parent
-                        AppImage {id: evenImage; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
-                        AppText {id: evenText; width: parent.width; text: model.owner.username}
-                    }
-                }
+                id: evenModelView; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (explorePage.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
+                delegate: AppImage {id: evenImage; height: Image.height; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
             }
-            Rectangle {width: dp(5); height: evenModelView.height}
-
             AppListView {
-                id: oddModelView; model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (parent.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
-                delegate: Rectangle {
-                    width: parent.width
-                    height: oddImage.height + oddText.height
-                    Column {
-                        anchors.fill: parent
-                        AppImage {id: oddImage; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
-                        AppText {id: oddText; width: parent.width; text: model.owner.username}
-                    }
-                }
+                id: oddModelView; model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (explorePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
+                delegate: AppImage {id: oddImage; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
+            }
+        }
+
+    }
+
+ /*   Loader {
+        id: scrollViewLoader
+        anchors.fill: parent
+    }
+
+    Component {
+        id: scrollComponent
+        Item {
+            anchors.fill: parent
+            ScrollView {
+                anchors.fill: parent
+                contentChildren: [scrollRow, evenModelView, oddModelView]
             }
         }
     }
@@ -87,5 +87,5 @@ Page {
                 }
             }
         }
-    }
+    }*/
 }

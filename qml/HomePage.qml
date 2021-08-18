@@ -13,12 +13,12 @@ Page {
         keyField: "id"
         fields: ["id", "owner", "downloadUrl", "timestamp","tag", "post_description", "team", "liked_by", "location"]
     }
-    SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "hair"; }}}
-    SortFilterProxyModel {id: makeupSortedModel;Component.onCompleted: {sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "makeup"}}}
-    SortFilterProxyModel {id: wardrobeSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "wardrobe"}}}
-    SortFilterProxyModel {id: photoSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "photo"}}}
-    SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {app.userFeedChanged(); console.log("<br>"+jsonModel.count+"<br>") ;sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Model"}}}
-    SortFilterProxyModel {id: locationSortedModel; Component.onCompleted: {sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "location"}}}
+    SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
+    SortFilterProxyModel {id: makeupSortedModel;Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Makeup"}}}
+    SortFilterProxyModel {id: wardrobeSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Wardrobe"}}}
+    SortFilterProxyModel {id: photoSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Photographer"}}}
+    SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Model"}}}
+    SortFilterProxyModel {id: locationSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Studio"}}}
 
     rightBarItem: IconButtonBarItem {
         icon: IconType.search
@@ -40,10 +40,9 @@ Page {
                             MouseArea {
                                 anchors.fill: parent                               
                                 onClicked: {
-                                    exploreStack.push(explorePage)
-                                    exploreFilter = Object.keys(arr[index]).toString()
-                                    explorePage.title = Object.values(arr[index]).toString()
-                                    //exploreModal.open()
+                                    exploreFilter = Object.keys(arr[index]).toString();
+                                    explorePageTitle = Object.values(arr[index]).toString();
+                                    exploreStack.push(explorePage);
                                 }
                             }
                         }
@@ -66,8 +65,8 @@ Page {
                                         MouseArea {
                                             anchors.fill: parent                                            
                                             onClicked: {
-                                                exploreStack.push(viewPostPage)
-                                                viewPostID = model.id;
+                                                exploreStack.push(viewPostPage);
+                                                viewPostID = model.id;;
                                                 //viewPostModal.open()
                                             }
                                         }
@@ -80,17 +79,7 @@ Page {
             }
         }
     }
-    /*AppModal {
-        id: exploreModal; fullscreen: true; pushBackContent: navigationRoot
-        NavigationStack {
-            Explore {
-                id: exploreModalPage; clip: true
-                rightBarItem: TextButtonBarItem {
-                    text: "Close"; textItem.font.pixelSize: sp(16); onClicked: exploreModal.close()
-                }
-            }
-        }
-    }
+    /*
     AppModal {
         id: viewPostModal; pushBackContent: navigationRoot
         NavigationStack {
