@@ -132,7 +132,7 @@ Page {
                                 model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96
                                 width: parent.width/2; spacing: dp(5);scrollIndicatorVisible: false;
                                 delegate: AppCard {
-                                    id: card
+                                    id: card2
                                     width: parent.width
                                     margin: dp(15)
                                     paper.radius: dp(5)
