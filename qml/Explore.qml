@@ -42,7 +42,6 @@ Page {
         ]
         sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
     }
-
     ScrollView {
         anchors.fill: parent
         Row {
@@ -51,13 +50,29 @@ Page {
             anchors.margins: dp(5)
             AppListView {
                 id: evenModelView; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (parent.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
-                delegate: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
+                delegate: Rectangle {
+                    width: parent.width
+                    height: evenImage.height + evenText.height
+                    Column {
+                        anchors.fill: parent
+                        AppImage {id: evenImage; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
+                        AppText {id: evenText; width: parent.width; text: model.owner.username}
+                    }
+                }
             }
             Rectangle {width: dp(5); height: evenModelView.height}
 
             AppListView {
                 id: oddModelView; model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (parent.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
-                delegate: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
+                delegate: Rectangle {
+                    width: parent.width
+                    height: oddImage.height + oddText.height
+                    Column {
+                        anchors.fill: parent
+                        AppImage {id: oddImage; width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl}
+                        AppText {id: oddText; width: parent.width; text: model.owner.username}
+                    }
+                }
             }
         }
     }
