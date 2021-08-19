@@ -81,7 +81,6 @@ Page {
                         horizontalAlignment: Text.AlignHCenter
                     }
                 }
-
             }
         Row {
             id: scrollRow; width: homePage.width; height: homePage.height;
@@ -118,6 +117,14 @@ Page {
 
                     // Some useless buttons to display in the actions cell
                 }
+                add: Transition {
+                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+                }
+
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
+                }
             }
             AppListView {
                 id: oddModelView; interactive: false; model: sortedModelOdd; scale: 0.96; width: (homePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
@@ -151,6 +158,14 @@ Page {
                     }
 
                     // Some useless buttons to display in the actions cell
+                }
+                add: Transition {
+                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+                }
+
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
                 }
 
 
