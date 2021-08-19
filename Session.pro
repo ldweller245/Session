@@ -91,7 +91,6 @@ DISTFILES += \
     qml/Components/TimeTumbler.qml \
     qml/Components/ViewFeedComp.qml \
     qml/Create.qml \
-    qml/Explore.qml \
     qml/HomePage.qml \
     qml/Inbox.qml \
     qml/LoadingPage.qml \
