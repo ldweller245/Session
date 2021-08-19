@@ -8,6 +8,9 @@ Page {
 
     property var selectedView: singleColumnButton
 
+    function truncateString(str, num) {
+        return str;
+    }
     function isEven(n) {
         return n % 2 == 0;
     }
@@ -72,112 +75,83 @@ Page {
                     anchors.fill: parent
                     AppFlickable {
                         contentHeight: scrollRow.height
-                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height + dp(evenModelView.spacing)
                         Row {
                             id: scrollRow
                             width: userProfilePage.width
-                            height: userProfilePage.height
+                            height: userProfilePage.height + evenModelView.spacing
                             AppListView {
                                 id: evenModelView
-                                model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96
+                                interactive: false;
+                                model: sortedModelEven; emptyText.text: qsTr("No posts yet!")
                                 width: parent.width/2; spacing: dp(5); scrollIndicatorVisible: false;
                                 delegate: AppCard {
                                     id: card
                                     width: parent.width
-                                    margin: dp(15)
+                                    margin: dp(5)
                                     paper.radius: dp(5)
 
                                     // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
-                                    header: SimpleRow {
-                                      imageSource: userData.profile_Pic_URL
-                                      text: userData.username
-                                      enabled: false
-                                      image.radius: image.width/2
-                                      image.fillMode: Image.PreserveAspectCrop
-                                      style: StyleSimpleRow {
-                                        showDisclosure: false
-                                        backgroundColor: "transparent"
-                                      }
-                                    }
                                     // For the media cell, we use a simple AppImage
                                     media: AppImage {
-                                      width: parent.width
-                                      fillMode: Image.PreserveAspectFit
-                                      source: model.downloadUrl
+                                        width: parent.width
+                                        fillMode: Image.PreserveAspectFit
+                                        source: model.downloadUrl
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl)
+                                            onReleased: PictureViewer.close()
+                                        }
                                     }
 
                                     // For the content cell, we use some placeholder text
                                     content: AppText{
-                                      width: parent.width
-                                      padding: dp(15)
-                                      text: model.post_description
+                                        width: parent.width
+                                        padding: dp(15)
+                                        maximumLineCount: 2
+                                        elide: Text.ElideLeft
+                                        wrapMode: Text.Wrap
+                                        text: model.post_description
                                     }
-
-                                    // Some useless buttons to display in the actions cell
-                                    actions: Row {
-                                      IconButton {
-                                        icon: IconType.thumbsup
-                                      }
-                                      IconButton {
-                                        icon: IconType.sharealt
-                                      }
-                                      AppButton {
-                                        text: "Follow"
-                                        flat: true
-                                      }
-                                    }
-                                  }
+                                }
                             }
                             AppListView {
                                 id: oddModelView
-                                model: sortedModelOdd; emptyText.text: qsTr("No posts yet!"); scale: 0.96
+                                interactive: false;
+                                model: sortedModelOdd; emptyText.text: qsTr("No posts yet!");
                                 width: parent.width/2; spacing: dp(5);scrollIndicatorVisible: false;
                                 delegate: AppCard {
                                     id: card2
                                     width: parent.width
-                                    margin: dp(15)
+                                    margin: dp(5)
                                     paper.radius: dp(5)
 
                                     // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
-                                    header: SimpleRow {
-                                      imageSource: userData.profile_Pic_URL
-                                      text: userData.username
-                                      enabled: false
-                                      image.radius: image.width/2
-                                      image.fillMode: Image.PreserveAspectCrop
-                                      style: StyleSimpleRow {
-                                        showDisclosure: false
-                                        backgroundColor: "transparent"
-                                      }
-                                    }
                                     // For the media cell, we use a simple AppImage
                                     media: AppImage {
-                                      width: parent.width
-                                      fillMode: Image.PreserveAspectFit
-                                      source: model.downloadUrl
+                                        width: parent.width
+                                        fillMode: Image.PreserveAspectFit
+                                        source: model.downloadUrl
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl)
+                                            onReleased: PictureViewer.close()
+                                        }
                                     }
 
                                     // For the content cell, we use some placeholder text
                                     content: AppText{
-                                      width: parent.width
-                                      padding: dp(15)
-                                      text: model.post_description
+                                        width: parent.width
+                                        padding: dp(15)
+                                        maximumLineCount: 2
+                                        elide: Text.ElideLeft
+                                        wrapMode: Text.Wrap
+                                        text: model.post_description
                                     }
 
                                     // Some useless buttons to display in the actions cell
-                                    actions: Row {
-                                      IconButton {
-                                        icon: IconType.thumbsup
-                                      }
-                                      IconButton {
-                                        icon: IconType.sharealt
-                                      }
-                                      AppButton {
-                                        text: "Follow"
-                                        flat: true
-                                      }
-                                    }
-                                  }
+                                }
                             }
                         }
                     }
@@ -197,7 +171,7 @@ Page {
                             SimpleSection {title: "Specialitites:"}
                             Column {width: parent.width; Repeater {model: userData.specialities; AppText {padding: dp(20); text: "\u{2022} " +modelData}}}
                             SimpleSection {title: "Details:"}
-                            Column {width: parent.width; Repeater {model: Object.keys(userData.measurements); delegate: SimpleRow { text: Object.keys(userData.measurements)[index] + ": "+Object.values(userData.measurements)[index];showDisclosure: false }}}
+                            Column {width: parent.width; Repeater {model: Object.keys(userData.measurements); delegate: SimpleRow {enabled: false; text: Object.keys(userData.measurements)[index] + ": "+Object.values(userData.measurements)[index];showDisclosure: false }}}
                         }
                     }
                 }

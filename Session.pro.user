@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.2, 2021-08-18T21:33:38. -->
+<!-- Written by QtCreator 4.11.2, 2021-08-18T23:16:17. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -859,7 +859,6 @@
     <valuelist type="QVariantList" key="Android.PreStartShellCmdListKey"/>
     <value type="int" key="PE.EnvironmentAspect.Base">0</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Session</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.AndroidRunConfiguration:C:/Users/sk8du/OneDrive/Documents/Applications/Session/Session.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/sk8du/OneDrive/Documents/Applications/Session/Session.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
@@ -1144,7 +1143,6 @@
     <valuelist type="QVariantList" key="Android.PreStartShellCmdListKey"/>
     <value type="int" key="PE.EnvironmentAspect.Base">0</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Session</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.AndroidRunConfiguration:C:/Users/sk8du/OneDrive/Documents/Applications/Session/Session.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/sk8du/OneDrive/Documents/Applications/Session/Session.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
