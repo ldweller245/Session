@@ -78,7 +78,7 @@ App {
     property var imagePath
     property var imagePathID
     property var viewPostID
-    property var exploreFilter
+    property var exploreFilter: "Everything"
     property var explorePageTitle
     property var otherUserID
 

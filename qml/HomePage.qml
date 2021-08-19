@@ -7,76 +7,159 @@ Page {
     id: homePage
     title: "EXPLORE"
 
+    property var headerArr: ["Everything", "Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]
+
+    function isEven(n) {
+        return n % 2 == 0;
+    }
+
+    function isOdd(n) {
+        return Math.abs(n % 2) == 1;
+    }
+
+
     JsonListModel {
         id: jsonModel
         source: userFeed
         keyField: "id"
         fields: ["id", "owner", "downloadUrl", "timestamp","tag", "post_description", "team", "liked_by", "location"]
     }
-    SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
-    SortFilterProxyModel {id: makeupSortedModel;Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Makeup"}}}
-    SortFilterProxyModel {id: wardrobeSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Wardrobe"}}}
-    SortFilterProxyModel {id: photoSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Photographer"}}}
-    SortFilterProxyModel {id: modelSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Model"}}}
-    SortFilterProxyModel {id: locationSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel}filters: ExpressionFilter {expression: {model.tag === "Studio"}}}
-
+    SortFilterProxyModel {
+        id: sortedModelOdd;
+        Component.onCompleted: {sourceModel = jsonModel}
+        filters: [
+            ExpressionFilter {expression: model.tag === exploreFilter; enabled: exploreFilter !== "Everything"},
+            ExpressionFilter {expression: isOdd(index)}
+        ]
+        sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
+    }
+    SortFilterProxyModel {
+        id: sortedModelEven;
+        Component.onCompleted: {sourceModel = jsonModel}
+        filters: [
+            ExpressionFilter {expression: model.tag === exploreFilter; enabled: exploreFilter !== "Everything"},
+            ExpressionFilter {expression: isEven(index)}
+        ]
+        sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
+    }
     rightBarItem: IconButtonBarItem {
         icon: IconType.search
         onClicked: {}
     }
+
+
     AppFlickable {
-        anchors.fill: parent; contentHeight: content.height
+        anchors.fill: parent
+        contentHeight: scrollRow.height
         Column {
-            id: content; width: parent.width
-            Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)}
-            Repeater {
-                id: repeater; model: arr.length
-                Rectangle {
-                    width: parent.width; height: homePage.height /3
-                    Column {
-                        id: contentCol; width: parent.width; height: parent.height
-                        AppText {
-                            id: titleText; width: homePage.width; text: "<b>"+Object.values(arr[index]) + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); bottomPadding: dp(10)
-                            MouseArea {
-                                anchors.fill: parent                               
-                                onClicked: {
-                                    exploreFilter = Object.keys(arr[index]).toString();
-                                    explorePageTitle = Object.values(arr[index]).toString();
-                                    exploreStack.push(explorePage);
-                                }
-                            }
-                        }
-                        Item {
-                            id: item; width: homePage.width; height: homePage.height
-                            AppListView {
-                                model: {
-                                    if(index === 0){hairSortedModel}
-                                    else if(index === 1){makeupSortedModel}
-                                    else if(index === 2){wardrobeSortedModel}
-                                    else if(index === 3){photoSortedModel}
-                                    else if(index === 4){modelSortedModel}
-                                    else if(index === 5){locationSortedModel}
-                                }
-                                spacing: dp(15); orientation: ListView.Horizontal; anchors.fill: parent
-                                delegate: Rectangle {
-                                    height: (item.width / 10)*5; width: (item.width / 10)*4
-                                    AppImage {
-                                        anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
-                                        MouseArea {
-                                            anchors.fill: parent                                            
-                                            onClicked: {
-                                                exploreStack.push(viewPostPage);
-                                                viewPostID = model.id;;
-                                                //viewPostModal.open()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            anchors.fill: parent
+            AppListView {
+                id: scrollModel
+                orientation: ListView.Horizontal
+                width: homePage.width
+                height: dp(Theme.tabBar.height)
+                model: headerArr
+                delegate: Rectangle {
+                    height: parent.height; width: (homePage.width / 10)*4
+                    color: scrollModel.currentIndex === index ? "black" : "white"
+                    border.color: "black"
+                    border.width: dp(3)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("CLICKED");
+                            exploreFilter = headerArr[index]
+                            scrollModel.currentIndex = index
+                    }
+                    }
+
+                    AppText {
+                        id: swipeSelectText
+                        text: modelData
+                        color: scrollModel.currentIndex === index ? "white" : "black"
+                        anchors.centerIn: parent
+                        horizontalAlignment: Text.AlignHCenter
                     }
                 }
+
             }
+        Row {
+            id: scrollRow; width: homePage.width; height: homePage.height;
+            AppListView {
+                id: evenModelView; interactive: false; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (homePage.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
+                delegate:AppCard {
+                    id: evenImage
+                    width: parent.width
+                    margin: dp(5)
+                    paper.radius: dp(5)
+
+                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
+                    // For the media cell, we use a simple AppImage
+                    media: AppImage {
+                        width: parent.width
+                        fillMode: Image.PreserveAspectFit
+                        source: model.downloadUrl
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl)
+                            onReleased: PictureViewer.close()
+                        }
+                    }
+
+                    // For the content cell, we use some placeholder text
+                    content: AppText{
+                        width: parent.width
+                        padding: dp(15)
+                        maximumLineCount: 2
+                        elide: Text.ElideRight
+                        wrapMode: Text.Wrap
+                        text: model.owner.username
+                    }
+
+                    // Some useless buttons to display in the actions cell
+                }
+            }
+            AppListView {
+                id: oddModelView; interactive: false; model: sortedModelOdd; scale: 0.96; width: (homePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
+                delegate: AppCard {
+                    id: oddImage
+                    width: parent.width
+                    margin: dp(5)
+                    paper.radius: dp(5)
+
+                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
+                    // For the media cell, we use a simple AppImage
+                    media: AppImage {
+                        width: parent.width
+                        fillMode: Image.PreserveAspectFit
+                        source: model.downloadUrl
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl)
+                            onReleased: PictureViewer.close()
+                        }
+                    }
+
+                    // For the content cell, we use some placeholder text
+                    content: AppText{
+                        width: parent.width
+                        padding: dp(15)
+                        maximumLineCount: 2
+                        elide: Text.ElideRight
+                        wrapMode: Text.Wrap
+                        text: model.owner.username
+                    }
+
+                    // Some useless buttons to display in the actions cell
+                }
+
+
+
+
+
+
+            }
+        }
         }
     }
     /*

@@ -108,7 +108,7 @@ Page {
                                         width: parent.width
                                         padding: dp(15)
                                         maximumLineCount: 2
-                                        elide: Text.ElideLeft
+                                        elide: Text.ElideRight
                                         wrapMode: Text.Wrap
                                         text: model.post_description
                                     }
@@ -143,7 +143,7 @@ Page {
                                         width: parent.width
                                         padding: dp(15)
                                         maximumLineCount: 2
-                                        elide: Text.ElideLeft
+                                        elide: Text.ElideRight
                                         wrapMode: Text.Wrap
                                         text: model.post_description
                                     }
