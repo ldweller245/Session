@@ -21,7 +21,7 @@ App {
     LocationModel {id: locationModel}
     HomePage {id: homePage}
     HomeFlickable {id: homeFlickable}
-    OtherUserProfile {id: otherUserProfile; onUpdateList: {}}
+    OtherUserProfile {id: otherUserProfile}
     LoadingPage {
         z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false
         Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}

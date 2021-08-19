@@ -6,8 +6,6 @@ import QtQuick.Layouts 1.1
 Page {
     id: userProfilePage
 
-    property var selectedView: singleColumnButton
-
     function truncateString(str, num) {
         return str;
     }
@@ -177,10 +175,5 @@ Page {
                 }
             }
         }
-    }
-    Row {
-        z:10; visible: tabControl.currentIndex === 0 ? true : false; width: parent.width; spacing: dp(8); height: singleColumnButton.height; anchors.bottom: parent.bottom
-        FloatingActionButton {id: singleColumnButton; visible: true; icon: IconType.squareo; anchors.right: undefined; onClicked: selectedView = singleColumnButton; backgroundColor: selectedView === singleColumnButton ? "lightgrey" : "white"}
-        FloatingActionButton {id: dualColumnButton; visible: true; icon: IconType.pause; anchors.right: undefined; onClicked: selectedView = dualColumnButton; backgroundColor: selectedView === dualColumnButton ? "lightgrey" : "white"}
     }
 }
