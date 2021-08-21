@@ -44,16 +44,6 @@ Item {
     readonly property string realtimeChats: "chats/"
     readonly property string realtimeOtherUserDetails: "userData/" + otherUserID
 
-    //readonly property string dbKeyAllCalendarItems: "groups" + "/" + groupName
-    //readonly property string dbKeyAllUsers: "groups" + "/" + groupName + "/" + "users"
-    //readonly property string dbKeyLocations: "locations"
-
-
-    /*Timer {
-        interval: 60000; running: true; repeat: true
-        onTriggered: getMasterFeed()
-    }*/
-
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
@@ -104,7 +94,6 @@ Item {
                     } else if (finished && success) {remoteFilePath = downloadUrl; addToNameList(uuid, rusername) ; db.setUserValue("details", regUserDetails); db.setValue("userData/"+uuid+"/profile_Pic_URL", remoteFilePath); userData = regDetails; registerPage.visible = false; loginPage.visible = false}
                 })
             }
-            getMasterFeed()
         }
         onLoggedIn: {
             userData = [];
@@ -120,18 +109,13 @@ Item {
                                         }
                                     })
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
-
                                 }
                             })
             console.debug("User login " + success + " - " + message);
             if(success) {registerPage.visible = false; loginPage.visible = false}
         }
     }
-
-    FirebaseStorage {
-        id: storage
-        config: firebaseConfig
-    }
+    FirebaseStorage {id: storage; config: firebaseConfig}
 
     property var inboxJson: [{}]
     property var notificationJson: [{}]
@@ -184,330 +168,28 @@ Item {
             }
         }
     ]
-    property var otherUserJson: {
-        1: {
-            "id": 1, //userID
-            "firstname": "Jo",
-            "surname": "Brown",
-            "profile_Pic_URL": "",
-            "email": "JoBrown@live.co.uk",
-            "username": "JoBrownLondon",
-            "role": "Hairstylist", //Hair, Clothes, Location
-            "bio": "", //userBIO
-            "location": "Essex, UK",
-            "lastActive": 1590527342000,
-            "experience": "Highly Experienced",
-            "tfpStatus": "",
-            "portfolio": [{}],
-            "blocked_by_user": false,
-            "has_blocked_user": false,
-            "followed_by_user": true,
-            "follows_user": true,
-            "measurements": [
-                {"height": "180cm"},
-                {"shoe": "8"},
-                {"waist": "32"},
-                {"hair": "brown"},
-                {"eye": "blue"}
-            ],
-            "specialities": ["Fashion", "Film", "Editorial"],
-            "feed_count": 9,
-            "feed_posts": {
-                "p1": {//postID
-                    "id": "p1",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_e9ace1093c0444cf9749e534c0672272~mv2.jpeg/v1/fill/w_567,h_851,al_c,q_85,usm_0.66_1.00_0.01/d26481_e9ace1093c0444cf9749e534c0672272~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320528,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":"null",
-                    "thumbnail_src":"https://static.wixstatic.com/media/d26481_e9ace1093c0444cf9749e534c0672272~mv2.jpeg/v1/fill/w_567,h_851,al_c,q_85,usm_0.66_1.00_0.01/d26481_e9ace1093c0444cf9749e534c0672272~mv2.webp",
-                },
-                "p2": {//postID
-                    "id": "p2",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_e9ace1093c0444cf9749e534c0672272~mv2.jpeg/v1/fill/w_567,h_851,al_c,q_85,usm_0.66_1.00_0.01/d26481_e9ace1093c0444cf9749e534c0672272~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320529,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p3": {//postID
-                    "id": "p3",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_57a2802e01c14e63bcc7989920cb5b98~mv2.jpg/v1/fill/w_603,h_851,al_c,q_85,usm_0.66_1.00_0.01/d26481_57a2802e01c14e63bcc7989920cb5b98~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320530,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p4": {//postID
-                    "id": "p4",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_c007fb8760804d569dff3f2c491c928b~mv2.jpg/v1/fill/w_506,h_674,al_c,lg_1,q_80/d26481_c007fb8760804d569dff3f2c491c928b~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320531,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p5": {//postID
-                    "id": "p5",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_c007fb8760804d569dff3f2c491c928b~mv2.jpg/v1/fill/w_506,h_674,al_c,lg_1,q_80/d26481_c007fb8760804d569dff3f2c491c928b~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320532,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p6": {//postID
-                    "id": "p6",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.jpg/v1/fill/w_445,h_674,al_c,lg_1,q_80/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320533,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p7": {//postID
-                    "id": "p7",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.jpg/v1/fill/w_445,h_674,al_c,lg_1,q_80/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320534,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p8": {//postID
-                    "id": "p8",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_fde2922024c84e7a817a5a19cfbf096f~mv2.jpg/v1/fill/w_446,h_674,al_c,lg_1,q_80/d26481_fde2922024c84e7a817a5a19cfbf096f~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320535,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":"",
-                },
-                "p9": {//postID
-                    "id": "p9",
-                    "dimensions":{
-                        "height":1139,
-                        "width":1080
-                    },
-                    "display_url":"https://static.wixstatic.com/media/d26481_e2ce8706db0d4bd3b24f90278294f3b0~mv2.jpg/v1/fill/w_466,h_674,al_c,lg_1,q_80/d26481_e2ce8706db0d4bd3b24f90278294f3b0~mv2.webp", //post Image URL
-                    "owner":{
-                        "id":"1",
-                        "username":"JoBrownLondon"
-                    },
-                    "post_description" : "", //post Description
-                    "timestamp":1603320536,
-                    "team": {
-                    },
-                    "liked_by":{
-                        "count":0
-                    },
-                    "location":null,
-                    "thumbnail_src":""
-                }
-            }
-        }
-    }
-    property var discover_hair: [
-        {
-            987654322: {//postID
-                "id": 987654322,
-                "dimensions":{
-                    "height":1139,
-                    "width":1080
-                }, //jo
-                "display_url":"https://static.wixstatic.com/media/d26481_25526c9b62364d93951d69c2f236ed1c~mv2.jpg/v1/fill/w_567,h_851,al_c,q_85,usm_0.66_1.00_0.01/d26481_25526c9b62364d93951d69c2f236ed1c~mv2.webp", //post Image URL
-                "owner":{
-                    "id":"12345",
-                    "username":"Jo Brown"
-                },
-                "post_description" : "", //post Description
-                "timestamp":1603320528,
-                "team": {
-                },
-                "liked_by":{
-                    "count":1007
-                },
-                "location":null,
-                "thumbnail_src":"",
-            },
-            987654323: {//postID
-                "id": 987654323,
-                "dimensions":{
-                    "height":1139,
-                    "width":1080
-                }, //jo
-                "display_url":"https://static.wixstatic.com/media/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.jpg/v1/fill/w_445,h_674,al_c,lg_1,q_80/d26481_bb1fd69592d442d38d6893a3ad95aa31~mv2.webp", //post Image URL
-                "owner":{
-                    "id":"12345",
-                    "username":"Jo Brown"
-                },
-                "post_description" : "", //post Description
-                "timestamp":1603320528,
-                "team": {
-                },
-                "liked_by":{
-                    "count":0
-                },
-                "location":null,
-                "thumbnail_src":"",
-            }
-        }
-    ]
-
-
     //
     //
     // registration section
     function registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp, specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing,  profileImagePath, bio,bust, dressSize) {
         firebaseAuth.logoutUser()
         uuid = uniqueID()
-        rrole = role
-        rgender = gender
-        rfirstname = firstname
-        rsurname = surname
-        rusername = username
-        remail = email
-        rpassword = password
-        rbaseLocation = baseLocation
-        rexperience = experience
-        rtfp = tfp
-        rspecialities = specialities
-        rage = age
-        rheightCM = heightCM
-        rethnicity = ethnicity
-        rhairColor = hairColor
-        rhairLength = hairLength
-        rskinColor = skinColor
-        reyeColor = eyeColor
-        rshoeSize = shoeSize
-        rwaist = waist
-        rhips = hips
-        rinseam = inseam
-        rsuitSize = suitSize
-        rtattoo = tattoo
-        rpiercing = piercing
-        rprofileImagePath = profileImagePath
-        rbio = bio
-        rbust = bust
-        rdressSize = dressSize
-        remoteFilePath = profileImagePath
+        rrole = role; rgender = gender; rfirstname = firstname; rsurname = surname
+        rusername = username; remail = email; rpassword = password; rbaseLocation = baseLocation
+        rexperience = experience; rtfp = tfp; rspecialities = specialities; rage = age
+        rheightCM = heightCM; rethnicity = ethnicity; rhairColor = hairColor; rhairLength = hairLength
+        rskinColor = skinColor; reyeColor = eyeColor; rshoeSize = shoeSize; rwaist = waist
+        rhips = hips; rinseam = inseam; rsuitSize = suitSize; rtattoo = tattoo
+        rpiercing = piercing; rprofileImagePath = profileImagePath; rbio = bio; rbust = bust
+        rdressSize = dressSize; remoteFilePath = profileImagePath
 
         if(role === "Model") {
             if(gender === "Male"){
                 regDetails = ({"id": uuid,
-                                  "role": rrole,
-                                  "gender": rgender,
-                                  "firstname": rfirstname,
-                                  "surname": rsurname,
-                                  "username": rusername,
-                                  "email": remail,
-                                  "location": rbaseLocation,
-                                  "specialities": rspecialities,
-                                  "profile_Pic_URL": remoteFilePath,
-                                  "bio": rbio,
-                                  "lastActive": new Date().getTime(),
-                                  "blocked_by_user": false,
-                                  "has_blocked_user": false,
-                                  "followed_by_user": true,
-                                  "follows_user": true,
+                                  "role": rrole, "gender": rgender,"firstname": rfirstname, "surname": rsurname,
+                                  "username": rusername, "email": remail, "location": rbaseLocation, "specialities": rspecialities,
+                                  "profile_Pic_URL": remoteFilePath, "bio": rbio, "lastActive": new Date().getTime(),
+                                  "blocked_by_user": false, "has_blocked_user": false, "followed_by_user": true, "follows_user": true,
                                   "feedCount": 0,
                                   "followers": {
                                       "follower_count": 0,
@@ -518,41 +200,18 @@ Item {
                                       "follow_list": {}
                                   },
                                   "measurements": {
-                                      "Experience": rexperience,
-                                      "TFP": rtfp,
-                                      "Age": rage,
-                                      "Height": rheightCM,
-                                      "Ethnicity": rethnicity,
-                                      "Hair Color": rhairColor,
-                                      "Hair Length": rhairLength,
-                                      "Skin": rskinColor,
-                                      "Eyes": reyeColor,
-                                      "Shoe": rshoeSize,
-                                      "Waist": rwaist,
-                                      "Inseam": rinseam,
-                                      "Suit": rsuitSize,
-                                      "Piercings": rpiercing,
-                                      "Tattoos": rtattoo
+                                      "Experience": rexperience, "TFP": rtfp, "Age": rage, "Height": rheightCM,
+                                      "Ethnicity": rethnicity, "Hair Color": rhairColor, "Hair Length": rhairLength, "Skin": rskinColor,
+                                      "Eyes": reyeColor, "Shoe": rshoeSize, "Waist": rwaist, "Inseam": rinseam,
+                                      "Suit": rsuitSize, "Piercings": rpiercing, "Tattoos": rtattoo
                                   }
                               })
             }else if(gender === "Female") {
                 regDetails = ({"id": uuid,
-                                  "role": rrole,
-                                  "gender": rgender,
-                                  "firstname": rfirstname,
-                                  "surname": rsurname,
-                                  "username": rusername,
-                                  "email": remail,
-                                  "location": rbaseLocation,
-                                  "specialities": rspecialities,
-                                  "profile_Pic_URL": remoteFilePath,
-                                  "bio": rbio,
-                                  "lastActive": new Date().getTime(),
-                                  "blocked_by_user": false,
-                                  "has_blocked_user": false,
-                                  "followed_by_user": true,
-                                  "follows_user": true,
-                                  "feedCount": 0,
+                                  "role": rrole, "gender": rgender, "firstname": rfirstname, "surname": rsurname,
+                                  "username": rusername, "email": remail, "location": rbaseLocation, "specialities": rspecialities,
+                                  "profile_Pic_URL": remoteFilePath, "bio": rbio, "lastActive": new Date().getTime(), "blocked_by_user": false,
+                                  "has_blocked_user": false, "followed_by_user": true, "follows_user": true, "feedCount": 0,
                                   "followers": {
                                       "follower_count": 0,
                                       "follower_list": {}
@@ -562,43 +221,19 @@ Item {
                                       "follow_list": {}
                                   },
                                   "measurements": {
-                                      "Experience": rexperience,
-                                      "TFP": rtfp,
-                                      "Age": rage,
-                                      "Height": rheightCM,
-                                      "Ethnicity": rethnicity,
-                                      "Hair Color": rhairColor,
-                                      "Hair Length": rhairLength,
-                                      "Skin": rskinColor,
-                                      "Eyes": reyeColor,
-                                      "Shoe": rshoeSize,
-                                      "Waist": rwaist,
-                                      "Hips": rhips,
-                                      "Bust": rbust,
-                                      "Dress": rdressSize,
-                                      "Piercings": rpiercing,
-                                      "Tattoos": rtattoo
+                                      "Experience": rexperience, "TFP": rtfp, "Age": rage, "Height": rheightCM,
+                                      "Ethnicity": rethnicity, "Hair Color": rhairColor, "Hair Length": rhairLength, "Skin": rskinColor,
+                                      "Eyes": reyeColor, "Shoe": rshoeSize, "Waist": rwaist, "Hips": rhips,
+                                      "Bust": rbust, "Dress": rdressSize, "Piercings": rpiercing, "Tattoos": rtattoo
                                   }
                               })
-
             }else {
                 regDetails = ({"id": uuid,
                                   "role": rrole,
-                                  "firstname": rfirstname,
-                                  "surname": rsurname,
-                                  "username": rusername,
-                                  "gender": rgender,
-                                  "email": remail,
-                                  "location": rbaseLocation,
-                                  "specialities": rspecialities,
-                                  "profile_Pic_URL": remoteFilePath,
-                                  "bio": rbio,
-                                  "lastActive": new Date().getTime(),
-                                  "blocked_by_user": false,
-                                  "has_blocked_user": false,
-                                  "followed_by_user": true,
-                                  "follows_user": true,
-                                  "feedCount": 0,
+                                  "firstname": rfirstname, "surname": rsurname, "username": rusername, "gender": rgender,
+                                  "email": remail, "location": rbaseLocation, "specialities": rspecialities,
+                                  "profile_Pic_URL": remoteFilePath, "bio": rbio, "lastActive": new Date().getTime(),
+                                  "blocked_by_user": false, "has_blocked_user": false, "followed_by_user": true, "follows_user": true, "feedCount": 0,
                                   "followers": {
                                       "follower_count": 0,
                                       "follower_list": {}
@@ -608,46 +243,21 @@ Item {
                                       "follow_list": {}
                                   },
                                   "measurements": {
-                                      "Experience": rexperience,
-                                      "TFP": rtfp,
-                                      "Age": rage,
-                                      "Height": rheightCM,
-                                      "Ethnicity": rethnicity,
-                                      "Hair Color": rhairColor,
-                                      "Hair Length": rhairLength,
-                                      "Skin": rskinColor,
-                                      "Eyes": reyeColor,
-                                      "Shoe": rshoeSize,
-                                      "Waist": rwaist,
-                                      "Hips": rhips,
-                                      "Inseam": rinseam,
-                                      "Suit": rsuitSize,
-                                      "Bust": rbust,
-                                      "Dress": rdressSize,
-                                      "Piercings": rpiercing,
-                                      "Tattoos": rtattoo
+                                      "Experience": rexperience, "TFP": rtfp, "Age": rage, "Height": rheightCM,
+                                      "Ethnicity": rethnicity, "Hair Color": rhairColor, "Hair Length": rhairLength, "Skin": rskinColor,
+                                      "Eyes": reyeColor, "Shoe": rshoeSize, "Waist": rwaist, "Hips": rhips,
+                                      "Inseam": rinseam, "Suit": rsuitSize, "Bust": rbust, "Dress": rdressSize,
+                                      "Piercings": rpiercing, "Tattoos": rtattoo
                                   }
                               })
 
             }
         } else {
             regDetails = ({"id": uuid,
-                              "role": rrole,
-                              "gender": rgender,
-                              "firstname": rfirstname,
-                              "surname": rsurname,
-                              "username": rusername,
-                              "email": remail,
-                              "location": rbaseLocation,
-                              "specialities": rspecialities,
-                              "profile_Pic_URL": remoteFilePath,
-                              "bio": rbio,
-                              "lastActive": new Date().getTime(),
-                              "blocked_by_user": false,
-                              "has_blocked_user": false,
-                              "followed_by_user": true,
-                              "follows_user": true,
-                              "feedCount": 0,
+                              "role": rrole, "gender": rgender, "firstname": rfirstname, "surname": rsurname,
+                              "username": rusername, "email": remail, "location": rbaseLocation, "specialities": rspecialities,
+                              "profile_Pic_URL": remoteFilePath, "bio": rbio, "lastActive": new Date().getTime(), "blocked_by_user": false,
+                              "has_blocked_user": false, "followed_by_user": true, "follows_user": true, "feedCount": 0,
                               "followers": {
                                   "follower_count": 0,
                                   "follower_list": {}
@@ -663,14 +273,7 @@ Item {
                           })
 
         }
-        regUserDetails = {
-            "id": uuid,
-            "role": rrole,
-            "firstname": rfirstname,
-            "surname": rsurname,
-            "username": rusername,
-            "email": remail
-        }
+        regUserDetails = {"id": uuid, "role": rrole, "firstname": rfirstname, "surname": rsurname, "username": rusername, "email": remail}
         db.setValue("userData/"+uuid, regDetails)
         firebaseAuth.registerUser(email, password)
     }
@@ -687,13 +290,23 @@ Item {
     function resetPassword(email) {
         firebaseAuth.sendPasswordResetMail(email)
     }
-    function updateUserData() {
-
+    function addToNameList(id, userName) {
+        db.setValue("public/nameList/"+userName, id)
+    }
+    function checkUsernameAvailability(name) {
+        let searchKey = name.charAt(0)
+        db.getValue("public/nameList/"+name, {
+                    }, function(success, key, value) {
+                        if(success) {nativeUtils.displayMessageBox(qsTr("Try Again!"), qsTr("Username already exists"))}
+                        else {dataModel.nameAvailable()}
+                    })
     }
     //end registration functions
     //
     //
-
+    //
+    //
+    //Feed Functions
     function updateFeed() {
         /*
         db.getValue("public/received", {
@@ -705,6 +318,42 @@ Item {
                     })
         */
     }
+    function getFeed(uuid) {
+        db.getValue("userFeeds/"+uuid, {
+                    }, function(success, key, value) {
+                        if(success){
+                            userFeed = []
+                            for(var i in value) {
+                                userFeed.push(value[i])
+                            }
+                            app.userFeedChanged()
+                        }
+                    }
+                    )
+    }
+    function getMasterFeed() {
+        /*db.getValue("masterFeed/", {
+                        //orderByValue: true,  //order by value before limiting and filtering
+                        //startAt: 5,          //return only values greater than or equal to 5
+                        //endAt: 1000,         //return only values less than or equal to 1000
+                        //limitToFirst: 2     //return only first 10 sub-keys/values
+                    }, function(success, key, value) {
+                        if(success) {
+                            for(var i in value) {
+                                masterFeed.push(value[i])
+                            }
+                            app.masterFeedChanged()
+                            console.log("MASTER FEED: <br><br>" +JSON.stringify(masterFeed)+"<br><br><br><br><br>")
+                        }
+                    }
+                    )*/
+    }
+    //end Feed Functions
+    //
+    //
+    //
+    //
+    //post Functions
     function createPost(postImagePath, img_height, img_width, post_description, team, location, tag) {
         console.log("<br><br><br><br>REALTIMEUSER<br><br><br><br>"+realtimeUserData)
         let updateFeedCount = userData.feedCount +1
@@ -722,7 +371,10 @@ Item {
                     "downloadUrl": downloadUrl,
                     "owner":{
                         "id": userData.id,
-                        "username": userData.username
+                        "username": userData.username,
+                        "profile_Pic_URL": userData.profile_Pic_URL,
+                        "baseLocarion": userData.location
+
                     },
                     "post_description" : post_description,
                     "timestamp": Date.now(),
@@ -773,6 +425,34 @@ Item {
         //success,key, value; liked_by_me === true ? likeCount = likeCount -1 && liked_by_me_value = false : likeCount = likeCount +1 && liked_by_me_value = false
         db.setUserValue(/*set like count && liked_by_me_value */)
     }
+    function getPost(postID) {
+        userFeed.forEach(function(item) {
+            if(item.id === postID) {
+                viewPostData = item
+            }
+        })
+        return
+    }
+    function fanPosts(posterID, post, postID){
+        let followers = userData.followers.followers_list
+        for(var i in followers) {
+            db.setValue("userFeeds/"+i+"/feed_posts/", postID, post)
+        }
+
+        db.getValue(posterID+"/followers", {
+                        if(succcess){
+                            for(var i in value){
+                                db.setValue("userFeeds/"+value[i].id, postID, post)
+                            }
+                        }
+                    })
+    }
+    //end Post Functions
+    //
+    //
+    //
+    //
+    //Event(shoots) Functions
     function createEvent(event_name, event_organiser, event_date, event_time, event_overview, cover_image, event_concept, event_location, event_team) {
         let eventID = "e-uid"+uniqueID()
 
@@ -808,17 +488,15 @@ Item {
     }
     function getEvent(eventID) {
         db.getValue(/*events*/)
-
     }
-    function getPost(postID) {
-        userFeed.forEach(function(item) {
-            if(item.id === postID) {
-                viewPostData = item
-            }
-        })
-        return
+    //end Events Functions
+    //
+    //
+    //
+    //
+    // User Functions
+    function updateUserData() {
     }
-
     function searchUsers(searchString) {
         console.log("Search String: "+ searchString)
         db.getValue("public/nameList", {
@@ -853,42 +531,6 @@ Item {
                         }
                     })
     }
-    function getFeed(uuid) {
-        db.getValue("userFeeds/"+uuid, {
-                    }, function(success, key, value) {
-                        if(success){
-                            userFeed = []
-                            for(var i in value) {
-                                userFeed.push(value[i])
-                            }
-                            app.userFeedChanged()
-                        }
-                    }
-                    )
-    }
-    function getMasterFeed() {
-        console.log("gettings master feed")
-        db.getValue("masterFeed/", {
-                    }, function(success, key, value) {
-                        if(success) {
-                            console.log("<br><br><br>GOT MASTER FEED<br><br><br>")
-                            masterFeed = value
-                            console.log("MASTER FEED: <br><br>" +JSON.stringify(masterFeed))
-                            console.debug("Read user value for key", key, "from DB:", value)
-                        }
-                    })
-    }
-    function addToNameList(id, userName) {
-        db.setValue("public/nameList/"+userName, id)
-    }
-    function checkUsernameAvailability(name) {
-        let searchKey = name.charAt(0)
-        db.getValue("public/nameList/"+name, {
-                    }, function(success, key, value) {
-                        if(success) {nativeUtils.displayMessageBox(qsTr("Try Again!"), qsTr("Username already exists"))}
-                        else {dataModel.nameAvailable()}
-                    })
-    }
     function followUser(userID, userName) {
         let updateFollowCount
         updateFollowCount = userData.follows.follows_count + 1
@@ -904,6 +546,9 @@ Item {
         //add their feed to yours
         db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
     }
+    //
+    //
+    // IM functions
     function startChat (chatName, participantID) {
         let chatID = "c-uid"+uniqueID()
         let messageID = uniqueID()
@@ -935,15 +580,12 @@ Item {
         let messageID = uniqueID()
         db.setValue("chats/"+chatID+"/"+messageID+"/", messageContent)
     }
-    function fanPosts(posterID, post, postID){
-        db.getValue(posterID+"/followers", {
-                        if(succcess){
-                            for(var i in value){
-                                db.setValue("userFeeds/"+value[i].id, postID, post)
-                            }
-                        }
-                    })
-    }
+    // end IM functions
+    //
+    //
+    //
+    //
+    //Calendar Functions
     function addCalendarItem(){
 
     }
@@ -953,6 +595,12 @@ Item {
     function editCalendarItem(){
 
     }
+    // end Calendar functions
+    //
+    //
+    //
+    //
+    // Casting Functions
     function createCasting(){
 
     }
@@ -962,4 +610,7 @@ Item {
     function deleteCasting(){
 
     }
+    //End Casting Functions
+    //
+    //
 }
