@@ -19,46 +19,14 @@ App {
 
     DataModel {id: dataModel;onNameAvailable: registerPage.checkComplete()}
     LocationModel {id: locationModel}
-    Component {
-        id: otherUserProfile
-        OtherUserProfile {
-        }
-    }
+    LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
+    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
+    RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}
 
-    LoadingPage {
-        z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false
-        Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}
-    }
     ParallelAnimation {
         id: loaderAnim
         NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
         NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
-    }
-    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
-    RegisterPage {
-        z: 23; id: registerPage; visible: false
-        onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
-    }
-
-    Component {
-        id:shootOrganisePage
-        ShootsOrganise {
-        }
-    }
-    Component {
-        id: calendarOrganisePage
-        CalendarOrganise {
-        }
-    }
-    Component {
-        id: castingOrganisePage
-        CastingsOrganise {
-        }
-    }
-    Component {
-        id: invoiceOrganisePage
-        InvoiceOrganise {
-        }
     }
 
     onInitTheme: {
@@ -69,6 +37,7 @@ App {
         Theme.navigationBar.titleColor = "black"
         Theme.colors.tintColor = "#000000"
         Theme.normalFont = arialFont
+        Theme.iconFont = arialFont
         Theme.tabBar.backgroundColor = "white"
     }
     FontLoader {id: arialFont; source: "../fonts/Gravity-Book.otf"}
@@ -142,12 +111,18 @@ App {
         }
         NavigationItem {
             icon: IconType.paintbrush; title: "Studio"
-            onSelected: {studioLoadAnim.play()}
             NavigationStack {id: studioStack; Create { } }
         }
         NavigationItem {
             icon: IconType.book; title: "Organise"
-            NavigationStack {id:organiseStack; Organise { } }
+            NavigationStack {
+                id:organiseStack; initialPage: organiseComp
+                Component {id: organiseComp; Organise {id: organiseNav}}
+                Component {id:shootOrganisePage; ShootsOrganise {id: shootsOrganiseNav}}
+                Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav}}
+                Component {id: castingOrganisePage; CastingsOrganise {id: castingOrganiseNav}}
+                Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
+            }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"}
     }

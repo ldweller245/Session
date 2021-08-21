@@ -32,6 +32,7 @@ Item {
     property var regDetails: []
     property var regUserDetails: []
     property var otherUserData: []
+    property var otherUserPortfolio: []
 
     property var viewPostData
 
@@ -42,7 +43,6 @@ Item {
     readonly property string realtimeUserFeed: "userFeeds/" + userData.id
     readonly property string realtimeChats: "chats/"
     readonly property string realtimeOtherUserDetails: "userData/" + otherUserID
-
 
     //readonly property string dbKeyAllCalendarItems: "groups" + "/" + groupName
     //readonly property string dbKeyAllUsers: "groups" + "/" + groupName + "/" + "users"
@@ -838,16 +838,20 @@ Item {
                     })
     }
     function getUser(userID) {
-        otherUserID = userID
-        console.log("<br>GETTING USER"+ userID+"<br>")
-        db.getValue("userData/"+userID, {}, {function(success, key, value) {
-            if(success) {
-                otherUserData = value
-                dataModel.otherUserDataChanged()
-            }
-        }
+        db.getValue("userData/" +userID, {
+                    }, function(success, key, value) {
+                        if(success) {
+                            otherUserData = []
+                            otherUserData = value
+                            dataModel.otherUserDataChanged()
+                            let feedPosts = value.feed_posts
+                            otherUserPortfolio = []
+                            for(var i in feedPosts){
+                                otherUserPortfolio.push(feedPosts[i])
+                            }
+                            dataModel.otherUserPortfolioChanged()
+                        }
                     })
-        return
     }
     function getFeed(uuid) {
         db.getValue("userFeeds/"+uuid, {
@@ -858,9 +862,6 @@ Item {
                                 userFeed.push(value[i])
                             }
                             app.userFeedChanged()
-                            console.log("<br><br><br>USER FEED<br><br><br>")
-                            JSON.stringify(userFeed)
-
                         }
                     }
                     )

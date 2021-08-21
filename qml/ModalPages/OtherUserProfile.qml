@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.1
 Page {
     id: userProfilePage
 
+    title: otherUser.username
+
     function isEven(n) {
         return n % 2 == 0;
     }
@@ -16,6 +18,8 @@ Page {
 
     property var otherUser: dataModel.otherUserData
 
+    property var otherUserFeed: dataModel.otherUserPortfolio
+
     onUserIDChanged: {
         otherUserID = userID
         dataModel.getUser(userID)
@@ -23,7 +27,7 @@ Page {
 
     JsonListModel {
         id: userJsonModel
-        source: otherUser.feed_posts
+        source: otherUserFeed
         keyField: "id"
         fields: ["id", "downloadUrl", "dimensions", "liked_by", "owner", "post_description", "tag", "team", "timestamp"]
     }
