@@ -17,11 +17,14 @@ App {
 
     licenseKey: "8E04C2C81836FA28AAD7D933CE16F4F4E41FA5E7A2339BA7352E5045736E311653029D082BF368C2B1A8390EC6C5CB52DBA9F4BCF556483FB80E37D0B4653DF122DA40295DBDE0EAF7884CBDF706260754D9024014AFF76EA331071EF183F0BAFFE50B467C40F21E2E4159AC7F2C6DDF807FDF010A3E1052774A2F57C5461AAE12BA13F632CD8FCD537B65A4AFB574932B0194CEEAA09B4452FA48C08A3ADBDA52392E0911AAF6641C1B9FB0891DF1D7A7CF491A31FE5D325F3E2FBD86444E98F901E37878C6E061CD85C3D8851C8D45ECDBB1BC4F6E36EC8ADCA665B147B90F3B67C2B4F939997A41CB9488CC58121EE31269E36A7613E6C4F59920A95BDA3D46B8B8C31759587665AF62D5C4F2FEC00E479177B489D4D5368196AFF9B5B74909BCEAE6D2656C07D0565FE3D320B48695942CC06531DBB7F022BADB9BCA3614"
 
-    DataModel {id: dataModel; onNameAvailable: registerPage.checkComplete()}
+    DataModel {id: dataModel;onNameAvailable: registerPage.checkComplete()}
     LocationModel {id: locationModel}
-    HomePage {id: homePage}
-    HomeFlickable {id: homeFlickable}
-    OtherUserProfile {id: otherUserProfile}
+    Component {
+        id: otherUserProfile
+        OtherUserProfile {
+        }
+    }
+
     LoadingPage {
         z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false
         Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}
@@ -37,7 +40,6 @@ App {
         onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)
     }
 
-    ViewPostModal {id: viewPostPage}
     Component {
         id:shootOrganisePage
         ShootsOrganise {
@@ -102,7 +104,7 @@ App {
     property var rect10Imgsource
     property var rect11Imgsource
     property var rect12Imgsource
-    
+
     property var rect1Scale: 0.9
     property var rect2Scale: 0.9
     property var rect3Scale: 0.9
@@ -116,14 +118,19 @@ App {
     property var rect11Scale: 0.9
     property var rect12Scale: 0.9
     //END OF VARIABLES FOR CREATE SEGMENT
-    
+
     property var arr: [{"Hair": "Hairstylists"}, {"Makeup": "Makeup Artists"}, {"Wardrobe":"Clothes Stylists"}, {"Photographer": "Photographers"}, {"Model":"Models"},{"Studio": "Locations"}]
 
     Navigation {
         id: navigationRoot; navigationMode: navigationModeTabs
         NavigationItem {
             icon: IconType.compass; title: "Explore"
-            NavigationStack {id: exploreStack; HomePage { } }
+            NavigationStack {
+                id: exploreStack; initialPage: initialComp
+                Component {id: initialComp; HomePage {id: homePageNav}}
+                Component {id: viewPostComp; ViewPostModal {id: viewPostPage}}
+                Component {id: otherUserComp; OtherUserProfile {id: otherUserNav}}
+            }
         }
         NavigationItem {
             icon: IconType.group; title: "Collaborate"

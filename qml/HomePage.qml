@@ -39,39 +39,43 @@ Page {
         }
     }
     AppFlickable {
-        anchors.fill: parent; contentHeight: scrollRow.height; anchors.topMargin: scrollModel.height
+        anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
         Column {
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height + dp(Theme.navigationBar.height)*2
             Row {
                 id: scrollRow; width: homePage.width; height: homePage.height;
                 AppListView {
-                    footer: footerComponent
-                    id: evenModelView; interactive: false; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; width: (homePage.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
+                    footer: footerComp
+                    footerPositioning: ListView.InlineFooter
+                    id: evenModelView; interactive: false; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; height: parent.height; width: (homePage.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
                     delegate: AppCard {
                         id: evenImage; width: parent.width; margin: dp(5); paper.radius: dp(5)
                         media: AppImage {
                             width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
-                            MouseArea {anchors.fill: parent; onPressAndHold: PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: viewPostModal.open()}
+                            MouseArea {anchors.fill: parent; onPressAndHold: PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
                         }
                         content: AppText {
                             width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username
-                            MouseArea {anchors.fill: parent; onClicked: otherUserModal.open()}
+                            MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
                         }
                     }
                     add: Transition {NumberAnimation {property: "opacity"; from: 0; to: 1.0; duration: 400 } NumberAnimation {property: "scale"; from: 0; to: 1.0; duration: 400 }}
                     displaced: Transition {NumberAnimation {properties: "x,y"; duration: 400; easing.type: Easing.InOutBack}}
                 }
                 AppListView {
-                    id: oddModelView; interactive: false; model: sortedModelOdd; scale: 0.96; width: (homePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
+                    footer: footerComp
+                    footerPositioning: ListView.InlineFooter
+                    id: oddModelView; interactive: false; model: sortedModelOdd; scale: 0.96; height: parent.height; width: (homePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
                     delegate: AppCard {
                         id: oddImage; width: parent.width; margin: dp(5); paper.radius: dp(5)
                         media: AppImage {
                             width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
-                            MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: viewPostModal.open()}
+                            MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
                         }
                         content: AppText{
                             width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username;
-                            MouseArea {anchors.fill: parent; onClicked: otherUserModal.open()}
+                            MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
                         }
                     }
                     add: Transition {NumberAnimation {property: "opacity"; from: 0; to: 1.0; duration: 400} NumberAnimation {property: "scale"; from: 0; to: 1.0; duration: 400 }}
@@ -81,44 +85,11 @@ Page {
         }
     }
     Component {
-        id: footerComponent
+        id: footerComp
         Rectangle {
-            width: homePage.width
+            color: "white"
+            width: parent.width
             height: dp(Theme.navigationBar.height)*2
-            Column {
-                anchors.fill: parent
-                AppText {
-                    text: "LOAD MORE"
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                Icon {
-                    anchors.horizontalCenter: homePage.horizontalCenter
-                    icon: IconType.angledoubledown
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: console.log("LOADMORE")
-                }
-            }
-        }
-    }
-
-    AppModal {
-        id: otherUserModal; fullscreen: true; pushBackContent: navigationRoot
-        NavigationStack {
-            OtherUserProfile {
-                id: userProfilePage; clip: true
-                rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: {otherUserModal.close()}}
-            }
-        }
-    }
-    AppModal {
-        id: viewPostModal; pushBackContent: navigationRoot
-        NavigationStack {
-            ViewPostModal {
-                id: exploreModalPage2; clip: true
-                rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: viewPostModal.close()}
-            }
         }
     }
 }

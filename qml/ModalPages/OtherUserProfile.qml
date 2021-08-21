@@ -6,20 +6,24 @@ import QtQuick.Layouts 1.1
 Page {
     id: userProfilePage
 
-    function truncateString(str, num) {
-        return str;
-    }
     function isEven(n) {
         return n % 2 == 0;
     }
-
     function isOdd(n) {
         return Math.abs(n % 2) == 1;
+    }
+    property var userID: 0
+
+    property var otherUser: dataModel.otherUserData
+
+    onUserIDChanged: {
+        otherUserID = userID
+        dataModel.getUser(userID)
     }
 
     JsonListModel {
         id: userJsonModel
-        source: userFeed
+        source: otherUser.feed_posts
         keyField: "id"
         fields: ["id", "downloadUrl", "dimensions", "liked_by", "owner", "post_description", "tag", "team", "timestamp"]
     }
@@ -48,16 +52,16 @@ Page {
                         height: profileRow.height; width: profileRow.width / 2
                         Column {
                             id: detailsRow; anchors.verticalCenter: parent.verticalCenter
-                            AppText {id: profileName; padding: dp(15); text: "<b>"+userData.firstname + "<br>" + userData.surname + "</b><br>" + userData.role}
-                            AppText {fontSize: profileName.fontSize / 1.3; padding: dp(10); color: "grey"; text: "<b>"+userData.location +"</b><br><b>Last Active:</b> " + new Date(userData.lastActive).toDateString()}
+                            AppText {id: profileName; padding: dp(15); text: "<b>"+otherUser.firstname + "<br>" + otherUser.surname + "</b><br>" + otherUser.role}
+                            AppText {fontSize: profileName.fontSize / 1.3; padding: dp(10); color: "grey"; text: "<b>"+otherUser.location +"</b><br><b>Last Active:</b> " + new Date(otherUser.lastActive).toDateString()}
                             Row{
                                 width: parent.width
-                                AppButton {width: parent.width/2; text: otherUserData.follows_user === true ? "<b>Following": "<b>Follow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
+                                AppButton {width: parent.width/2; text: otherUser.follows_user === true ? "<b>Following": "<b>Follow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
                                 AppButton {width: parent.width/2; text: "<b>Message"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
                             }
                         }
                     }
-                    RoundedImage  {id: profileImage; width: parent.width / 2; height: width; scale: 0.75; anchors.rightMargin: dp(10); anchors.verticalCenter: parent.verticalCenter; source: userData.profile_Pic_URL; fillMode: Image.PreserveAspectCrop; radius: profileImage.width/2; img.autoTransform: true; smooth: true}
+                    RoundedImage  {id: profileImage; width: parent.width / 2; height: width; scale: 0.75; anchors.rightMargin: dp(10); anchors.verticalCenter: parent.verticalCenter; source: otherUser.profile_Pic_URL; fillMode: Image.PreserveAspectCrop; radius: profileImage.width/2; img.autoTransform: true; smooth: true}
                 }
             }
         }
@@ -113,10 +117,10 @@ Page {
                                         width: parent.width
                                         padding: dp(15)
                                         maximumLineCount: 2
-                                        elide: Text.ElideLeft
+                                        elide: Text.ElideRight
                                         wrapMode: Text.Wrap
                                         text: model.post_description
-                                    }
+                                    }                                   
                                 }
                             }
                             AppListView {
@@ -148,7 +152,7 @@ Page {
                                         width: parent.width
                                         padding: dp(15)
                                         maximumLineCount: 2
-                                        elide: Text.ElideLeft
+                                        elide: Text.ElideRight
                                         wrapMode: Text.Wrap
                                         text: model.post_description
                                     }
@@ -158,7 +162,6 @@ Page {
                             }
                         }
                     }
-
                 }
             }
             NavigationItem {
@@ -170,11 +173,11 @@ Page {
                         Column {
                             id: detailsCol; width: parent.width
                             SimpleSection {title: "Bio:"}
-                            AppText {text: userData.bio; padding: dp(20); width: parent.width}
+                            AppText {text: otherUser.bio; padding: dp(20); width: parent.width}
                             SimpleSection {title: "Specialitites:"}
-                            Column {width: parent.width; Repeater {model: userData.specialities; AppText {padding: dp(20); text: "\u{2022} " +modelData}}}
+                            Column {width: parent.width; Repeater {model: otherUser.specialities; AppText {padding: dp(20); text: "\u{2022} " +modelData}}}
                             SimpleSection {title: "Details:"}
-                            Column {width: parent.width; Repeater {model: Object.keys(userData.measurements); delegate: SimpleRow {enabled: false; text: Object.keys(userData.measurements)[index] + ": "+Object.values(userData.measurements)[index];showDisclosure: false }}}
+                            Column {width: parent.width; Repeater {model: Object.keys(otherUser.measurements); delegate: SimpleRow {text: Object.keys(otherUser.measurements)[index] + ": "+Object.values(otherUser.measurements)[index];showDisclosure: false }}}
                         }
                     }
                 }

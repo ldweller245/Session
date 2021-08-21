@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Felgo 3.0
 import "../Plugins"
+import "../ModalPages"
 
 Item {
     id: dataModel
@@ -30,7 +31,9 @@ Item {
     property var rrole; property var rgender; property var rfirstname; property var rsurname; property var rusername; property var remail; property var rpassword; property var rbaseLocation; property var rexperience; property var rtfp; property var rspecialities; property var rage; property var rheightCM; property var rethnicity; property var rhairColor; property var rhairLength; property var rskinColor; property var reyeColor; property var rshoeSize; property var rwaist; property var rhips; property var rinseam; property var rsuitSize; property var rtattoo; property var rpiercing; property var rprofileImagePath; property var rbio; property var rbust; property var rdressSize
     property var regDetails: []
     property var regUserDetails: []
-    property var otherUserData
+    property var otherUserData: []
+
+    property var viewPostData
 
     property var userID: userData.id
 
@@ -38,6 +41,13 @@ Item {
     readonly property string realtimeMasterFeed: "masterFeed/"
     readonly property string realtimeUserFeed: "userFeeds/" + userData.id
     readonly property string realtimeChats: "chats/"
+    readonly property string realtimeOtherUserDetails: "userData/" + otherUserID
+
+
+    //readonly property string dbKeyAllCalendarItems: "groups" + "/" + groupName
+    //readonly property string dbKeyAllUsers: "groups" + "/" + groupName + "/" + "users"
+    //readonly property string dbKeyLocations: "locations"
+
 
     /*Timer {
         interval: 60000; running: true; repeat: true
@@ -52,21 +62,27 @@ Item {
     FirebaseDatabase {
         id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
-        realtimeValueKeys: [realtimeUserData, realtimeUserFeed];
+        realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeUserFeed, realtimeChats, realtimeOtherUserDetails];
         onRealtimeValueChanged: {
             if(key === realtimeUserData) {
                 console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
                 userData = []; userData = value;
             }
+            else if(key === realtimeMasterFeed) {
+                masterFeed = []; masterFeed = value
+            }
             else if(key === realtimeUserFeed) {
                 console.log("<br><br><br><br>REALTIME_USER_FEED_UPDATE<br><br><br><br>")
                 userFeed.push(value[i]); app.userFeedChanged();
             }
-            /*
-            else if(key === realtimeMasterFeed) {
-                masterFeed = []; masterFeed = value}
-            else if(key === realtimeChats) {}
-            */
+            else if(key === realtimeChats) {
+            }
+            else if(key === realtimeOtherUserDetails) {
+                console.log("<br> Other User Key: " + realtimeOtherUserDetails)
+                otherUserData = value
+                dataModel.otherUserDataChanged()
+                console.log("<br>Other User Data: <br>" + JSON.stringify(otherUserData) + "<br><br>")
+            }
         }
         onFirebaseReady: {
             //remember to delete
@@ -794,6 +810,15 @@ Item {
         db.getValue(/*events*/)
 
     }
+    function getPost(postID) {
+        userFeed.forEach(function(item) {
+            if(item.id === postID) {
+                viewPostData = item
+            }
+        })
+        return
+    }
+
     function searchUsers(searchString) {
         console.log("Search String: "+ searchString)
         db.getValue("public/nameList", {
@@ -812,8 +837,17 @@ Item {
                         }
                     })
     }
-    function getUser(userID, username) {
-        db.getValue("userData/"+userID, {function(success, key, value) {if(success) {otherUserData = value}}})
+    function getUser(userID) {
+        otherUserID = userID
+        console.log("<br>GETTING USER"+ userID+"<br>")
+        db.getValue("userData/"+userID, {}, {function(success, key, value) {
+            if(success) {
+                otherUserData = value
+                dataModel.otherUserDataChanged()
+            }
+        }
+                    })
+        return
     }
     function getFeed(uuid) {
         db.getValue("userFeeds/"+uuid, {

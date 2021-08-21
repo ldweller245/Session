@@ -86,7 +86,6 @@ DISTFILES += \
     qml/CanvasTemplates/Canvas6x6_2.qml \
     qml/Collaborate.qml \
     qml/Components/ConversationPage.qml \
-    qml/Components/HomeFlickable.qml \
     qml/Components/ImagePickerPage.qml \
     qml/Components/TimeTumbler.qml \
     qml/Components/ViewFeedComp.qml \

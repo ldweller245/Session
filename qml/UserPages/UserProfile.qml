@@ -6,13 +6,9 @@ import QtQuick.Layouts 1.1
 Page {
     id: userProfilePage
 
-    function truncateString(str, num) {
-        return str;
-    }
     function isEven(n) {
         return n % 2 == 0;
     }
-
     function isOdd(n) {
         return Math.abs(n % 2) == 1;
     }
@@ -169,7 +165,7 @@ Page {
                             SimpleSection {title: "Specialitites:"}
                             Column {width: parent.width; Repeater {model: userData.specialities; AppText {padding: dp(20); text: "\u{2022} " +modelData}}}
                             SimpleSection {title: "Details:"}
-                            Column {width: parent.width; Repeater {model: Object.keys(userData.measurements); delegate: SimpleRow {enabled: false; text: Object.keys(userData.measurements)[index] + ": "+Object.values(userData.measurements)[index];showDisclosure: false }}}
+                            Column {width: parent.width; Repeater {model: Object.keys(userData.measurements); delegate: SimpleRow {text: Object.keys(userData.measurements)[index] + ": "+Object.values(userData.measurements)[index];showDisclosure: false }}}
                         }
                     }
                 }
