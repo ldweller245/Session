@@ -25,6 +25,7 @@ Item {
     */
 
     signal nameAvailable
+    signal postSuccess
 
     property var remoteFilePath
     property var uuid
@@ -390,7 +391,8 @@ Item {
                 db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost)
                 fanPosts(userPost, postID)
                 // add posted complete anim
-                navigationRoot.currentIndex = 0
+                navigationRoot.currentIndex = 0;
+                dataModel.postSuccess()
             }
         })
     }
