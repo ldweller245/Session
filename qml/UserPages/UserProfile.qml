@@ -68,88 +68,39 @@ Page {
                 Item {
                     anchors.fill: parent
                     AppFlickable {
-                        contentHeight: scrollRow.height
-                        width: parent.width
-                        height: parent.height + dp(evenModelView.spacing)
+                        anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
                         Row {
-                            id: scrollRow
-                            width: userProfilePage.width
-                            height: userProfilePage.height + evenModelView.spacing
-                            AppListView {
-                                id: evenModelView
-                                interactive: false;
-                                model: sortedModelEven; emptyText.text: qsTr("No posts yet!")
-                                width: parent.width/2; spacing: dp(5); scrollIndicatorVisible: false;
-                                delegate: AppCard {
-                                    id: card
-                                    width: parent.width
-                                    margin: dp(5)
-                                    paper.radius: dp(5)
-
-                                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
-                                    // For the media cell, we use a simple AppImage
-                                    media: AppImage {
-                                        width: parent.width
-                                        fillMode: Image.PreserveAspectFit
-                                        source: model.downloadUrl
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl)
-                                            onReleased: PictureViewer.close()
+                            id: scrollRow; width: parent.width
+                            Column {
+                                id: col; spacing: dp(5); width: parent.width/2
+                                Repeater {
+                                    id: evenModelView; model: sortedModelEven;
+                                    delegate: AppCard {
+                                        id: evenImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
+                                        media: AppImage {
+                                            width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl; autoTransform: true
+                                            MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl); onReleased: PictureViewer.close()}
                                         }
-                                    }
-
-                                    // For the content cell, we use some placeholder text
-                                    content: AppText{
-                                        width: parent.width
-                                        padding: dp(15)
-                                        maximumLineCount: 2
-                                        elide: Text.ElideRight
-                                        wrapMode: Text.Wrap
-                                        text: model.post_description
+                                        content: AppText{width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.post_description}
                                     }
                                 }
                             }
-                            AppListView {
-                                id: oddModelView
-                                interactive: false;
-                                model: sortedModelOdd; emptyText.text: qsTr("No posts yet!");
-                                width: parent.width/2; spacing: dp(5);scrollIndicatorVisible: false;
-                                delegate: AppCard {
-                                    id: card2
-                                    width: parent.width
-                                    margin: dp(5)
-                                    paper.radius: dp(5)
-
-                                    // We use a slightly adapted SimpleRow as header cell, this gives us nice styling with low effort
-                                    // For the media cell, we use a simple AppImage
-                                    media: AppImage {
-                                        width: parent.width
-                                        fillMode: Image.PreserveAspectFit
-                                        source: model.downloadUrl
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl)
-                                            onReleased: PictureViewer.close()
+                            Column {
+                                id: oddCol; spacing: dp(5); width: parent.width/2
+                                Repeater {
+                                    id: oddModelView; model: sortedModelOdd;
+                                    delegate: AppCard {
+                                        id: oddImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
+                                        media: AppImage {
+                                            width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl; autoTransform: true
+                                            MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl); onReleased: PictureViewer.close()}
                                         }
+                                        content: AppText{width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.post_description}
                                     }
-
-                                    // For the content cell, we use some placeholder text
-                                    content: AppText{
-                                        width: parent.width
-                                        padding: dp(15)
-                                        maximumLineCount: 2
-                                        elide: Text.ElideRight
-                                        wrapMode: Text.Wrap
-                                        text: model.post_description
-                                    }
-
-                                    // Some useless buttons to display in the actions cell
                                 }
                             }
                         }
                     }
-
                 }
             }
             NavigationItem {

@@ -34,7 +34,7 @@ Page {
                 onSelected: exploreStack.push(otherUserComp, {userID: postData.owner.id})
             }
             Rectangle {height: spacerH; width: spacerW}
-            AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: postData.downloadUrl}
+            AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: postData.downloadUrl; autoTransform: true}
             Row {
                 height: location.height; width: parent.width
                 Rectangle {
@@ -44,25 +44,30 @@ Page {
                 AppText {id: location; text: postData.location; padding: dp(15)}
             }
             AppText {id: postDescription; width: parent.width; text: postData.post_description; padding: dp(15)}
-            AppText {padding: dp(15); text: "<b>Hair:"}
+            AppText {padding: dp(15); text: "<b>Hair:"; visible: hairRepeater.count !== 0}
             Repeater {
-                model: postData.team_hair
-                AppText {padding: dp(15); color: "grey"; text: postData.team_hair[index]; width: parent.width}
+                id: hairRepeater; model: postData.team.hair; visible: hairRepeater.count !== 0
+                AppText {padding: dp(15); color: "grey"; text: postData.team.hair[index].name; width: parent.width}
             }
-            AppText {padding: dp(15); text: "<b>Makeup:"}
+            AppText {padding: dp(15); text: "<b>Makeup:"; visible: makeupRepeater.count !== 0}
             Repeater {
-                model: postData.team_makeup
-                AppText {padding: dp(15); color: "grey"; text: postData.team_makeup[index]; width: parent.width}
+                id: makeupRepeater; model: postData.team.makeup; visible: makeupRepeater.count !== 0
+                AppText {padding: dp(15); color: "grey"; text: postData.team.makeup[index].name; width: parent.width}
             }
-            AppText {padding: dp(15); text: "<b>Wardrobe:"}
+            AppText {padding: dp(15); text: "<b>Wardrobe:"; visible: wardrobeRepeater.count !== 0}
             Repeater {
-                model: postData.team_wardrobe
-                AppText {padding: dp(15); color: "grey"; text: postData.team_wardrobe[index]; width: parent.width}
+                id: wardrobeRepeater; model: postData.team.wardrobe; visible: wardrobeRepeater.count !== 0
+                AppText {padding: dp(15); color: "grey"; text: postData.team.wardrobe[index].name; width: parent.width}
             }
-            AppText {padding: dp(15); text: "<b>Models:"}
+            AppText {padding: dp(15); text: "<b>Models:"; visible: modelRepeater.count !== 0}
             Repeater {
-                model: postData.team_models
-                AppText {padding: dp(15); color: "grey"; text: postData.team_models[index]; width: parent.width}
+                id: modelRepeater; model: postData.team.models; visible: modelRepeater.count !== 0
+                AppText {padding: dp(15); color: "grey"; text: postData.team.models[index].name; width: parent.width}
+            }
+            AppText {padding: dp(15); text: "<b>Photographer:"; visible: photoRepeater.count !== 0}
+            Repeater {
+                id: photoRepeater; model: postData.team.photo; visible: photoRepeater.count !== 0
+                AppText {padding: dp(15); color: "grey"; text: postData.team.photo[index].name; width: parent.width}
             }
             Rectangle {width: spacerW; height: spacerH*2.5}
         }

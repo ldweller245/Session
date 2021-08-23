@@ -105,7 +105,6 @@ Item {
                                             userData = value
                                             console.debug("USERDATA: "+ JSON.stringify(userData))
                                             getFeed(userData.id)
-
                                         }
                                     })
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
@@ -113,6 +112,7 @@ Item {
                             })
             console.debug("User login " + success + " - " + message);
             if(success) {registerPage.visible = false; loginPage.visible = false}
+            getMasterFeed()
         }
     }
     FirebaseStorage {id: storage; config: firebaseConfig}
@@ -355,9 +355,8 @@ Item {
     //
     //post Functions
     function createPost(postImagePath, img_height, img_width, post_description, team, location, tag) {
-        console.log("<br><br><br><br>REALTIMEUSER<br><br><br><br>"+realtimeUserData)
         let updateFeedCount = userData.feedCount +1
-        let postID = "p-uid"+uniqueID()
+        let postID = "p-uid"+uniqueID() + "-" + uniqueID()
 
         storage.uploadFile(postImagePath, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
             if(!finished) {} else if (finished && success) {
@@ -378,18 +377,7 @@ Item {
                     },
                     "post_description" : post_description,
                     "timestamp": Date.now(),
-                    "team": {
-                        "hair": [
-                            {"id": 123, "name": "JoBrownLondon"},
-                            {"id": 321, "name": "KatiePrescott"}
-                        ],
-                        "makeup": [
-                            {"id": 456, "name": "SadieLauder"}
-                        ],
-                        "model": [
-                            {"id": 654, "name": "EdwardLawrence"}
-                        ]
-                    },
+                    "team": team,
                     "liked_by":{
                         "count":0,
                         "liked_by_me": false
@@ -400,7 +388,8 @@ Item {
                 db.setValue("masterFeed/"+postID, userPost)
                 db.setValue("userFeeds/"+userData.id+"/"+postID, userPost)
                 db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost)
-                fanPosts(userData.id, userPost, postID)
+                fanPosts(userPost, postID)
+                // add posted complete anim
                 navigationRoot.currentIndex = 0
             }
         })
@@ -433,19 +422,12 @@ Item {
         })
         return
     }
-    function fanPosts(posterID, post, postID){
+    function fanPosts(post, postID){
         let followers = userData.followers.followers_list
         for(var i in followers) {
-            db.setValue("userFeeds/"+i+"/feed_posts/", postID, post)
+            console.log(i)
+            db.setValue("userFeeds/"+i+"/"+postID, post)
         }
-
-        db.getValue(posterID+"/followers", {
-                        if(succcess){
-                            for(var i in value){
-                                db.setValue("userFeeds/"+value[i].id, postID, post)
-                            }
-                        }
-                    })
     }
     //end Post Functions
     //
@@ -499,19 +481,19 @@ Item {
     }
     function searchUsers(searchString) {
         console.log("Search String: "+ searchString)
-        db.getValue("public/nameList", {
-
+        db.getValue("public/nameList/", {
                         orderByKeys: true,
-                        //startAt: JSON.stringify(searchString),
-                        //endAt: JSON.stringify(searchString) + "~",
-                        limitToFirst: 3
-
+                        startAt: {key:  searchString},
+                        endAt: {key: searchString + "~"},
+                        limitToFirst: 10,
                     }, function(success, key, value) {
                         if(success) {
-                            console.log("nameList: " + Object.keys(value))
                             searchArr = []
-                            searchArr = value
-                            console.debug("searchArr: "+JSON.stringify(searchArr))
+                            for(var i in value){
+                            searchArr.push({name: i, id: value[i]})
+                            }
+                            app.searchArrChanged()
+                            console.log("<br><br>Read user value for key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)
                         }
                     })
     }

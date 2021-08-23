@@ -40,49 +40,48 @@ Page {
     }
     AppFlickable {
         anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
-        Column {
-            width: parent.width
-            height: parent.height + dp(Theme.navigationBar.height)*2
             Row {
-                id: scrollRow; width: homePage.width; height: homePage.height;
-                AppListView {
-                    footer: footerComp
-                    footerPositioning: ListView.InlineFooter
-                    id: evenModelView; interactive: false; model: sortedModelEven; emptyText.text: qsTr("No posts yet!"); scale: 0.96; height: parent.height; width: (homePage.width/2)-dp(2); spacing: dp(5); scrollIndicatorVisible: false;
-                    delegate: AppCard {
-                        id: evenImage; width: parent.width; margin: dp(5); paper.radius: dp(5)
-                        media: AppImage {
-                            width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
-                            MouseArea {anchors.fill: parent; onPressAndHold: PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
-                        }
-                        content: AppText {
-                            width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username
-                            MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
+              id: scrollRow;
+                width: parent.width
+                Column {
+                    id: col
+                    spacing: dp(5)
+                    width: parent.width/2
+                    Repeater {
+                        id: evenModelView; model: sortedModelEven;
+                        delegate: AppCard {
+                            id: evenImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
+                            media: AppImage {
+                                width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl; autoTransform: true
+                                MouseArea {anchors.fill: parent; onPressAndHold: PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
+                            }
+                            content: AppText {
+                                width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username
+                                MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
+                            }
                         }
                     }
-                    add: Transition {NumberAnimation {property: "opacity"; from: 0; to: 1.0; duration: 400 } NumberAnimation {property: "scale"; from: 0; to: 1.0; duration: 400 }}
-                    displaced: Transition {NumberAnimation {properties: "x,y"; duration: 400; easing.type: Easing.InOutBack}}
                 }
-                AppListView {
-                    footer: footerComp
-                    footerPositioning: ListView.InlineFooter
-                    id: oddModelView; interactive: false; model: sortedModelOdd; scale: 0.96; height: parent.height; width: (homePage.width/2)-dp(2); spacing: dp(5);scrollIndicatorVisible: false;
-                    delegate: AppCard {
-                        id: oddImage; width: parent.width; margin: dp(5); paper.radius: dp(5)
-                        media: AppImage {
-                            width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl
-                            MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
-                        }
-                        content: AppText{
-                            width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username;
-                            MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
+                Column {
+                    id: oddCol
+                    spacing: dp(5)
+                    width: parent.width/2
+                    Repeater {
+                        id: oddModelView; model: sortedModelOdd;
+                        delegate: AppCard {
+                            id: oddImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
+                            media: AppImage {
+                                width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl; autoTransform: true
+                                MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(homePage, model.downloadUrl); onReleased: PictureViewer.close(); onClicked: {exploreStack.push(viewPostComp, {postID: model.id})}}
+                            }
+                            content: AppText{
+                                width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username;
+                                MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
+                            }
                         }
                     }
-                    add: Transition {NumberAnimation {property: "opacity"; from: 0; to: 1.0; duration: 400} NumberAnimation {property: "scale"; from: 0; to: 1.0; duration: 400 }}
-                    displaced: Transition {NumberAnimation {properties: "x,y"; duration: 400; easing.type: Easing.InOutBack}}
                 }
             }
-        }
     }
     Component {
         id: footerComp
