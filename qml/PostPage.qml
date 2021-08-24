@@ -23,9 +23,6 @@ Page {
         }
     }
 
-
-
-
     rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
         onClicked: {if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
@@ -52,7 +49,7 @@ Page {
                             id: selectedImage
                             source: imageToPost
                             width: parent.width
-                            height: imageToPost !== undefined ? Image.height : width
+                            height: imageToPost !== undefined ? Image.height : parent.width
                             anchors.centerIn: parent; autoTransform: true; smooth: true
                             onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}
                             fillMode: Image.PreserveAspectFit

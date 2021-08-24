@@ -102,6 +102,7 @@ DISTFILES += \
     qml/ModalPages/ShootSetupModal.qml \
     qml/ModalPages/ViewEventDetails.qml \
     qml/ModalPages/ViewPostModal.qml \
+    qml/MoreOptionsPage.qml \
     qml/Notifications.qml \
     qml/Organise.qml \
     qml/OrganisePages/CalendarOrganise.qml \
@@ -112,6 +113,12 @@ DISTFILES += \
     qml/Plugins/MapBoxPlugin.qml \
     qml/PostPage.qml \
     qml/SettingsPage.qml \
+    qml/SettingsPages/AboutSettings.qml \
+    qml/SettingsPages/AccountSettings.qml \
+    qml/SettingsPages/HelpSettings.qml \
+    qml/SettingsPages/NotificationSettings.qml \
+    qml/SettingsPages/PrivacySettings.qml \
+    qml/SettingsPages/SecuritySettings.qml \
     qml/SetupPages/InitialSetupPage.qml \
     qml/SetupPages/RegisterPage.qml \
     qml/TabBarPages/EventLocationPage.qml \

@@ -28,22 +28,22 @@ ListPage {
             text: model.name; iconSource: model.icon
             onSelected: {
                 if(model.name === "Account Settings") {
-
+                    stack.push(accountComp)
                 }
                 if(model.name === "Privacy") {
-
+                    stack.push(privacyComp)
                 }
                 if(model.name === "Security"){
-
+                    stack.push(securityComp)
                 }
                 if(model.name === "Help"){
-
+                    stack.push(helpComp)
                 }
                 if(model.name === "About"){
-
+                    stack.push(aboutComp)
                 }
                 if(model.name === "Notifications"){
-
+                    stack.push(notificationComp)
                 }
                 if(model.name === "Logout"){
                     settingsPage.logoutUser(); console.log("logoutclicked")

@@ -23,6 +23,21 @@ App {
     InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
     RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}
 
+
+    Component {id: settingsComp;  SettingsPage {id: settingsNav}}
+    Component {id: profileComp; UserProfile {id: profileNav}}
+    Component {id: notificationComp; Notifications {id: notificationNav}}
+    Component {id: inboxComp; Inbox {id: inboxNav}}
+
+    //settings navigation
+    Component {id: aboutComp; AboutSettings {id: aboutNav}}
+    Component {id: accountComp; AccountSettings {id: accountNav}}
+    Component {id: helpComp; HelpSettings {id: helpNav}}
+    Component {id: notificationSettingsComp; NotificationSettings {id: notificationSettingsNav}}
+    Component {id: privacyComp; PrivacySettings {id: privacyNav}}
+    Component {id: securityComp; SecuritySettings {id: securityNav}}
+
+
     ParallelAnimation {
         id: loaderAnim
         NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
@@ -124,7 +139,11 @@ App {
                 Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
             }
         }
-        NavigationItem {icon: IconType.ellipsisv; title: "More"}
+        NavigationItem {icon: IconType.ellipsisv; title: "More"
+        }
+    }
+    NavigationStack {
+        id: stack
     }
 
     MouseArea {
@@ -145,19 +164,25 @@ App {
         id: floatingColumn; z: 5; spacing: dp(5); width: settingsButton.width; height: settingsButton.height * 4; anchors.right: parent.right; anchors.bottom: moreClickable.top; anchors.bottomMargin: dp(Theme.navigationTabBar.height) / 2; anchors.rightMargin: dp(3); visible: false; enabled: !animation.running
         FloatingActionButton {
             id: settingsButton; icon: IconType.cog; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {settingsModal.open(); floatingColumn.visible = false}
+            onClicked: {
+                stack.push(settingsComp)
+                floatingColumn.visible = false
+            }
         }
         FloatingActionButton {
             id: userProfileButton; icon: IconType.user; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {profileModal.open(); floatingColumn.visible = false}
+            onClicked: {
+                stack.push(profileComp); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: notificationButton; icon: IconType.heart; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {notificationModal.open(); floatingColumn.visible = false}
+            onClicked: {
+                stack.push(notificationComp); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: inboxButton; icon: IconType.envelope; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {inboxModal.open(); floatingColumn.visible = false}
+            onClicked: {
+                stack.push(inboxComp); floatingColumn.visible = false}
         }
     }
     AppModal {

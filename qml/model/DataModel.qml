@@ -5,7 +5,6 @@ import "../ModalPages"
 
 Item {
     id: dataModel
-
     /*
     DATAMODEL STORAGE PLANS
     branch 1 - userData
@@ -23,7 +22,6 @@ Item {
         chatID followed by chat content and those who can access it?
 
     */
-
     signal nameAvailable
     signal postSuccess
 
@@ -49,7 +47,6 @@ Item {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
     FirebaseConfig {id: firebaseConfig; storageBucket: "session-10d53.appspot.com";  projectId: "session-10d53"; databaseUrl: "https://session-10d53-default-rtdb.europe-west1.firebasedatabase.app/"; apiKey: Qt.platform.os === "android" ? "AIzaSyClEiWZ5tOnHpB0kl19W4guYMZXBw5k6Hw": "AIzaSyCWy_CbVSdDFJGwtTvhiNJYtK3VA6Ehj4Q"; applicationId:  Qt.platform.os === "android" ? "1:627724626656:android:74443461c4df304ccc7e85": "1:627724626656:ios:1a1ec445bbaf1efbcc7e85"}
-
     FirebaseDatabase {
         id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
@@ -69,10 +66,8 @@ Item {
             else if(key === realtimeChats) {
             }
             else if(key === realtimeOtherUserDetails) {
-                console.log("<br> Other User Key: " + realtimeOtherUserDetails)
                 otherUserData = value
                 dataModel.otherUserDataChanged()
-                console.log("<br>Other User Data: <br>" + JSON.stringify(otherUserData) + "<br><br>")
             }
         }
         onFirebaseReady: {
@@ -85,7 +80,6 @@ Item {
             //remember to delete
         }
     }
-
     FirebaseAuth {id: firebaseAuth; config: firebaseConfig;
         onUserRegistered: {
             if(!success) {nativeUtils.displayMessageBox(qsTr("Somethings gone wrong!"), qsTr("Seems like: %1").arg(message), 1)}
@@ -120,7 +114,6 @@ Item {
 
     property var inboxJson: [{}]
     property var notificationJson: [{}]
-    property var postJson: []
     property var savedForLaterJson: [{}]
     property var myShootsJson: [
         {"e1234567890": {
@@ -473,6 +466,9 @@ Item {
     function getEvent(eventID) {
         db.getValue(/*events*/)
     }
+    function editEvent() {
+
+    }
     //end Events Functions
     //
     //
@@ -484,15 +480,15 @@ Item {
     function searchUsers(searchString) {
         console.log("Search String: "+ searchString)
         db.getValue("public/nameList/", {
-                        orderByKeys: true,
-                        startAt: {key:  searchString},
-                        endAt: {key: searchString + "~"},
-                        limitToFirst: 10,
+                        "orderByKey": true,
+                        "startAt": searchString,
+                        "endAt": searchString+"~",
+                        "limitToFirst": 10,
                     }, function(success, key, value) {
                         if(success) {
                             searchArr = []
                             for(var i in value){
-                            searchArr.push({name: i, id: value[i]})
+                                searchArr.push({name: i, id: value[i]})
                             }
                             app.searchArrChanged()
                             console.log("<br><br>Read user value for key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)
@@ -530,6 +526,9 @@ Item {
         //add their feed to yours
         db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
     }
+    function editUserData() {
+
+    }
     //
     //
     // IM functions
@@ -563,6 +562,9 @@ Item {
     function sendMessage(chatID,messageContent) {
         let messageID = uniqueID()
         db.setValue("chats/"+chatID+"/"+messageID+"/", messageContent)
+    }
+    function deleteMessage() {
+
     }
     // end IM functions
     //
