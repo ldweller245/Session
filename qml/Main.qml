@@ -111,7 +111,7 @@ App {
             icon: IconType.compass; title: "Explore"
             NavigationStack {
                 id: exploreStack; initialPage: initialComp
-                Component {id: initialComp; HomePage {id: homePageNav}}
+                Component {id: initialComp; HomePage {id: homePageNav; title: "EXPLORE"}}
                 Component {id: viewPostComp; ViewPostModal {id: viewPostPage}}
                 Component {id: otherUserComp; OtherUserProfile {id: otherUserNav}}
             }
@@ -142,9 +142,7 @@ App {
         NavigationItem {icon: IconType.ellipsisv; title: "More"
         }
     }
-    NavigationStack {
-        id: stack
-    }
+
 
     MouseArea {
         id: moreClickable; width: navigationRoot.width/6; height: dp(Theme.navigationTabBar.height); anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.bottomMargin: nativeUtils.safeAreaInsets.bottom // take care of potential safearea (e.g. iPhone 10 and up)

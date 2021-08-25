@@ -58,11 +58,6 @@ Page {
                             id: detailsRow; anchors.verticalCenter: parent.verticalCenter
                             AppText {id: profileName; padding: dp(15); text: "<b>"+otherUser.firstname + "<br>" + otherUser.surname + "</b><br>" + otherUser.role}
                             AppText {fontSize: profileName.fontSize / 1.3; padding: dp(10); color: "grey"; text: "<b>"+otherUser.location +"</b><br><b>Last Active:</b> " + new Date(otherUser.lastActive).toDateString()}
-                            Row{
-                                width: parent.width
-                                AppButton {width: parent.width/2; text: otherUser.follows_user === true ? "<b>Following": "<b>Follow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
-                                AppButton {width: parent.width/2; text: "<b>Message"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
-                            }
                         }
                     }
                     RoundedImage  {id: profileImage; width: parent.width / 2; height: width; scale: 0.75; anchors.rightMargin: dp(10); anchors.verticalCenter: parent.verticalCenter; source: otherUser.profile_Pic_URL; fillMode: Image.PreserveAspectCrop; radius: profileImage.width/2; img.autoTransform: true; smooth: true}
@@ -73,8 +68,8 @@ Page {
         Column {
             id: userStatistics; width: parent.width; height: statRow.height
             Row {
-                id: statRow; width: parent.width
-                AppButton {width: parent.width/2; text: "<b>Follow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
+                id: statRow; width: parent.width                
+                AppButton {id: followButton; width: parent.width/2; text: userData.follows.follow_list[otherUser.id] === undefined ? "<b>Follow": "<b>Unfollow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false; onClicked: {followButton.text === "Follow" ? dataModel.followUser(otherUser.id, otherUser.username) : "unfollow"}}
                 AppButton {width: parent.width/2; text: "<b>Message"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
             }
         }

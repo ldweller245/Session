@@ -513,18 +513,16 @@ Item {
     }
     function followUser(userID, userName) {
         let updateFollowCount
-        updateFollowCount = userData.follows.follows_count + 1
+        updateFollowCount = userData.follows.follow_count + 1
         //add to your follows list
-        db.setValue("userData/"+uuid+"/follows/follows_count", updateFollowCount)
-        db.setValue("userData/"+uuid+"/follows/follows_list/"+userID+"/", {"id": userID, "name": userName})
+        db.setValue("userData/"+userData.id+"/follows/follow_count", updateFollowCount)
+        db.setValue("userData/"+userData.id+"/follows/follow_list/"+userID+"/", {"id": userID, "name": userName})
         //add to their folllowers list
         let followerCount
-        db.getValue("userData/"+userID+"/followers/followers_count", followerCount = value+1)
-        db.setValue("userData/"+userID+"/followers/followers_count", followerCount)
+        db.getValue("userData/"+userID+"/followers/follower_count", {}, function(success, key, value){followerCount = value; followerCount = followerCount +1;db.setValue("userData/"+userID+"/followers/follower_count", followerCount)})
         db.setValue("userData/"+userID+"/followers/followers_list/"+userData.id+"/", {"id": userData.id, "name": userData.username})
-
         //add their feed to yours
-        db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+uuid+"/", value)}})
+        db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+userData.id+"/", value)}})
     }
     function editUserData() {
 
