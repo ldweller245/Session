@@ -69,8 +69,8 @@ Page {
             id: userStatistics; width: parent.width; height: statRow.height
             Row {
                 id: statRow; width: parent.width                
-                AppButton {id: followButton; width: parent.width/2; text: userData.follows.follow_list[otherUser.id] === undefined ? "<b>Follow": "<b>Unfollow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false; onClicked: {followButton.text === "Follow" ? dataModel.followUser(otherUser.id, otherUser.username) : "unfollow"}}
-                AppButton {width: parent.width/2; text: "<b>Message"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false}
+                AppButton {id: followButton; width: parent.width/2; text: userData.follows.follow_list[otherUser.id] === undefined ? "<b>Follow": "<b>Unfollow"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false; onClicked: {followButton.text === "Follow" ? dataModel.followUser(otherUser.id, otherUser.username) : dataModel.unfollowUser(otherUser.id)}}
+                AppButton {width: parent.width/2; text: "<b>Message"; flat: false; borderColor: "black"; backgroundColor: "white"; textColor: "black"; borderWidth: dp(1); dropShadow: false; onClicked: {dataModel.getChat(otherUser.id);exploreStack.push(messageUserComp)}}
             }
         }
         TabControl {

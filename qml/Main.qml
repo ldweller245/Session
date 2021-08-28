@@ -114,6 +114,8 @@ App {
                 Component {id: initialComp; HomePage {id: homePageNav; title: "EXPLORE"}}
                 Component {id: viewPostComp; ViewPostModal {id: viewPostPage}}
                 Component {id: otherUserComp; OtherUserProfile {id: otherUserNav}}
+                Component {id: messageUserComp; ConversationPage {id: messageUserNav}}
+
             }
         }
         NavigationItem {
@@ -163,24 +165,24 @@ App {
         FloatingActionButton {
             id: settingsButton; icon: IconType.cog; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                stack.push(settingsComp)
+                exploreStack.push(settingsComp)
                 floatingColumn.visible = false
             }
         }
         FloatingActionButton {
             id: userProfileButton; icon: IconType.user; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                stack.push(profileComp); floatingColumn.visible = false}
+                exploreStack.push(profileComp); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: notificationButton; icon: IconType.heart; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                stack.push(notificationComp); floatingColumn.visible = false}
+                exploreStack.push(notificationComp); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: inboxButton; icon: IconType.envelope; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                stack.push(inboxComp); floatingColumn.visible = false}
+                exploreStack.push(inboxComp); floatingColumn.visible = false}
         }
     }
     AppModal {

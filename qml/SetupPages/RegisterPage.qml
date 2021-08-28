@@ -2,9 +2,12 @@ import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import QtQuick 2.12 as DragEffect
+import QtLocation 5.12 as QL
+import QtPositioning 5.12
 import QtQuick.Layouts 1.1
 import Felgo 3.0
 import "../Components"
+import "../Plugins"
 import "../model"
 
 
@@ -23,20 +26,6 @@ Page {
         view.currentIndex = view.currentIndex + 1
         animation.start()
     }
-
-    /*
-    JsonListModel {
-        id: locationJSONModel
-        source: locationModel.townData
-        keyField: "name"
-        fields: ["name", "county"]
-    }
-    SortFilterProxyModel {
-        id: sortedModel
-        Component.onCompleted: sourceModel = locationJSONModel
-        sorters: StringSorter { id: typeSorter; roleName: "name"; ascendingOrder: true }
-    }
-    */
 
     ParallelAnimation {id: animation; NumberAnimation {target: titleText; property: "scale"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutBack}}
     NumberAnimation {id: pageReturnTransitionAnimation; target: loginPage; property: "x"; from: -app.width; to: 0; duration: 1000; easing.type: Easing.InOutBack}
@@ -203,17 +192,27 @@ Page {
                 Item {
                     id: additionalDetailsSetupPage
                     Column {
-                        anchors.margins: dp(12)
-                        spacing: dp(12)
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.verticalCenterOffset: -dp(Theme.navigationBar.height)
+                        anchors.margins: dp(12); spacing: dp(12); anchors.horizontalCenter: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter; anchors.verticalCenterOffset: -dp(Theme.navigationBar.height)
                         GridLayout {
-                            columnSpacing: dp(20)
-                            rowSpacing: dp(15)
-                            columns: 2
-                            AppText {font.pixelSize: sp(12); text: "Where are you based? "}
-                            AppTextField {id:baseLocationTextEdit; Layout.preferredWidth: dp(100); showClearButton: true; font.pixelSize: sp(14); rightPadding: dp(35); borderColor: Theme.tintColor; borderWidth: !Theme.isAndroid ? dp(2) : 0}
+                            columnSpacing: dp(20); rowSpacing: dp(15); columns: 2
+                            AppText {font.pixelSize: sp(12); text: "Where are you based? "; Layout.columnSpan: 2}
+                            AppPaper {
+                                z:5; Layout.columnSpan: 2; height: baseLocationTextEdit.height + suggestionsList.height; width: registerPage.width
+                                AppTextField {
+                                    Layout.columnSpan: 2; id:baseLocationTextEdit; width: parent.width; showClearButton: true; font.pixelSize: sp(14); rightPadding: dp(35); borderColor: Theme.tintColor; borderWidth: !Theme.isAndroid ? dp(2) : 0; placeholderText: qsTr("Search for location")
+                                    onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
+                                    onDisplayTextChanged: {
+                                        if (baseLocationTextEdit.displayText.length > 3 && baseLocationTextEdit.focus) {suggenstionModel.searchTerm = baseLocationTextEdit.displayText.toString(); suggenstionModel.update()}
+                                        else if(baseLocationTextEdit.displayText.length === 0) {suggestionsList.hide()}
+                                    }
+                                    onFocusChanged: {if (!focus) {suggestionsList.hide()}}
+                                    Component.onCompleted: {font.pixelSize = sp(14)}
+                                }
+                                SuggestionsList {
+                                    id: suggestionsList; rowHeight: dp(30); model: suggenstionModel; Layout.columnSpan: 2; width: registerPage.width
+                                    onProposalSelected: {baseLocationTextEdit.focus = false; baseLocationTextEdit.text = suggestion; geocodeModel.query = suggestion}
+                                }
+                            }
                             AppText {font.pixelSize: sp(12); text: "Experience Level: "}
                             ComboBox {id: experienceCombobox; model: ["Select", "None", "Some", "Experienced", "Highly experience"]; Layout.preferredWidth: dp(100); font.pixelSize: sp(14); rightPadding: dp(35); Layout.preferredHeight: dp(Theme.navigationBar.height)/2}
                             AppText {font.pixelSize: sp(12); text: "Open TFP work? "}
@@ -364,4 +363,18 @@ Page {
             }
         }
     }
+
+    QL.GeocodeModel {id: geocodeModel; plugin: MapBoxPlugin {geocoding: true} autoUpdate: true
+        onLocationsChanged: {
+            //var address = get(0).address
+            //suggenstionModel.text = address.street + " " + address.city + " " + address.country
+        }
+    }
+
+    QL.PlaceSearchSuggestionModel {
+        id: suggenstionModel; plugin:  MapBoxPlugin {geocoding: true}
+        onStatusChanged: {if (status == QL.PlaceSearchSuggestionModel.Ready) {suggestionsList.show()}}
+    }
+
+
 }

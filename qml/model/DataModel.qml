@@ -32,6 +32,7 @@ Item {
     property var regUserDetails: []
     property var otherUserData: []
     property var otherUserPortfolio: []
+    property var currentChat: []
 
     property var viewPostData
 
@@ -469,6 +470,9 @@ Item {
     function editEvent() {
 
     }
+    function deleteEvent() {
+
+    }
     //end Events Functions
     //
     //
@@ -522,7 +526,22 @@ Item {
         db.getValue("userData/"+userID+"/followers/follower_count", {}, function(success, key, value){followerCount = value; followerCount = followerCount +1;db.setValue("userData/"+userID+"/followers/follower_count", followerCount)})
         db.setValue("userData/"+userID+"/followers/followers_list/"+userData.id+"/", {"id": userData.id, "name": userData.username})
         //add their feed to yours
-        db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){db.setValue("userFeeds/"+userData.id+"/", value)}})
+        let otherUserFeed
+        db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){otherUserFeed = value; db.setValue("userFeeds/"+userData.id+"/", otherUserFeed)}})
+    }
+    function unfollowUser(userID) {
+        let updateFollowCount
+        updateFollowCount = userData.follows.follow_count -1
+
+        db.setValue("userData/"+userData.id+"/follows/follow_count", updateFollowCount)
+        db.setValue("userData/"+userData.id+"/follows/follow_list/"+userID+"/", null)
+
+        let followerCount
+        db.getValue("userData/"+userID+"/followers/follower_count", {}, function(success, key, value){followerCount = value; followerCount = followerCount -1;db.setValue("userData/"+userID+"/followers/follower_count", followerCount)})
+        db.setValue("userData/"+userID+"/followers/followers_list/"+userData.id+"/", null)
+        //remove their feed from yours
+        //let otherUserFeed
+        //db.getValue("userData/"+userID+"/feed_posts", {}, function(success, key, value){ if(success){otherUserFeed = value; db.setValue("userFeeds/"+userData.id+"/", otherUserFeed)}})
     }
     function editUserData() {
 
@@ -530,40 +549,98 @@ Item {
     //
     //
     // IM functions
-    function startChat (chatName, participantID) {
-        let chatID = "c-uid"+uniqueID()
+    function startGroupChat (chatName, participantID) {
+        let chatID = "c-uid"+uniqueID() + "-" + uniqueID()
         let messageID = uniqueID()
         let content = {
+            "chatID": chatID,
             "chat_name": chatName,
-            "members": [participantID, uuid],
+            "members": [participantID, userData.id],
             "thread": [{
-                    messageID: { // message id
-                        "content": userData.name + " has started a chat!",
+                    "0001": { // message id
+                        "content": userData.username + " has started a chat!",
                         "created": Date.now(),
                         "senderId": "Turtle",
                         "senderName": "Session"
                     }
                 }]
         }
+        //message layout on convo page
+        /*property var blindTextMsgs: [
+          { text: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.", me: false },
+          { text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.", me: true },
+          { text: "All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words.", me: false },
+          { text: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.", me: false },
+          { text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.", me: true },
+          { text: "All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words.", me: false }
+        ]*/
         db.setValue("chats/"+chatID, content)
-        db.setValue("userData/"+uuid+"/chats/",chatID)
+        //chats/123456
+        db.setValue("userData/"+userData.id+"/chats/"+chatID, chatID)
+        for (var i in participantID){
+            db.setValue("userData/"+i+"/chats/"+chatID, chatID)
+        }
+        //userData/eddID/chats/Key: 123456 value: 123456
     }
-    function getChats() {
-        db.getValue("userData/"+uuid+"/chats/", {
+    function refreshChat(chatiD) {
+        db.getValue("chats/"+chatiD, {
                         if(success){
-                            for (var x in value){
-                                db.getValue("chats/"+value[x])
-                            }
+                            //updateModel
+
                         }
                     })
     }
-    function sendMessage(chatID,messageContent) {
+    function sendMessage(chatID,messageContent, member) {
+        var chatExists = userData.chats
+        var recipients = userData.chats[chatID].members
         let messageID = uniqueID()
-        db.setValue("chats/"+chatID+"/"+messageID+"/", messageContent)
-    }
-    function deleteMessage() {
 
+        if(chatExists.indexOf(chatID) === -1){
+            //not found
+            db.setValue("chats/"+chatID+"/chatID",chatID)
+            for(var x in member){
+                db.setValue("userData/"+x+"/chats/"+chatID, chatID)
+                db.setValue("chats/"+chatID+"/members/",x)
+                //send notification -"Edward has started a chat"
+            }
+        }
+        else {
+            //found
+            for(var i in recipients) {
+                //send notification "New message from Edward
+            }
+        }
+        db.setValue("chats/"+chatID+"/thread/"+messageID, messageContent)
     }
+    function deleteMessage(chatID, messageID) {
+        db.setValue("chats/"+chatID+"/thread/"+messageID, null)
+    }
+    function editMessage(chatID, messageID, content){
+        db.setValue("chats/"+chatID+"/thread/"+messageID+"/content", content)
+    }
+    function leaveChat(chatID) {
+        db.setValue("chats/"+chatID+"/members/"+userData.id+"/", null)
+        db.setValue("userData/"+userData.id+"/chats/"+chatID, null)
+    }
+    function getChat (userID) {
+        //userData/edd/chats/123456/
+        let chats = userData.chats
+        for(var i in chats){
+            if(chats[i].includes(userData.id && userID)){
+                if(chats[i].length === 2){
+                    //send signal to push page with details
+                    //correct chat. change to array.every ?
+                } else {
+                    //emptty chat
+                    //keep looking
+                }
+            }
+            else {
+                //empty chat
+            }
+        }
+    }
+
     // end IM functions
     //
     //

@@ -87,6 +87,8 @@ DISTFILES += \
     qml/Collaborate.qml \
     qml/Components/ConversationPage.qml \
     qml/Components/ImagePickerPage.qml \
+    qml/Components/PlaceSearchSuggestionsPage.qml \
+    qml/Components/SuggestionsList.qml \
     qml/Components/TimeTumbler.qml \
     qml/Components/ViewFeedComp.qml \
     qml/Create.qml \
