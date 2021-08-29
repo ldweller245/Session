@@ -132,6 +132,18 @@ Page {
             }
         }
     }
+
+    AppButton {
+        minimumWidth: parent.width / 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.margins: dp(15)
+        radius: dp(12)
+        flat: false
+        text: "Preview"
+        onClicked: postStack.push(postPreviewComp)
+    }
+
     AppModal {
         id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
         NavigationStack {
