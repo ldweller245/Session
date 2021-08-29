@@ -97,6 +97,7 @@ DISTFILES += \
     qml/LoadingPage.qml \
     qml/ModalPages/AddTeamPostPage.qml \
     qml/ModalPages/OtherUserProfile.qml \
+    qml/ModalPages/PostPreview.qml \
     qml/ModalPages/SavedUsers.qml \
     qml/ModalPages/SearchModal.qml \
     qml/ModalPages/SearchResults.qml \

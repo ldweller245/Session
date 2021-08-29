@@ -124,7 +124,10 @@ App {
         }
         NavigationItem {
             icon: IconType.cameraretro; title: "Post"
-            NavigationStack {id: postStack; PostPage {id: postPage; onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)} }
+            NavigationStack {id: postStack; initialPage: postPageComp
+                Component {id: postPageComp; PostPage {id: postPage; onPostImage: dataModel.createPost(postImagePath, imageHeight, imageWidth, imageDescription, team, location, tag)}}
+                Component {id: postPreviewComp; PostPreview {id: postPreviewPage}}
+            }
         }
         NavigationItem {
             icon: IconType.paintbrush; title: "Studio"
