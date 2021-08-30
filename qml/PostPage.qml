@@ -25,28 +25,39 @@ Page {
             }
         }
     }
-
-    rightBarItem: TextButtonBarItem {
+    
+        rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
         onClicked: {if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
             else if(appTextEdit.length > 0) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
             else if(team.length === 0) {nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)}
             else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}}
+    
+    
+    
     AppFlickable {
-        id:flick
-        anchors.fill: parent; contentWidth: width; contentHeight: col.height + dp(150)
+        id: flickable
+        width: parent.width
+        contentHeight: contentCol.height
         Column {
-            id: col; width: parent.width
+            id: contentCol
+            //spacer rect for top
+            Rectangle {width: parent.width; height: dp(Theme.navigationBar.height; color: "#00000000"}
+            //post image
             Rectangle {
-                width: parent.width; height: page.height
-                AppCard {
-                    id: card3; width: parent.width; height: parent.height; margin: dp(15); paper.radius: dp(5)
-                    header: Item {
+                        width: parent.width; height: width; color: "lightgrey"
+                        Icon {icon: IconType.upload; anchors.centerIn: parent; scale: 2}
+                        AppImage {
+                            id: selectedImage; source: imageToPost; width: parent.width; height: imageToPost !== undefined ? Image.height : parent.width; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit
+                            onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}                           
+                        }
+                        MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
+                    }
+                    //location Add bar
+                    Item {
                         width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
                         Column {
                             anchors.fill: parent
-                            SimpleRow {imageSource: userData.profile_Pic_URL; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop; text: userData.username; detailText: userData.role; enabled: false; style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}}
-                            //Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
                             AppPaper {
                                 z:5
                                 height: searchTextField.height + suggestionsList.height
@@ -54,19 +65,10 @@ Page {
                                 AppTextField {
                                     id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
                                     //Perform search when typed term is accepted
-                                    onAccepted: {
-                                        focus = false
-                                        if (text != "") {
-                                            geocodeModel.query = text
-                                        }
-                                    }
+                                    onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
                                     //Update suggestions model when typed text changed
-                                    onDisplayTextChanged: {
-                                        console.log()
-                                        if (searchTextField.displayText.length > 3 && searchTextField.focus) {
-                                            suggenstionModel.searchTerm = searchTextField.displayText.toString()
-                                            suggenstionModel.update()
-                                        }
+                                    onDisplayTextChanged: {                                        
+                                        if (searchTextField.displayText.length > 3 && searchTextField.focus) {suggenstionModel.searchTerm = searchTextField.displayText.toString(); suggenstionModel.update()}
                                         else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
                                     }
                                     //Hide suggestions when focus is lost
@@ -74,32 +76,14 @@ Page {
                                     Component.onCompleted: {font.pixelSize = sp(16)}
                                 }
                                 SuggestionsList {
-                                    id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel
-                                    anchors {horizontalCenter: parent.horizontalCenter}
-                                    onProposalSelected: {
-                                        searchTextField.focus = false
-                                        searchTextField.text = suggestion
-                                        geocodeModel.query = suggestion
-                                    }
+                                    id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
+                                    onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
                                 }
                             }
                         }
-                    }
-                    media: Rectangle {
-                        width: parent.width; height: imageToPost !== undefined ? selectedImage.height : width; color: "lightgrey"
-                        Icon {icon: IconType.upload; anchors.centerIn: parent; scale: 2}
-                        AppImage {
-                            id: selectedImage
-                            source: imageToPost
-                            width: parent.width
-                            height: imageToPost !== undefined ? Image.height : parent.width
-                            anchors.centerIn: parent; autoTransform: true; smooth: true
-                            onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}
-                            fillMode: Image.PreserveAspectFit
-                        }
-                        MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
-                    }
-                    content: Item {
+                    }                    
+                    //description
+                    Item {
                         width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
                         Column {
                             id: locationDescriptionCol
@@ -127,11 +111,13 @@ Page {
                             }
                         }
                     }
-                    actions: Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()}}
-                }
-            }
+                    
+                    //actions
+                    Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()}}
+            
         }
     }
+    
 
     AppButton {
         minimumWidth: parent.width / 2
