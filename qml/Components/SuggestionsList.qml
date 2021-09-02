@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.12
+import QtPositioning 5.12
 
 AppListView {
   id: root
@@ -17,9 +18,9 @@ AppListView {
 
   delegate: SimpleRow {
     height: root.rowHeight
-    text: suggestion
+    text: place.location.address.text
     onSelected: {
-      root.proposalSelected(suggestion)
+      root.proposalSelected(place.location.address.text)
     }
   }
 

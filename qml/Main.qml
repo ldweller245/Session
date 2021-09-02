@@ -131,7 +131,11 @@ App {
         }
         NavigationItem {
             icon: IconType.paintbrush; title: "Studio"
-            NavigationStack {id: studioStack; Create { } }
+            NavigationStack {
+                id: studioStack; initialPage: studioPageComp
+                Component {id: studioPageComp; Create {id: studioPage } }
+
+            }
         }
         NavigationItem {
             icon: IconType.book; title: "Organise"

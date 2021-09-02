@@ -20,114 +20,76 @@ Page {
     Connections {
         target: nativeUtils
         onMessageBoxFinished: {
-            if(accepted){
-                page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)
-            }
+            if(accepted){page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}
         }
     }
-    
-        rightBarItem: TextButtonBarItem {
+    rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
         onClicked: {if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
             else if(appTextEdit.length > 0) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
             else if(team.length === 0) {nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)}
             else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}}
-    
-    
-    
-    AppFlickable {
-        id: flickable
-        width: parent.width
-        contentHeight: contentCol.height
-        Column {
-            id: contentCol
-            //spacer rect for top
-            Rectangle {width: parent.width; height: dp(Theme.navigationBar.height; color: "#00000000"}
-            //post image
-            Rectangle {
-                        width: parent.width; height: width; color: "lightgrey"
-                        Icon {icon: IconType.upload; anchors.centerIn: parent; scale: 2}
-                        AppImage {
-                            id: selectedImage; source: imageToPost; width: parent.width; height: imageToPost !== undefined ? Image.height : parent.width; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit
-                            onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}                           
-                        }
-                        MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
-                    }
-                    //location Add bar
-                    Item {
-                        width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
-                        Column {
-                            anchors.fill: parent
-                            AppPaper {
-                                z:5
-                                height: searchTextField.height + suggestionsList.height
-                                anchors {left: parent.left; right: parent.right; margins: dp(10)}
-                                AppTextField {
-                                    id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
-                                    //Perform search when typed term is accepted
-                                    onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
-                                    //Update suggestions model when typed text changed
-                                    onDisplayTextChanged: {                                        
-                                        if (searchTextField.displayText.length > 3 && searchTextField.focus) {suggenstionModel.searchTerm = searchTextField.displayText.toString(); suggenstionModel.update()}
-                                        else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
-                                    }
-                                    //Hide suggestions when focus is lost
-                                    onFocusChanged: {if (!focus) {suggestionsList.hide()}}
-                                    Component.onCompleted: {font.pixelSize = sp(16)}
-                                }
-                                SuggestionsList {
-                                    id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
-                                    onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
-                                }
-                            }
-                        }
-                    }                    
-                    //description
-                    Item {
-                        width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
-                        Column {
-                            id: locationDescriptionCol
-                            anchors.fill: parent
-                            Rectangle {
-                                width: parent.width; height: dp(Theme.navigationBar.height); color: "transparent"
-                            }
-                            Rectangle {
-                                width: parent.width; height: parent.height - searchTextField.height; color: "#fff"
-                                Rectangle {
-                                    width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor
-                                }
-                                AppFlickable {
-                                    id: flickText;anchors.fill: parent ; contentWidth: width; contentHeight: appTextEdit.height
-                                    AppTextEdit {
-                                        onTextChanged: console.log(appTextEdit.length)
-                                        inputMethodHints: Qt.ImhSensitiveData
 
-                                        id: appTextEdit; width: parent.width; height: Math.max(appTextEdit.contentHeight, flickText.height); padding: dp(10)
-                                        placeholderText: "Tell us about the look!"; verticalAlignment: TextEdit.AlignTop;
-                                        // This enables the text field to automatically scroll if cursor moves outside while typing
-                                        flickable: flickText; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                                    }
-                                }
+    AppFlickable {
+        id: flickable; anchors.fill: parent; contentHeight: contentCol.height
+        Column {
+            id: contentCol; width: parent.width
+            Rectangle {
+                width: parent.width; height: imageToPost !== undefined ? selectedImage.height : width/2; color: "lightgrey"
+                Icon {icon: IconType.upload; anchors.centerIn: parent; scale: 2}
+                AppImage {
+                    id: selectedImage; visible: imageToPost !== undefined ;source: imageToPost; width: parent.width; height: imageToPost !== undefined || "" || " " || "undefined" ? Image.height : parent.width; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit
+                    onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}}
+                MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
+            }
+            Item {
+                width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
+                Column {
+                    anchors.fill: parent
+                    AppPaper {
+                        z:5; height: searchTextField.height + suggestionsList.height
+                        AppTextField {
+                            id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
+                            onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
+                            onDisplayTextChanged: {
+                                if (searchTextField.displayText.length > 2 && searchTextField.focus) {
+                                    suggenstionModel.searchTerm = searchTextField.displayText.toString();suggenstionModel.update()}
+                                else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
+                            }
+                            onFocusChanged: {if (!focus) {suggestionsList.hide()}}
+                            Component.onCompleted: {font.pixelSize = sp(16)}
+                        }
+                        SuggestionsList {
+                            id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
+                            onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
+                        }
+                    }
+                }
+            }
+            Item {
+                width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
+                Column {
+                    id: locationDescriptionCol; anchors.fill: parent
+                    Rectangle {width: parent.width; height: dp(Theme.navigationBar.height); color: "transparent"}
+                    Rectangle {
+                        width: parent.width; height: parent.height - searchTextField.height; color: "#fff"
+                        Rectangle {width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor}
+                        AppFlickable {
+                            id: flickText;anchors.fill: parent ; contentWidth: width; contentHeight: appTextEdit.height
+                            AppTextEdit {
+                                onTextChanged: console.log(appTextEdit.length); inputMethodHints: Qt.ImhSensitiveData; id: appTextEdit; width: parent.width; height: Math.max(appTextEdit.contentHeight, flickText.height); padding: dp(10)
+                                placeholderText: "Tell us about the look!"; verticalAlignment: TextEdit.AlignTop; flickable: flickText; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             }
                         }
                     }
-                    
-                    //actions
-                    Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()}}
-            
+                }
+            }
+            Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()} IconButton {icon: IconType.plus; onClicked: addTeamModal.open()}}
         }
     }
-    
-
     AppButton {
-        minimumWidth: parent.width / 2
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.margins: dp(15)
-        radius: dp(12)
-        flat: false
-        text: "Preview"
-        onClicked: postStack.push(postPreviewComp)
+        minimumWidth: parent.width / 2; anchors.horizontalCenter: parent.horizontalCenter; anchors.bottom: parent.bottom; anchors.margins: dp(15); radius: dp(12); flat: false; text: "Preview"
+        onClicked: postStack.push(postPreviewComp, {previewData: {"image": selectedImage.source, "location": searchTextField.text, "details": appTextEdit.text, "team": team}})
     }
 
     AppModal {
@@ -135,7 +97,7 @@ Page {
         NavigationStack {
             ImagePickerPage {
                 id: imagePicker; title: "CHOOSE IMAGE"; clip: true
-                rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: {imageToPost = imagePath; imagePickerModal.close()}}
+                rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: {imageToPost = imagePath; console.log("NEW SOURCE: " + imageToPost) ; imagePickerModal.close()}}
             }
         }
     }
@@ -158,11 +120,17 @@ Page {
 
     QL.GeocodeModel {id: geocodeModel; plugin: MapBoxPlugin {geocoding: true} autoUpdate: true
         onLocationsChanged: {
-            var address = get(0).address
-            suggenstionModel.text = address.street + " " + address.city + " " + address.country
+            console.log("count: " + count)
+            for(var i = 0; i < count; i++){
+                var address = get(i).address
+                var fullText
+                fullText = "str: "+ address.street + " City: " + address.city + " Country: " + address.country
+
+                console.log("get: " + fullText + "<br>")
+            }
         }
     }
-    QL.PlaceSearchSuggestionModel {
+    QL.PlaceSearchModel {
         id: suggenstionModel; plugin:  MapBoxPlugin {geocoding: true}
         onStatusChanged: {if (status == QL.PlaceSearchSuggestionModel.Ready) {suggestionsList.show()}}
     }
