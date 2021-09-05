@@ -30,7 +30,11 @@ Page {
             }
             content: Column {
                 id: detailCol; width: parent.width
-                AppText {text: previewData.location; width: parent.width; padding: dp(15)}
+                Row {
+                width: parent.width
+                Icon {icon: IconType.mapmarker}
+                AppText {text: previewData.location; padding: dp(15)}
+                }
                 AppText {text: previewData.details; width: parent.width; padding: dp(15)}
             }
             actions: Column {
