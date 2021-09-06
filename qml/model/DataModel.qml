@@ -683,6 +683,8 @@ Item {
         }
         //userData/eddID/chats/Key: 123456 value: 123456
     }
+    
+    
     function refreshChat(chatiD) {
         db.getValue("chats/"+chatiD, {
                         if(success){
@@ -691,6 +693,9 @@ Item {
                         }
                     })
     }
+    
+    
+    
     function sendMessage(chatID,messageContent, member) {
         var chatExists = userData.chats
         var recipients = userData.chats[chatID].members
@@ -713,24 +718,49 @@ Item {
         }
         db.setValue("chats/"+chatID+"/thread/"+messageID, messageContent)
     }
+    
+    
+    
     function deleteMessage(chatID, messageID) {
         db.setValue("chats/"+chatID+"/thread/"+messageID, null)
     }
+    
+    
     function editMessage(chatID, messageID, content){
         db.setValue("chats/"+chatID+"/thread/"+messageID+"/content", content)
     }
+    
+    
     function leaveChat(chatID) {
         db.setValue("chats/"+chatID+"/members/"+userData.id+"/", null)
         db.setValue("userData/"+userData.id+"/chats/"+chatID, null)
     }
-    function getChat (userID) {
-        //userData/edd/chats/123456/
+    
+    
+    function getChat (userID) {    
+        //userData/edd/chats/123456/0 --- edd123    
+        //                          1 --- kati456
+        
         let chats = userData.chats
-        for(var i in chats){
+        
+        chats.forEach(function(item) {        
+            if(item.length ===2 && item[0] === userData.id && item[1]===userID || item.length ===2 && item[1] === userData.id && item[0]===userID) {
+                db.getValue("chats/"+item, {
+                    "orderByKey": true,
+                    "limitToLast": 50,
+                    }, function(success, key, value) {
+                        if(success) {
+                        chatData = value
+                        }
+                    })
+            }
+        })
+        return              
+        /*for(var i in chats){
             if(chats[i].includes(userData.id && userID)){
                 if(chats[i].length === 2){
                     //send signal to push page with details
-                    //correct chat. change to array.every ?
+                    //correct chat. change to array.every ?                                                                                                   
                 } else {
                     //emptty chat
                     //keep looking
@@ -739,7 +769,7 @@ Item {
             else {
                 //empty chat
             }
-        }
+        }*/
     }
 
     // end IM functions
