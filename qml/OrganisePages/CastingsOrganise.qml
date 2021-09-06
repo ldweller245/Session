@@ -53,13 +53,14 @@ Page {
                 header: SimpleRow {
                     text: model.title; detailText: model.date; enabled: false
                     style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
+                    onSelected: {organiseStack.push(viewCastingPage, {castingDetails: castingDetails})}
                 }
                 media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image}
                 content: AppText{width: parent.width; padding: dp(15); text: model.details}
                 actions: Row {
                     IconButton {icon: IconType.thumbsup}
                     IconButton {icon: IconType.sharealt}
-                    AppButton {text: "Follow"; flat: true}
+                    AppButton {text: "View Details"; flat: true; onClicked: organiseStack,push(viewCastingPage, {castingDetails: castingDetails})}
                 }
             }
         }
@@ -74,5 +75,5 @@ Page {
                 }
             }
         }
-    }
+    }//end modal
 }
