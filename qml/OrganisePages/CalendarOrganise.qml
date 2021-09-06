@@ -7,102 +7,8 @@ import Felgo 3.0
 
 Page {
     id: calendarPage; height: parent.height; width: parent.width
-/*
-    function isEven(n) {
-        return n % 2 == 0;
-    }
-    function groupBy(array, property) {
-        var hash = {};
-        for (var i = 0; i < array.length; i++) {
-            if (!hash[array[i][property]]) hash[array[i][property]] = [];
-            hash[array[i][property]].push(array[i]);
-        }
-        return hash;
-    }
-    function getSum(total, num) {
-        return total + num;
-    }
-    function saveDate() {
-        updateEvents()
-        var year
 
-        var time = new Date().getTime()
-        var dayIn = calendar.selectedDate.getDay()
-        if(testRange.text !== "Multiple Day"){
-
-            var multiDeductTotal = []
-            var multiDeductReduce = []
-            var grouped = groupBy(multiSelectSaveArr,'leaveYear')
-            var sumDays = function sumOfDays(yearArr) {
-                return yearArr.reduce(function (a, b) {
-                    return a + b.dayValue;
-                }, 0);
-            };
-            var output = Object.values(grouped).reduce(function (a, yearArr) {
-                a[yearArr[0].leaveYear] = sumDays(yearArr);
-                return a;
-            }, {});
-            for (var key in output) {
-                if (output.hasOwnProperty(key)) {
-                    console.log(key + " -> " + output[key]);
-                    var takenAllowanceMulti = dataModel.calendarUserItems.users[userName + " " + userSurname].allowances[key].taken
-                    var deductMulti = takenAllowanceMulti + output[key]
-                    console.log(takenAllowanceMulti)
-                    console.log(deductMulti)
-                    calendarPage.amendTakenAllowance(deductMulti, key)
-                }
-            }
-
-            var result = multiSelectSaveArr.map(function(o) {
-                o.note = note;
-                return o;
-            });
-
-            multiSelectSaveArr.forEach(function (val, idx) {
-                calendarPage.saveCalendarMultiItem(time = val.creationDate, val);
-                if (idx === multiSelectSaveArr.length - 1)
-                    calendarPage.notificationCallback();
-            });
-            multiSelectSaveArr = []
-        } else {
-            year = getMySpecialYear(calendar.selectedDate)
-            var takenAllowance = dataModel.calendarUserItems.users[userName + " " + userSurname].allowances[year].taken
-            var container = isEven(selectedWeekNum) ? weeklyHours2 : weeklyHours;
-            var dayValue = container[(dayIn + 6) % 7].hours;                        //  mod power returns %%%
-            var deduct
-            if(dayCycle.text === "Full Day") {
-                deduct = takenAllowance + dayValue
-            } else {
-                var half = dayValue / 2
-                deduct = takenAllowance + half
-            }
-            if (dayCycle.text !== "Full Day") {
-                dayValue /= 2
-            }
-            calendarPage.amendTakenAllowance(deduct, year);
-            userData = ({"leaveYear": getMySpecialYear(new Date(calendar.selectedDate)) ,"dayValue": dayValue ,"creationDate": time ,"date": calendar.selectedDate, "name": userName +" "+ userSurname, "details": dayCycle.text, "status": "pending", "dayI": dayIn, "updated": "0", "note": note})
-            calendarPage.saveCalendarItem(time, userData)
-            dayValue = undefined
-            deduct = undefined
-            delete(deduct)
-            if(dayCycle.text !== "Full Day") {
-                currCycleIndex = 0
-            }
-        }
-        currCycleIndex = 0
-        dateRangeIndex = 0
-        updateEvents()
-        multiSelectArr = []
-        calendarPage.playVideo()
-    }
-    function getMySpecialYear(date) {
-        var yr = date.getFullYear();
-        var fyStart = new Date(yr, customYearY, 1);
-        return date < fyStart? yr - 1 : yr;
-    }*/
-
-
-    Flow {
+Flow {
         id: row
         anchors.fill: parent
         spacing: 10
@@ -154,7 +60,16 @@ Page {
                     readonly property color selectedDateTextColor: "#4e4e4e"
                     readonly property color differentMonthDateTextColor: "#bbb"
                     readonly property color invalidDatecolor: "#dddddd"
-                    Rectangle {id: calendarMarker; z: 1; anchors.fill: parent; anchors.margins: -1; width: 12; height: width; scale: 0.5; color:"lightgrey"}
+                    
+                    //calendar marker
+                    Grid {
+                    id: calendarMarker
+                    anchors.fill: parent
+                    model: 5
+                    delegate: Rectangle {id: calendarMarker; z: 1; width: parent.width / 4; anchors.margins: -1; height: width; radius: parent.width/2 ; color:"lightgrey"}
+                    }
+                    //calendar marker 
+                    
                     Label {
                         id: dayDelegateText; z: 5; text: styleData.date.getDate(); anchors.centerIn: parent
                         color:  {
@@ -186,7 +101,8 @@ Page {
         Rectangle {
             width: (parent.width > parent.height ? parent.width * 0.4 - parent.spacing : parent.width); height: (parent.height > parent.width ? parent.height * 0.4 - parent.spacing : parent.height); border.color: Qt.darker(color, 1.2)
             ListView {
-                id:eventListView; spacing: 4; clip: true; header: eventListHeader; anchors.fill: parent; anchors.margins: 10; model: 10
+                id:eventListView; spacing: 4; clip: true; header: eventListHeader; anchors.fill: parent; anchors.margins: 10;
+                model: 10
                 delegate: Rectangle {
                     width: eventListView.width; height: eventItemColumn.height; anchors.horizontalCenter: parent.horizontalCenter
                     Rectangle {width: parent.width; height: 1; color: "#eee"}
