@@ -172,24 +172,24 @@ App {
         FloatingActionButton {
             id: settingsButton; icon: IconType.cog; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                exploreStack.push(settingsComp)
+                settingsModal.open()
                 floatingColumn.visible = false
             }
         }
         FloatingActionButton {
             id: userProfileButton; icon: IconType.user; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                exploreStack.push(profileComp); floatingColumn.visible = false}
+                profileModal.open(); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: notificationButton; icon: IconType.heart; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                exploreStack.push(notificationComp); floatingColumn.visible = false}
+                notificationModal.open(); floatingColumn.visible = false}
         }
         FloatingActionButton {
             id: inboxButton; icon: IconType.envelope; visible: true; anchors.right: undefined; anchors.bottom: undefined
             onClicked: {
-                exploreStack.push(inboxComp); floatingColumn.visible = false}
+                inboxModal.open(); floatingColumn.visible = false}
         }
     }
     AppModal {

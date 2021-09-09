@@ -46,23 +46,22 @@ Page {
                 width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
                 Column {
                     anchors.fill: parent
-                    AppPaper {
-                        z:5; height: searchTextField.height + suggestionsList.height
-                        AppTextField {
-                            id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
-                            onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
-                            onDisplayTextChanged: {
-                                if (searchTextField.displayText.length > 2 && searchTextField.focus) {
-                                    suggenstionModel.searchTerm = searchTextField.displayText.toString();suggenstionModel.update()}
-                                else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
-                            }
-                            onFocusChanged: {if (!focus) {suggestionsList.hide()}}
-                            Component.onCompleted: {font.pixelSize = sp(16)}
+                    z:5; height: searchTextField.height + suggestionsList.height
+                    width: parent.width
+                    AppTextField {
+                        id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
+                        onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
+                        onDisplayTextChanged: {
+                            if (searchTextField.displayText.length > 2 && searchTextField.focus) {
+                                suggenstionModel.searchTerm = searchTextField.displayText.toString();suggenstionModel.update()}
+                            else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
                         }
-                        SuggestionsList {
-                            id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
-                            onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
-                        }
+                        onFocusChanged: {if (!focus) {suggestionsList.hide()}}
+                        Component.onCompleted: {font.pixelSize = sp(16)}
+                    }
+                    SuggestionsList {
+                        id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
+                        onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
                     }
                 }
             }
