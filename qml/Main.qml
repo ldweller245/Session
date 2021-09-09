@@ -146,6 +146,8 @@ App {
                 Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav}}
                 Component {id: castingOrganisePage; CastingsOrganise {id: castingOrganiseNav}}
                 Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
+                
+                Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav}}
             }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"
