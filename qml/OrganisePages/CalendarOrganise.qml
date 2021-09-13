@@ -8,7 +8,12 @@ import Felgo 3.0
 Page {
     id: calendarPage; height: parent.height; width: parent.width
 
-Flow {
+    signal addCalendarItem(var date, var details, var time, var location)
+    signal editCalendarItem (var id, var calendarItem)
+    signal deleteCalendarItem(var id)
+
+
+    Flow {
         id: row
         anchors.fill: parent
         spacing: 10
@@ -63,12 +68,12 @@ Flow {
                     
                     //calendar marker
                     GridView {
-                    id: calendarMarker
-                    anchors.fill: parent
-                    model: 5
-                    delegate: Rectangle {id: calendarMarkerRect; z: 1; width: parent.width / 4; anchors.margins: -1; height: width; radius: parent.width/2 ; color:"lightgrey"}
+                        id: calendarMarker
+                        anchors.fill: parent
+                        model: userData.calendar
+                        delegate: Rectangle {id: calendarMarkerRect; z: 1; width: parent.width / 4; anchors.margins: -1; height: width; radius: parent.width/2 ; color:"lightgrey"}
                     }
-                    //calendar marker 
+                    //calendar marker
                     
                     Label {
                         id: dayDelegateText; z: 5; text: styleData.date.getDate(); anchors.centerIn: parent
@@ -102,17 +107,75 @@ Flow {
             width: (parent.width > parent.height ? parent.width * 0.4 - parent.spacing : parent.width); height: (parent.height > parent.width ? parent.height * 0.4 - parent.spacing : parent.height); border.color: Qt.darker(color, 1.2)
             ListView {
                 id:eventListView; spacing: 4; clip: true; header: eventListHeader; anchors.fill: parent; anchors.margins: 10;
-                model: 10
-                delegate: Rectangle {
-                    width: eventListView.width; height: eventItemColumn.height; anchors.horizontalCenter: parent.horizontalCenter
-                    Rectangle {width: parent.width; height: 1; color: "#eee"}
-                    Column {
-                        id: eventItemColumn; anchors.left: parent.left; anchors.leftMargin: 20; anchors.right: parent.right; height: timeLabel.height + nameLabel.height + 8
-                        Label {id: nameLabel; width: parent.width; wrapMode: Text.Wrap; text: modelData.name; color: "#4e4e4e"}
-                        Label {id: timeLabel; width: parent.width; wrapMode: Text.Wrap; color: "#aaa"; text: modelData}
+                model: userData.calendar
+                delegate: SwipeOptionsContainer {
+                    Rectangle {
+                        width: eventListView.width; height: eventItemColumn.height; anchors.horizontalCenter: parent.horizontalCenter
+                        Rectangle {width: parent.width; height: 1; color: "#eee"}
+                        Column {
+                            id: eventItemColumn; anchors.left: parent.left; anchors.leftMargin: 20; anchors.right: parent.right; height: timeLabel.height + nameLabel.height + 8
+                            Label {id: nameLabel; width: parent.width; wrapMode: Text.Wrap; text: modelData.time + " " + modelData.details; color: "#4e4e4e"}
+                            Label {id: timeLabel; width: parent.width; wrapMode: Text.Wrap; color: "#aaa"; text: modelData.location}
+                        }
+                        IconButton {
+                            height: eventItemColumn.height; width: height; anchors.right: parent.right; anchors.rightMargin: dp(15)
+                            icon: IconType.edit
+                            onClicked: {/*edit calendarItem*/}
+                        }
+                    }
+                    rightOption: Rectangle {
+                        height: eventItemColumn.height; width: height
+                        color: "red"
+                        Icon {icon: IconType.trash; anchors.fill: parent}
+                        MouseArea {anchors.fill: parent; onClicked: calendarPage.deleteCalendarItem(modelData.id)}
                     }
                 }
             }
         }
     }
+
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(0,0,0,0.3)
+        visible: false
+        opacity: 0
+        Rectangle {
+            width: parent.width
+            height: parent.height
+            scale: 0.9
+            color: "white"
+            Column {
+                anchors.fill: parent
+            }
+        }
+        Behavior on opacity {NumberAnimation {duration: 1000}}
+    }
+
+    FloatingActionButton {
+        visible: true; icon: IconType.plus
+        onClicked: createCalendarItemModal.open()
+    }
+    AppModal {
+        id: createCalendarItemModal
+        fullscreen: false
+        modalHeight: calendarPage.height*0.8
+        NavigationStack {
+            Page {
+                clip: true
+                leftBarItem: TextButtonBarItem {
+                    text: "Cancel"; textItem.font.pixelSize: sp(16); onClicked: createCalendarItemModal.close()
+                }
+                rightBarItem: TextButtonBarItem {
+                    text: "Save"; textItem.font.pixelSize: sp(16); onClicked: calendarPage.addCalendarItem(date, details, time, location)
+                }
+                AppText {
+                    horizontalCenter: Text.AlignHCenter
+                    text: "Create an event for " + calendar.selectedDate
+                }
+
+            }
+        }
+    }
+
 }
+

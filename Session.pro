@@ -90,7 +90,6 @@ DISTFILES += \
     qml/Components/PlaceSearchSuggestionsPage.qml \
     qml/Components/SuggestionsList.qml \
     qml/Components/TimeTumbler.qml \
-    qml/Components/ViewFeedComp.qml \
     qml/Create.qml \
     qml/HomePage.qml \
     qml/Inbox.qml \
@@ -115,6 +114,9 @@ DISTFILES += \
     qml/OrganisePages/ShootsOrganise.qml \
     qml/OrganisePages/ViewCastingPage.qml \
     qml/Plugins/MapBoxPlugin.qml \
+    qml/Plugins/OneSignalPlugin.qml \
+    qml/Plugins/code-onesignal.png \
+    qml/Plugins/logo-onesignal.png \
     qml/PostPage.qml \
     qml/SettingsPage.qml \
     qml/SettingsPages/AboutSettings.qml \
@@ -134,6 +136,4 @@ DISTFILES += \
     qml/TabBarPages/ViewShootLocation.qml \
     qml/TabBarPages/ViewShootTeam.qml \
     qml/UserProfile.qml \
-    qml/model/DataModel.qml \
-    qml/model/LocationModel.qml \
-    qml/model/MyJSON.qml
+    qml/model/DataModel.qml

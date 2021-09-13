@@ -9,6 +9,11 @@ FlickablePage {
     flickable.contentHeight: contentCol.height
     scrollIndicator.visible: true
 
+    rightBarItem: TextButtonBarItem {visible: castingData.owner.owner_id === userData.id ; text: "Edit"; textItem.font.pixelSize: sp(16); onClicked: {/*edit casting*/}}
+
+
+    signal updateCastingApplicant(var accept_Reject, var castingName, var castingID, var applicantName, var applicantPicture, var applicantID)
+
     property var castingDetails: 0
 
     property var castingData: dataModel.castingData
@@ -53,7 +58,59 @@ FlickablePage {
         }
     }
     AppButton {
-        anchors.bottom: parent.bottom;anchors.bottomMargin: dp(15); width: parent.width/2; minimumWidth: parent.width/2; flat: false; text: "Apply"; visible: castingData.owner.owner_id !== userData.id
-        onClicked: {}
+        anchors.bottom: parent.bottom;anchors.bottomMargin: dp(15); width: parent.width/2; minimumWidth: parent.width/2; flat: false; text: applicants.indexOf(userData.id) ? "WITHDRAW" : "APPLY"; visible: castingData.owner.owner_id !== userData.id
+        onClicked: {let applicants = castingData.applications; applicants.indexOf(userData.id) ? viewCastingPage.updateCastingApplicant(false, castingData.title, castingData.id, userData.username, userData.id) : dataModel.castingApply(castingData.id, castingData.owner.id, castingData)}
+        //add check for already applied
+    }
+    AppButton {
+        anchors.bottom: parent.bottom;anchors.bottomMargin: dp(15); width: parent.width/2; minimumWidth: parent.width/2; flat: false; text: "View Applicants"; visible: castingData.owner.owner_id === userData.id
+        onClicked: {viewApplicantModal.open()}
+    }
+    AppModal {
+        id: viewApplicantModal
+        pushBackContent: navigationRoot
+        fullscreen: false
+        modalHeight: viewCastingPage.height / 2
+        NavigationStack {
+            Page {rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: viewApplicantModal.close()}
+                AppListView {
+                    anchors.fill: parent
+                    model: castingData.applications
+                    delegate: SwipeOptionsContainer {
+                        SimpleRow {
+                            id: row
+                            text: modelData.username
+                            imageSource: modelData.picture
+                            image.radius: image.width/2
+                            image.fillMode: Image.PreserveAspectCrop
+                            style: StyleSimpleRow {
+                                showDisclosure: false
+                                backgroundColor: "transparent"
+                            }
+                            onSelected: organiseStack.push(otherUserComp, {userID: modelData.id})
+                        }
+                        rightOption: Rectangle {
+                            height: row.height; width: height
+                            Row {
+                                anchors.fill: parent
+                                Rectangle {
+                                    height: parent.height; width: parent.width/2; color: "red"
+                                    Icon {anchors.fill: parent; icon: IconType.times}
+                                    MouseArea {anchors.fill: parent; onClicked: {viewCastingPage.updateCastingApplicant(false, castingData.title, castingData.id, modelData.username, modelData.id)}}
+                                }
+                                Rectangle {
+                                    height: parent.height; width: parent.width/2; color: "green"
+                                    Icon {anchors.fill: parent; icon: IconType.check}
+                                    MouseArea {anchors.fill: parent; onClicked: {viewCastingPage.updateCastingApplicant(true, castingData.title, castingData.id, modelData.username, modelData.id)}}
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }

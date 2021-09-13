@@ -779,23 +779,25 @@ Item {
     //
     //
     //Calendar Functions
-    function getCalendarData() {
-        calendarListModel.push(
-                    {
-                        date: new Date(calendarViewModel[idx].date).getTime(),
-                        name: calendarViewModel[idx].name,
-                        details: calendarViewModel[idx].details,
-                        status: calendarViewModel[idx].status});
-        
+    function getCalendarData() {       
     }
-    function addCalendarItem(){
-        
+    function addCalendarItem(date, details, time, location){
+        let calendarID = "cl-uid"+uniqueID() + "-" + uniqueID()
+        let calendarItem = {
+            "id": calendarID,
+            "date": date,
+            "details": details,
+            "time": time,
+            "location": location,
+            "creation_date": Date.now()
+        }
+        db.setValue("userData/"+userData.id+"/calendar/"+calendarID, calendarItem)
     }
-    function removeCalendarItem(){
-
+    function removeCalendarItem(id){
+        db.setValue("userData/"+userData.id+"/calendar/"+id, null)
     }
-    function editCalendarItem(){
-
+    function editCalendarItem(id, calendarItem){
+        db.setValue("userData/"+userData.id+"/calendar/"+id, calendarItem)
     }
     // end Calendar functions
     //
@@ -826,6 +828,7 @@ Item {
             "details": details,
             "image": image,
             "created": Date.now(),
+            "applications": [],
             "owner": {
                 "owner_id": userData.id,
                 "owner_name": userData.name,
@@ -835,10 +838,39 @@ Item {
         db.setValue("castings/"+castingID+"/", casting)
         db.setValue("userData/"+userData.id+"/castings/"+castingID, casting)
     }
-    function editCasting(){
+    function castingApply(castingID, casting_owner, casting) {
+        let data = {"id": userData.id, "username": userData.username, "picture": userData.profile_Pic_URL}
+        //update their data
+        db.setValue("castings/"+castingID+"/applications/"+userData.id+"/", data)
+
+        //update my data
+        db.setValue("userData/"+userData.id+"/castings/"+castingID+"/applications/"+userData.id+"/", data)
+        db.setValue("userData/"+userData.id+"/castings/"+castingID, casting)
+    }
+    function updateCastingApplicant(accept_Reject, castingName, castingID, name, id) {
+        if(accept_Reject === true) {
+            //if accept
+            //add to their calendar
+            // send happy notification
+
+
+        }else {
+            //if reject
+            db.setValue("castings/"+castingID+"/applications/"+id+"/", null)
+            db.setValue("userData/"+id+"/castings/"+castingID+"/applications/"+id+"/", null)
+            //send sad notification
+        }
+
 
     }
-    function deleteCasting(){
+    function editCasting(castingID, casting){
+        db.setValue("castings/"+castingID+"/", casting)
+        db.setValue("userData/"+userData.id+"/castings/"+castingID, casting)
+
+    }
+    function deleteCasting(castingID){
+        db.setValue("castings/"+castingID+"/", null)
+        db.setValue("userData/"+userData.id+"/castings/"+castingID, null)
 
     }
     //End Casting Functions

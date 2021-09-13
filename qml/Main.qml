@@ -18,7 +18,6 @@ App {
     licenseKey: "8E04C2C81836FA28AAD7D933CE16F4F4E41FA5E7A2339BA7352E5045736E311653029D082BF368C2B1A8390EC6C5CB52DBA9F4BCF556483FB80E37D0B4653DF122DA40295DBDE0EAF7884CBDF706260754D9024014AFF76EA331071EF183F0BAFFE50B467C40F21E2E4159AC7F2C6DDF807FDF010A3E1052774A2F57C5461AAE12BA13F632CD8FCD537B65A4AFB574932B0194CEEAA09B4452FA48C08A3ADBDA52392E0911AAF6641C1B9FB0891DF1D7A7CF491A31FE5D325F3E2FBD86444E98F901E37878C6E061CD85C3D8851C8D45ECDBB1BC4F6E36EC8ADCA665B147B90F3B67C2B4F939997A41CB9488CC58121EE31269E36A7613E6C4F59920A95BDA3D46B8B8C31759587665AF62D5C4F2FEC00E479177B489D4D5368196AFF9B5B74909BCEAE6D2656C07D0565FE3D320B48695942CC06531DBB7F022BADB9BCA3614"
 
     DataModel {id: dataModel; onPostSuccess: postPage.team = []; onNameAvailable: registerPage.checkComplete()}
-    LocationModel {id: locationModel}
     LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
     InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
     RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}
@@ -143,11 +142,16 @@ App {
                 id:organiseStack; initialPage: organiseComp
                 Component {id: organiseComp; Organise {id: organiseNav}}
                 Component {id:shootOrganisePage; ShootsOrganise {id: shootsOrganiseNav}}
-                Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav}}
+                Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav;
+                        onAddCalendarItem: dataModel.addCalendarItem(date, details, time, location)
+                        onEditCalendarItem: dataModel.editCalendarItem(id, calendarItem)
+                        onDeleteCalendarItem: dataModel.removeCalendarItem(id)
+                    }
+                }
                 Component {id: castingOrganisePage; CastingsOrganise {id: castingOrganiseNav}}
                 Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
                 
-                Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav}}
+                Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav; onUpdateCastingApplicant: dataModel.updateCastingApplicant(accept_Reject, castingName, castingID, name, id)}}
                 Component {id: createCastingPage; CreateCasting {id: createCastingNav; onCreateCasting: dataModel.createCasting(title, seeking, location, date, time, details, image, paid, compensation)}}
             }
         }
