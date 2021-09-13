@@ -876,4 +876,8 @@ Item {
     //End Casting Functions
     //
     //
+    function sendNotification(tags, recipient, content, ){
+
+    }
+
 }

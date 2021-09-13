@@ -10,7 +10,7 @@ ListPage {
 
   model: JsonListModel {
     id: listModel
-    source: dataModel.messages
+    source: dataModel.notificationJson
     keyField: "id"
   }
 
