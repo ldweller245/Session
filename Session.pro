@@ -113,6 +113,7 @@ DISTFILES += \
     qml/OrganisePages/CreateCasting.qml \
     qml/OrganisePages/InvoiceOrganise.qml \
     qml/OrganisePages/ShootsOrganise.qml \
+    qml/OrganisePages/ViewCastingPage.qml \
     qml/Plugins/MapBoxPlugin.qml \
     qml/PostPage.qml \
     qml/SettingsPage.qml \

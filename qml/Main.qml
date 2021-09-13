@@ -148,6 +148,7 @@ App {
                 Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
                 
                 Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav}}
+                Component {id: createCastingPage; CreateCasting {id: createCastingNav; onCreateCasting: dataModel.createCasting(title, seeking, location, date, time, details, image, paid, compensation)}}
             }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"

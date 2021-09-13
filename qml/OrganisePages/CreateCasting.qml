@@ -5,12 +5,21 @@ import "../Components"
 
 Page {
 
+    //to add to page: is paid?
+
+
     id: createCastingPage
     title: "Create Casting"
+
+    signal createCasting(var title, var seeking, var location, var date, var time, var details, var image, var paid, var compensation)
+
+
 
     property real spacerW: parent.width
     property real spacerH: dp(Theme.navigationBar.height)
     property var castingRoles: []
+
+
     AppFlickable {
         id: flickable
         anchors.fill: parent
@@ -25,6 +34,31 @@ Page {
                 AppTextField {id: eventTitle; placeholderText: "Enter event name"; anchors.horizontalCenter: parent.horizontalCenter}
             }
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
+
+            AppText {width: spacerW; text: "Is this a paid opportunity?"}
+            GridLayout {
+                columnSpacing: dp(20)
+                rowSpacing: dp(15)
+                columns: 2
+                AppText {
+                    id: paidSwitchText
+                    text: "No"
+                    Layout.preferredWidth: dp(80)
+                }
+                AppSwitch {
+                    Layout.preferredWidth: dp(80)
+                    onCheckedChanged: checked === true ? paidSwitchText.text = "Yes" : paidSwitchText.text = "No"
+                }
+                AppTextField {
+                    id: compensationTextField
+                    visible: paidSwitchText.text === "Yes"
+                    placeholderText: "What is the compensation?";
+                    Layout.columnSpan: 2
+                }
+
+            }
+
+            Rectangle {width: spacerW; height: spacerH; color: "transparent"}
             AppText {width: spacerW; text: "Tell us who you need on your team!&nbsp;&nbsp;&nbsp;>"}//seeking
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
             GridLayout {
@@ -35,7 +69,8 @@ Page {
                 AppCheckBox {text: "Makeup"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
                 AppCheckBox {text: "Wardrobe"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
                 AppCheckBox {text: "Photographer"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
-                AppCheckBox {text: "Model"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
+                AppCheckBox {text: "Male Models"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
+                AppCheckBox {text: "Female Models"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
                 AppCheckBox {text: "Studio"; labelFontSize: sp(14); Layout.preferredWidth: dp(80); onCheckedChanged:{if(checked === true) {if(castingRoles.includes(text) !== true){castingRoles.push(text)}}else {let index = castingRoles.indexOf(text); if (index > -1) {castingRoles.splice(index, 1)}}}}
             }
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
@@ -90,6 +125,17 @@ Page {
                 }
             }
             Rectangle {width: spacerW; height: spacerH; color: "transparent"}
+
+            AppButton {
+                width: parent.width / 2
+                minimumWidth: parent.width/2
+                text: "Create"
+                radius: dp(5)
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    createCastingPage.createCasting(eventTitle.text, castingRoles, locationTitle.text, dateTextField.text, timeTextField.text, appTextEdit.text, "IMAGE PATH", paidSwitchText.text, compensationTextField.text)
+                }
+            }
         }//content column end
     }//page flickable end
     Item {

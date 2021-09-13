@@ -62,11 +62,11 @@ Flow {
                     readonly property color invalidDatecolor: "#dddddd"
                     
                     //calendar marker
-                    Grid {
+                    GridView {
                     id: calendarMarker
                     anchors.fill: parent
                     model: 5
-                    delegate: Rectangle {id: calendarMarker; z: 1; width: parent.width / 4; anchors.margins: -1; height: width; radius: parent.width/2 ; color:"lightgrey"}
+                    delegate: Rectangle {id: calendarMarkerRect; z: 1; width: parent.width / 4; anchors.margins: -1; height: width; radius: parent.width/2 ; color:"lightgrey"}
                     }
                     //calendar marker 
                     
