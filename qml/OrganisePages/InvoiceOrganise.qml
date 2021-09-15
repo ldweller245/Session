@@ -3,7 +3,7 @@ import Felgo 3.0
 
 Page {
 
-    title: "New Page"
+    title: "INVOICES"
     AppText {
         anchors.centerIn: parent
         text: "invoice"

@@ -5,7 +5,7 @@ import "../ModalPages"
 Page {
     id: organisePage
 
-    title: "Organise"
+    title: "EVENTS"
     AppFlickable {
         anchors.fill: parent; contentHeight: exploreColumn.height
         Column {

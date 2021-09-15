@@ -3,7 +3,7 @@ import Felgo 3.0
 
 Page {
 
-    title: "About"
+    title: "ABOUT"
 
 
 }

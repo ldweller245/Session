@@ -35,7 +35,9 @@ Item {
     property var currentChat: []
 
     property var viewPostData
-    property var castingData
+    property var castingData: []
+    property var allCastingData: []
+    property var calendarData: []
 
     property var userID: userData.id
 
@@ -144,8 +146,6 @@ Item {
         return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
     }
 
-
-
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
@@ -195,14 +195,17 @@ Item {
         }
         onLoggedIn: {
             userData = [];
+            allCastingData = []
             db.getUserValue("details/id", {
                             }, function(success, key, value) {
                                 if(success) {
                                     db.getValue("userData/"+value, {}, function(success, key, value){
                                         if(success){
                                             userData = value
-                                            console.debug("USERDATA: "+ JSON.stringify(userData))
                                             getFeed(userData.id)
+                                            allCastingData = userData.castings
+                                            calendarData = userData.calendar
+                                            console.log("CALENDAR DATA: "+ JSON.stringify(userData.calendar) + "<br><br>")
                                         }
                                     })
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
@@ -419,10 +422,8 @@ Item {
         db.getValue("userFeeds/"+uuid, {
                     }, function(success, key, value) {
                         if(success){
-                            userFeed = []
-                            for(var i in value) {
-                                userFeed.push(value[i])
-                            }
+                            userFeed = [];
+                            userFeed = value
                             app.userFeedChanged()
                         }
                     }
@@ -513,7 +514,8 @@ Item {
         db.setUserValue(/*set like count && liked_by_me_value */)
     }
     function getPost(postID) {
-        userFeed.forEach(function(item) {
+        let data =  Object.values(userFeed)
+        data.forEach(function(item) {
             if(item.id === postID) {
                 viewPostData = item
             }
@@ -684,8 +686,6 @@ Item {
         }
         //userData/eddID/chats/Key: 123456 value: 123456
     }
-    
-    
     function refreshChat(chatiD) {
         db.getValue("chats/"+chatiD, {
                         if(success){
@@ -694,9 +694,6 @@ Item {
                         }
                     })
     }
-    
-    
-    
     function sendMessage(chatID,messageContent, member) {
         var chatExists = userData.chats
         var recipients = userData.chats[chatID].members
@@ -718,26 +715,17 @@ Item {
             }
         }
         db.setValue("chats/"+chatID+"/thread/"+messageID, messageContent)
-    }
-    
-    
-    
+    } 
     function deleteMessage(chatID, messageID) {
         db.setValue("chats/"+chatID+"/thread/"+messageID, null)
     }
-    
-    
     function editMessage(chatID, messageID, content){
         db.setValue("chats/"+chatID+"/thread/"+messageID+"/content", content)
     }
-    
-    
     function leaveChat(chatID) {
         db.setValue("chats/"+chatID+"/members/"+userData.id+"/", null)
         db.setValue("userData/"+userData.id+"/chats/"+chatID, null)
     }
-    
-    
     function getChat (userID) {
         //userData/edd/chats/123456/0 --- edd123
         //                          1 --- kati456
@@ -772,20 +760,20 @@ Item {
             }
         }*/
     }
-
     // end IM functions
     //
     //
     //
     //
     //Calendar Functions
-    function getCalendarData() {       
+    function getCalendarData() {
     }
-    function addCalendarItem(date, details, time, location){
+    function addCalendarItem(date, name, time, location, details){
         let calendarID = "cl-uid"+uniqueID() + "-" + uniqueID()
         let calendarItem = {
             "id": calendarID,
             "date": date,
+            "name": name,
             "details": details,
             "time": time,
             "location": location,
@@ -806,7 +794,7 @@ Item {
     //
     // Casting Functions
     function getCasting(castingID) {
-        let data = userData.castings
+        let data = Object.values(allCastingData)
         data.forEach(function(item) {
             if(item.id === castingID) {
                 castingData = item
@@ -816,27 +804,32 @@ Item {
     }
     function createCasting(title, seeking, location, date, time, details, image, paid, compensation){
         let castingID = "cs-uid"+uniqueID() + "-" + uniqueID()
-        let casting = {
-            "id": castingID,
-            "title": title,
-            "seeking": seeking,
-            "location": location,
-            "date": date,
-            "time": time,
-            "paid": paid,
-            "compensation": compensation,
-            "details": details,
-            "image": image,
-            "created": Date.now(),
-            "applications": [],
-            "owner": {
-                "owner_id": userData.id,
-                "owner_name": userData.name,
-                "profile_Pic_URL": userData.profile_Pic_URL
+        storage.uploadFile(image, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+            if(!finished) {} else if (finished && success) {
+                let casting = {
+                    "id": castingID,
+                    "title": title,
+                    "seeking": seeking,
+                    "location": location,
+                    "date": date,
+                    "time": time,
+                    "paid": paid,
+                    "compensation": compensation,
+                    "details": details,
+                    "image": downloadUrl,
+                    "created": Date.now(),
+                    "applications": [],
+                    "tag": "casting",
+                    "owner": {
+                        "owner_id": userData.id,
+                        "owner_name": userData.name,
+                        "profile_Pic_URL": userData.profile_Pic_URL
+                    }
+                }
+                db.setValue("castings/"+castingID+"/", casting)
+                db.setValue("userData/"+userData.id+"/castings/"+castingID, casting)
             }
-        }
-        db.setValue("castings/"+castingID+"/", casting)
-        db.setValue("userData/"+userData.id+"/castings/"+castingID, casting)
+        })
     }
     function castingApply(castingID, casting_owner, casting) {
         let data = {"id": userData.id, "username": userData.username, "picture": userData.profile_Pic_URL}

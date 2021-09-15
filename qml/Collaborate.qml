@@ -63,7 +63,7 @@ Page {
         id: searchModal; pushBackContent: navigationRoot; fullscreen: true
         NavigationStack {
             SearchModal {
-                title: "Search Users"; clip: true;
+                title: "SEARCH USERS"; clip: true;
                 rightBarItem: TextButtonBarItem {
                     text: "Close"; textItem.font.pixelSize: sp(16); onClicked: searchModal.close()
                 }

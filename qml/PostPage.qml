@@ -19,17 +19,15 @@ Page {
 
     Connections {
         target: nativeUtils
-        onMessageBoxFinished: {
-            if(accepted){page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}
-        }
+        onMessageBoxFinished: {if(accepted){page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}
     }
     rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
         onClicked: {if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
             else if(appTextEdit.length > 0) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
             else if(team.length === 0) {nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)}
-            else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}}
-
+            else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}
+    }
     AppFlickable {
         id: flickable; anchors.fill: parent; contentHeight: contentCol.height
         Column {
@@ -45,9 +43,7 @@ Page {
             Item {
                 width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
                 Column {
-                    anchors.fill: parent
-                    z:5; height: searchTextField.height + suggestionsList.height
-                    width: parent.width
+                    anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height; width: parent.width
                     AppTextField {
                         id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
                         onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}

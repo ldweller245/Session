@@ -8,12 +8,13 @@ Page {
     title: "EXPLORE"
 
     property var headerArr: ["Everything", "Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]
+    property var jsonArray: Object.values(userFeed)
 
     function isEven(n) {return n % 2 == 0;}
     function isOdd(n) {return Math.abs(n % 2) == 1;}
 
     JsonListModel {
-        id: jsonModel; source: userFeed; keyField: "id"
+        id: jsonModel; source: jsonArray; keyField: "id"
         fields: ["id", "owner", "downloadUrl","profile_Pic_URL", "tag", "timestamp","post_description", "team", "liked_by", "location"]
     }
     SortFilterProxyModel {
@@ -41,12 +42,9 @@ Page {
     AppFlickable {
         anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
         Row {
-            id: scrollRow;
-            width: parent.width
+            id: scrollRow; width: parent.width
             Column {
-                id: col
-                spacing: dp(5)
-                width: parent.width/2
+                id: col; spacing: dp(5); width: parent.width/2
                 Repeater {
                     id: evenModelView; model: sortedModelEven;
                     delegate: AppCard {
@@ -63,9 +61,7 @@ Page {
                 }
             }
             Column {
-                id: oddCol
-                spacing: dp(5)
-                width: parent.width/2
+                id: oddCol; spacing: dp(5); width: parent.width/2
                 Repeater {
                     id: oddModelView; model: sortedModelOdd;
                     delegate: AppCard {
@@ -85,31 +81,18 @@ Page {
     }
     Component {
         id: footerComp
-        Rectangle {
-            color: "white"
-            width: parent.width
-            height: dp(Theme.navigationBar.height)*2
-        }
+        Rectangle {color: "white"; width: parent.width; height: dp(Theme.navigationBar.height)*2}
     }
     Rectangle {
         id: searchUserModal
-        z: 7
-        anchors.fill: parent
-        color: Qt.rgba(0,0,0,0.5)
-        width: parent.width
-        height: parent.height/3
-        anchors.top: parent.top
-        visible: false
-        opacity: visible === true ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation {duration: 400}
-        }
+        z: 7; anchors.fill: parent; width: parent.width; height: parent.height/3; anchors.top: parent.top; visible: false; opacity: visible === true ? 1 : 0; color: Qt.rgba(0,0,0,0.5)
+        Behavior on opacity {NumberAnimation {duration: 400}}
         Column {
             anchors.fill: parent
             Row {
                 width: parent.width; height: searchText.height;
                 Rectangle {
-                    height: parent.height; width: height; color: white
+                    height: parent.height; width: height; color: "white"
                     Icon {icon: IconType.search; anchors.centerIn: parent}
                 }
                 AppTextField {

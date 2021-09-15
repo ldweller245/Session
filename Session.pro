@@ -104,7 +104,6 @@ DISTFILES += \
     qml/ModalPages/ShootSetupModal.qml \
     qml/ModalPages/ViewEventDetails.qml \
     qml/ModalPages/ViewPostModal.qml \
-    qml/MoreOptionsPage.qml \
     qml/Notifications.qml \
     qml/Organise.qml \
     qml/OrganisePages/CalendarOrganise.qml \

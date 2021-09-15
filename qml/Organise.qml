@@ -12,34 +12,22 @@ Page {
             columns: 2; anchors.fill: parent
             Rectangle {
                 width: organisePage.width/2; height: organisePage.height/2
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {console.log("clicked"); organiseStack.push(shootOrganisePage)}
-                }
+                MouseArea {anchors.fill: parent; onClicked: {console.log("clicked"); organiseStack.push(shootOrganisePage)}}
                 AppImage {source: "../assets/OrganiseIcons/ShootsIcon.png"; anchors.fill: parent; fillMode: Image.PreserveAspectFit}
             }
             Rectangle {
                 width: organisePage.width/2; height: organisePage.height/2
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {console.log("clicked"); organiseStack.push(calendarOrganisePage)}
-                }
+                MouseArea {anchors.fill: parent; onClicked: {console.log("clicked"); organiseStack.push(calendarOrganisePage)}}
                 AppImage {source: "../assets/OrganiseIcons/CalendarIcons.png"; anchors.fill: parent; fillMode: Image.PreserveAspectFit}
             }
             Rectangle {
                 width: organisePage.width/2; height: organisePage.height/2
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {console.log("clicked"); organiseStack.push(castingOrganisePage)}
-                }
+                MouseArea {anchors.fill: parent; onClicked: {console.log("clicked"); organiseStack.push(castingOrganisePage)}}
                 AppImage {source: "../assets/OrganiseIcons/CastingsIcon.png"; anchors.fill: parent; fillMode: Image.PreserveAspectFit}
             }
             Rectangle {
                 width: organisePage.width/2; height: organisePage.height/2
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {console.log("clicked"); organiseStack.push(invoiceOrganisePage)}
-                }
+                MouseArea {anchors.fill: parent; onClicked: {console.log("clicked"); organiseStack.push(invoiceOrganisePage)}}
                 AppImage {source: "../assets/OrganiseIcons/InvoiceIcon.png"; anchors.fill: parent; fillMode: Image.PreserveAspectFit}
             }
         }

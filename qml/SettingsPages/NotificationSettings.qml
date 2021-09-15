@@ -3,6 +3,6 @@ import Felgo 3.0
 
 Page {
 
-    title: "Notifications"
+    title: "NOTIFICATIONS"
 
 }

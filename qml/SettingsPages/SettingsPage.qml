@@ -6,7 +6,7 @@ ListPage {
 
     signal logoutUser()
 
-    title: qsTr("Settings")
+    title: qsTr("SETTINGS")
 
     property var settingsList: [{name: "Account Settings", icon: IconType.user}, {name: "Privacy", icon: IconType.lock}, {name: "Security", icon: IconType.shield}, {name: "Help", icon: IconType.lifebouy}, {name: "About", icon: IconType.info}, {name: "Notifications", icon: IconType.envelope}, {name: "Logout", icon: IconType.externallink}]
 

@@ -17,32 +17,6 @@ App {
 
     licenseKey: "8E04C2C81836FA28AAD7D933CE16F4F4E41FA5E7A2339BA7352E5045736E311653029D082BF368C2B1A8390EC6C5CB52DBA9F4BCF556483FB80E37D0B4653DF122DA40295DBDE0EAF7884CBDF706260754D9024014AFF76EA331071EF183F0BAFFE50B467C40F21E2E4159AC7F2C6DDF807FDF010A3E1052774A2F57C5461AAE12BA13F632CD8FCD537B65A4AFB574932B0194CEEAA09B4452FA48C08A3ADBDA52392E0911AAF6641C1B9FB0891DF1D7A7CF491A31FE5D325F3E2FBD86444E98F901E37878C6E061CD85C3D8851C8D45ECDBB1BC4F6E36EC8ADCA665B147B90F3B67C2B4F939997A41CB9488CC58121EE31269E36A7613E6C4F59920A95BDA3D46B8B8C31759587665AF62D5C4F2FEC00E479177B489D4D5368196AFF9B5B74909BCEAE6D2656C07D0565FE3D320B48695942CC06531DBB7F022BADB9BCA3614"
 
-    DataModel {id: dataModel; onPostSuccess: postPage.team = []; onNameAvailable: registerPage.checkComplete()}
-    LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
-    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
-    RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}
-
-
-    Component {id: settingsComp;  SettingsPage {id: settingsNav}}
-    Component {id: profileComp; UserProfile {id: profileNav}}
-    Component {id: notificationComp; Notifications {id: notificationNav}}
-    Component {id: inboxComp; Inbox {id: inboxNav}}
-
-    //settings navigation
-    Component {id: aboutComp; AboutSettings {id: aboutNav}}
-    Component {id: accountComp; AccountSettings {id: accountNav}}
-    Component {id: helpComp; HelpSettings {id: helpNav}}
-    Component {id: notificationSettingsComp; NotificationSettings {id: notificationSettingsNav}}
-    Component {id: privacyComp; PrivacySettings {id: privacyNav}}
-    Component {id: securityComp; SecuritySettings {id: securityNav}}
-
-
-    ParallelAnimation {
-        id: loaderAnim
-        NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
-        NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
-    }
-
     onInitTheme: {
         Theme.navigationTabBar.titleColor = "black"
         Theme.navigationBar.backgroundColor = "#f8f8f8"
@@ -63,9 +37,9 @@ App {
     property var otherUserID
 
     property var otherUserData: dataModel.otherUserJson[otherUserID]
-    property var searchArr: []
+    property var searchArr: [] //user search list
 
-    property var userData: [] //current users data
+    property var userData: [] //logged in user data
     property var masterFeed: [] //filtered master feed
     property var userFeed: [] //users personal feed view
 
@@ -104,6 +78,31 @@ App {
 
     property var arr: [{"Hair": "Hairstylists"}, {"Makeup": "Makeup Artists"}, {"Wardrobe":"Clothes Stylists"}, {"Photographer": "Photographers"}, {"Model":"Models"},{"Studio": "Locations"}]
 
+    DataModel {id: dataModel; onPostSuccess: postPage.team = []; onNameAvailable: registerPage.checkComplete()}
+    LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
+    InitialSetupPage {id: loginPage; z: 24; onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
+    RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}
+
+    //Additional Menu Items
+    Component {id: settingsComp;  SettingsPage {id: settingsNav}}
+    Component {id: profileComp; UserProfile {id: profileNav}}
+    Component {id: notificationComp; Notifications {id: notificationNav}}
+    Component {id: inboxComp; Inbox {id: inboxNav}}
+
+    //settings navigation
+    Component {id: aboutComp; AboutSettings {id: aboutNav}}
+    Component {id: accountComp; AccountSettings {id: accountNav}}
+    Component {id: helpComp; HelpSettings {id: helpNav}}
+    Component {id: notificationSettingsComp; NotificationSettings {id: notificationSettingsNav}}
+    Component {id: privacyComp; PrivacySettings {id: privacyNav}}
+    Component {id: securityComp; SecuritySettings {id: securityNav}}
+
+    ParallelAnimation {
+        id: loaderAnim
+        NumberAnimation {target: loaderPage; properties: "opacity"; from: 1; to: 0; duration: 1000}
+        NumberAnimation {target: loaderPage; properties: "scale"; from: 1; to: 0; duration: 1000}
+    }
+
     Navigation {
         id: navigationRoot; navigationMode: navigationModeTabs
         NavigationItem {
@@ -114,7 +113,6 @@ App {
                 Component {id: viewPostComp; ViewPostModal {id: viewPostPage}}
                 Component {id: otherUserComp; OtherUserProfile {id: otherUserNav}}
                 Component {id: messageUserComp; ConversationPage {id: messageUserNav}}
-
             }
         }
         NavigationItem {
@@ -133,7 +131,6 @@ App {
             NavigationStack {
                 id: studioStack; initialPage: studioPageComp
                 Component {id: studioPageComp; Create {id: studioPage } }
-
             }
         }
         NavigationItem {
@@ -143,26 +140,39 @@ App {
                 Component {id: organiseComp; Organise {id: organiseNav}}
                 Component {id:shootOrganisePage; ShootsOrganise {id: shootsOrganiseNav}}
                 Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav;
-                        onAddCalendarItem: dataModel.addCalendarItem(date, details, time, location)
+                        onAddCalendarItem: dataModel.addCalendarItem(date, name, time, location, details)
                         onEditCalendarItem: dataModel.editCalendarItem(id, calendarItem)
                         onDeleteCalendarItem: dataModel.removeCalendarItem(id)
                     }
                 }
                 Component {id: castingOrganisePage; CastingsOrganise {id: castingOrganiseNav}}
                 Component {id: invoiceOrganisePage; InvoiceOrganise {id: invoiceOrganiseNav}}
-                
                 Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav; onUpdateCastingApplicant: dataModel.updateCastingApplicant(accept_Reject, castingName, castingID, name, id)}}
-                Component {id: createCastingPage; CreateCasting {id: createCastingNav; onCreateCasting: dataModel.createCasting(title, seeking, location, date, time, details, image, paid, compensation)}}
+                Component {id: createCastingPageBase; CreateCasting {id: createCastingNav; onCreateCasting: dataModel.createCasting(title, seeking, location, date, time, details, image, paid, compensation)}}
             }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"
         }
     }
 
-
+    Column {
+        id: floatingColumn; z: 5; spacing: dp(5); width: settingsButton.width; height: settingsButton.height * 4; anchors.right: parent.right; anchors.bottom: moreClickable.top; anchors.bottomMargin: dp(Theme.navigationTabBar.height) / 2; anchors.rightMargin: dp(3); visible: false; enabled: !animation.running
+        FloatingActionButton {
+            id: settingsButton; icon: IconType.cog; visible: true; anchors.right: undefined; anchors.bottom: undefined
+            onClicked: {settingsModal.open(); floatingColumn.visible = false}}
+        FloatingActionButton {
+            id: userProfileButton; icon: IconType.user; visible: true; anchors.right: undefined; anchors.bottom: undefined
+            onClicked: {profileModal.open(); floatingColumn.visible = false}}
+        FloatingActionButton {
+            id: notificationButton; icon: IconType.heart; visible: true; anchors.right: undefined; anchors.bottom: undefined
+            onClicked: {notificationModal.open(); floatingColumn.visible = false}}
+        FloatingActionButton {
+            id: inboxButton; icon: IconType.envelope; visible: true; anchors.right: undefined; anchors.bottom: undefined
+            onClicked: {inboxModal.open(); floatingColumn.visible = false}}
+    }
     MouseArea {
         id: moreClickable; width: navigationRoot.width/6; height: dp(Theme.navigationTabBar.height); anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.bottomMargin: nativeUtils.safeAreaInsets.bottom // take care of potential safearea (e.g. iPhone 10 and up)
-        onClicked: {floatingColumn.visible === true ? floatingColumn.visible = false : floatingColumn.visible = true; animation.start()}
+        onClicked: {console.log("clicked"); floatingColumn.visible === true ? floatingColumn.visible = false : floatingColumn.visible = true; animation.start()}
     }
     ParallelAnimation {
         id: animation
@@ -173,58 +183,28 @@ App {
         NumberAnimation {target: inboxButton; property: "rotation"; from: 0; to: 360; duration: 1000}
     }
 
-
-    Column {
-        id: floatingColumn; z: 5; spacing: dp(5); width: settingsButton.width; height: settingsButton.height * 4; anchors.right: parent.right; anchors.bottom: moreClickable.top; anchors.bottomMargin: dp(Theme.navigationTabBar.height) / 2; anchors.rightMargin: dp(3); visible: false; enabled: !animation.running
-        FloatingActionButton {
-            id: settingsButton; icon: IconType.cog; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {
-                settingsModal.open()
-                floatingColumn.visible = false
-            }
-        }
-        FloatingActionButton {
-            id: userProfileButton; icon: IconType.user; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {
-                profileModal.open(); floatingColumn.visible = false}
-        }
-        FloatingActionButton {
-            id: notificationButton; icon: IconType.heart; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {
-                notificationModal.open(); floatingColumn.visible = false}
-        }
-        FloatingActionButton {
-            id: inboxButton; icon: IconType.envelope; visible: true; anchors.right: undefined; anchors.bottom: undefined
-            onClicked: {
-                inboxModal.open(); floatingColumn.visible = false}
+    AppModal {
+        id: profileModal; pushBackContent: navigationRoot
+        NavigationStack {
+            UserProfile {title: "PROFILE"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: profileModal.close()}}
         }
     }
     AppModal {
-        id: profileModal
-        pushBackContent: navigationRoot
+        id: inboxModal; pushBackContent: navigationRoot
         NavigationStack {
-            UserProfile {title: "Profile"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: profileModal.close()}}
+            Inbox {title: "MESSAGES"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: inboxModal.close()}}
         }
     }
     AppModal {
-        id: inboxModal
-        pushBackContent: navigationRoot
+        id: notificationModal; pushBackContent: navigationRoot
         NavigationStack {
-            Inbox {title: "Messages"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: inboxModal.close()}}
+            Notifications {title: "NOTIFICATIONS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: notificationModal.close()}}
         }
     }
     AppModal {
-        id: notificationModal
-        pushBackContent: navigationRoot
+        id: settingsModal; pushBackContent: navigationRoot
         NavigationStack {
-            Notifications {title: "Notifications"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: notificationModal.close()}}
-        }
-    }
-    AppModal {
-        id: settingsModal
-        pushBackContent: navigationRoot
-        NavigationStack {
-            SettingsPage {onLogoutUser: {dataModel.logoutUser(); console.log("mainlogoutuser")} title: "Settings"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
+            SettingsPage {onLogoutUser: {dataModel.logoutUser(); console.log("mainlogoutuser")} title: "SETTINGS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
         }
     }
 }

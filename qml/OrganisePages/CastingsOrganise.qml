@@ -5,111 +5,85 @@ import Felgo 3.0
 Page {
 
     id: castingPage
-    title: "Castings"
+    title: "CASTINGS"
 
     readonly property real spacerH: dp(Theme.navigationBar.height)
     readonly property real spacerW: parent.width
 
+    property var currentDate: new Date().getTime()
+
+    property var jsonArray: Object.values(dataModel.allCastingData)
+
     JsonListModel {
         id: jsonModel
-        source: userData.castings
+        source: jsonArray
         keyField: "id"
-        fields: ["id", "date", "details", "title", "image", "location", "paid", "compensation", "owner"]
+        fields: ["id", "created", "date", "details", "image", "location", "paid", "compensation", "owner", "seeking", "tag", "time", "title"]
     }
     SortFilterProxyModel {
         id: sortedModel
         Component.onCompleted: {sourceModel = jsonModel}
         sorters: RoleSorter {roleName: "date"; ascendingOrder: true}
-        filters: [
-            ExpressionFilter {id: castingDateFilter; expression: "date" > new Date().getTime(); inverted: false},
-            ExpressionFilter {id: ownerFilter; expression: "owner.owner_id" === userData.id ? true : false; enabled: false}
-        ]
+        filters: ExpressionFilter {id: castingDateFilter; expression: new Date(model.date).getTime() > currentDate; inverted: false; enabled: true}
     }
     Column {
         anchors.fill: parent
-        Rectangle {width: spacerW; height: spacerH; color: "transparent"}
+        Rectangle {width: spacerW; height: spacerH/2; color: "transparent"}
         AppText {text: "<b>Create Casting" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); bottomPadding: dp(15)}
         Rectangle {
-            width: spacerW; height: parent.height/4
+            width: spacerW; height: parent.height/6
             IconButton {
-                anchors.fill: parent
-                icon: IconType.plus
-                onClicked: organiseStack.push(createCastingPage)
+                anchors.fill: parent; icon: IconType.plus; scale: 2
+                onClicked: organiseStack.push(createCastingPageBase)
             }
         }
-        AppText {text: "<b>View My Castings" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); bottomPadding: dp(15)}
+        Rectangle {color: "black"; width: parent.width * 0.8; height: 1; anchors.horizontalCenter: parent.horizontalCenter}
+        Rectangle {width: spacerW; height: spacerH/4; color: "transparent"}
+        AppText {text: "<b>My Castings" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); bottomPadding: dp(15)}
         TabControl {
             id: tabControl; width: parent.width; height: parent.height -y
             NavigationItem {
-                id: myCastingsTab; title: "OPEN"; onSelected: {castingDateFilter.inverted = false; ownerFilter.enabled = true}
+                id: myCastingsTab; title: "OPEN"; onSelected: {castingDateFilter.inverted = false}
                 Item {
                     anchors.fill: parent
                     AppListView {
-                        width: parent.width; height: parent.height/2; model: sortedModel
-                        emptyText: "You have no castings yet!"
+                        width: parent.width; height: parent.height; model: sortedModel
+                        emptyText.text: "You have no castings yet!"
                         delegate: AppCard {
                             id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
                             header: SimpleRow {
-                                text: model.title; detailText: model.date; enabled: false
+                                text: model.title; detailText: new Date(model.date).toDateString()
                                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
                                 onSelected: {organiseStack.push(viewCastingPage, {castingDetails: castingDetails})}
                             }
-                            media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image}
-                            content: AppText{width: parent.width; padding: dp(15); text: model.details}
+                            media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image; MouseArea {anchors.fill: parent; onClicked: organiseStack.push(viewCastingPage, {castingDetails: model.id})}}
+                            content: AppText{width: parent.width; padding: dp(15); text: model.details; maximumLineCount: 3; elide: Text.ElideRight}
                             actions: Row {
-                                IconButton {icon: IconType.thumbsup}
-                                IconButton {icon: IconType.sharealt}
                                 AppButton {text: "View Details"; flat: true; onClicked: organiseStack.push(viewCastingPage, {castingDetails: model.id})}
                             }
                         }
                     }
                 }
             }
+
             NavigationItem {
-                id: appliedCastingsTab; title: "APPLIED"; onSelected: ownerFilter.enabled = true
+                id: expiredCastingsTab; title: "CLOSED"; onSelected: {castingDateFilter.inverted = true}
                 Item {
                     anchors.fill: parent
                     AppListView {
-                        width: parent.width; height: parent.height/2; model: sortedModel
-                        emptyText: "You have no castings yet!"
-                        delegate: AppCard {
-                            id: card2; width: parent.width; margin: dp(15); paper.radius: dp(5)
-                            header: SimpleRow {
-                                text: model.title; detailText: model.date; enabled: false
-                                style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
-                                onSelected: {organiseStack.push(viewCastingPage, {castingDetails: castingDetails})}
-                            }
-                            media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image}
-                            content: AppText{width: parent.width; padding: dp(15); text: model.details}
-                            actions: Row {
-                                IconButton {icon: IconType.thumbsup}
-                                IconButton {icon: IconType.sharealt}
-                                AppButton {text: "View Details"; flat: true; onClicked: organiseStack.push(viewCastingPage, {castingDetails: model.id})}
-                            }
-                        }
-                    }
-                }
-            }
-            NavigationItem {
-                id: expiredCastingsTab; title: "CLOSED"; onSelected: {castingDateFilter.inverted = true; ownerFilter.enabled = false}
-                Item {
-                    anchors.fill: parent
-                    AppListView {
-                        width: parent.width; height: parent.height/2; model: sortedModel
-                        emptyText: "You have no castings yet!"
+                        width: parent.width; height: parent.height; model: sortedModel
+                        emptyText.text: "You have no closed castings!"
                         delegate: AppCard {
                             id: card3; width: parent.width; margin: dp(15); paper.radius: dp(5)
                             header: SimpleRow {
-                                text: model.title; detailText: model.date; enabled: false
+                                text: model.title; detailText: new Date(model.date).toDateString()
                                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
                                 onSelected: {organiseStack.push(viewCastingPage, {castingDetails: castingDetails})}
                             }
-                            media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image}
-                            content: AppText{width: parent.width; padding: dp(15); text: model.details}
+                            media: AppImage {width: parent.width; fillMode: Image.PreserveAspectFit; source: model.image; MouseArea {anchors.fill: parent; onClicked: organiseStack.push(viewCastingPage, {castingDetails: model.id})}}
+                            content: AppText{width: parent.width; padding: dp(15); text: model.details; maximumLineCount: 2; elide: Text.ElideRight}
                             actions: Row {
-                                IconButton {icon: IconType.thumbsup}
-                                IconButton {icon: IconType.sharealt}
-                                AppButton {text: "View Details"; flat: true; onClicked: organiseStack.push(viewCastingPage, {castingDetails: model.id})}
+                                AppButton {text: "View Details"; flat: true; onClicked: {console.log(model.id); organiseStack.push(viewCastingPage, {castingDetails: model.id})}}
                             }
                         }
                     }

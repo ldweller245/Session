@@ -4,7 +4,7 @@ import Felgo 3.0
 ListPage {
   id: page
 
-  title: qsTr("Notifications")
+  title: qsTr("NOTIFICATIONS")
 
   listView.emptyText.text: qsTr("No notifications")
 
