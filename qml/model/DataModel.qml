@@ -38,6 +38,8 @@ Item {
     property var castingData: []
     property var allCastingData: []
     property var calendarData: []
+    property var shootData: []
+
 
     property var userID: userData.id
 
@@ -538,7 +540,6 @@ Item {
     function createEvent(event_name, event_organiser, event_date, event_time, event_overview, cover_image, event_concept, event_location, event_team) {
         let eventID = "e-uid"+uniqueID()
 
-        /*events/e-uid"+eventID*/
         let eventData =  {
             "eventCreator": {
                 "name": userData.name,
@@ -566,10 +567,16 @@ Item {
                 {"id": "u4567", "name": "Julie", "role": "Photographer"}
             ]
         }
-        db.setValue("userData/"+uuid+"/"+eventID, eventData)
+        db.setValue("userData/"+userData.id+"/shoots/"+eventID, eventData)
     }
     function getEvent(eventID) {
-        db.getValue(/*events*/)
+        let data = Object.values(userData.shoots)
+        data.forEach(function(item) {
+            if(item.id === eventID) {
+                shootData = item
+            }
+        })
+        return
     }
     function editEvent() {
 

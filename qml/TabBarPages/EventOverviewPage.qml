@@ -16,29 +16,43 @@ Page {
         Column {
             id: contentCol
             Rectangle {
+                //cover image frame
                 width: overviewItem.width
                 height: overviewItem.height / 3
                 color: "lightgrey"
                 AppText {
+                    // cover image select text
                     id: coverImageText
                     text: "Select cover image"
                     padding: dp(15)
                     anchors.centerIn: parent
+                    visible: pageEditable
                 }
+                AppImage {
+                    id: coverImage
+                    width: parent.width
+                    height: Image.height
+                    fillMode: Image.PreserveAspectFit
+                    visible: pageEditable
+                }
+
                 Icon {
                     icon: IconType.edit
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: coverImageText.right
+                    anchors{bottom: parent.bottom; right: parent.right}
+                    anchors.margins: dp(15)
+                    visible: pageEditable
                 }
             }
             Rectangle {
+                // event title container
                 width: parent.width
                 height: eventTitle.height
                 AppTextField {
+                    // event title
                     id: eventTitle
                     placeholderText: "Enter event name"
                     anchors.horizontalCenter: parent.horizontalCenter
-
+                    enabled: pageEditable
                 }
             }
             Rectangle {width: spacerW; height: spacerH}

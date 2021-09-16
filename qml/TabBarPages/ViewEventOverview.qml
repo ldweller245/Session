@@ -4,18 +4,18 @@ import Felgo 3.0
 Page {
     id: overviewItem
 
-    readonly property real spacerH: dp(Theme.navigationBar.height)/2
-    readonly property real spacerW: overviewItem.width
+    //readonly property real spacerH: dp(Theme.navigationBar.height)/2
+    //readonly property real spacerW: overviewItem.width
 
     AppFlickable {
-        anchors.fill: parent
-        contentHeight: contentCol.height
+        //anchors.fill: parent
+        //contentHeight: contentCol.height
         Column {
-            id: contentCol
+            //id: contentCol
             Rectangle {
-                width: overviewItem.width
-                height: overviewItem.height / 3
-                color: "lightgrey"
+                //width: overviewItem.width
+                //height: overviewItem.height / 3
+                //color: "lightgrey"
             }
             Rectangle {width: spacerW; height: spacerH}
             Row {

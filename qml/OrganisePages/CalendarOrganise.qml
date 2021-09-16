@@ -272,6 +272,7 @@ Page {
             }
         }
     }
+
     AppModal {
         id: timeTumblerModal; fullscreen: false; pushBackContent: navigationRoot; modalHeight: calendarPage.height / 2.5;
         NavigationStack {

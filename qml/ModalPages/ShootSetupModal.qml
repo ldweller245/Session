@@ -11,6 +11,17 @@ Page {
     readonly property real spacerW: shootSetupModal.width
     property var jsonData: [{"id": 1, "name": "Katie", "role": "Hair"},{"id": 2,"name": "Jo", "role": "Hair"},{"id": 3,"name": "Tracey", "role": "Photography"},{"id": 4,"name": "Edward", "role": "Model"},{"id": 5,"name": "Turtle", "role": "Director"}]
 
+    property var pageEditable: 0
+    property var eventID: 0
+
+    property var shootData: dataModel.shootData
+
+    onEventIDChanged: {
+        if(pageEditable === false) {
+            dataModel.getEvent(eventID)
+        }
+    }
+
     TabControl {
         anchors.fill: parent
         NavigationItem {
