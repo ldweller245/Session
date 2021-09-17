@@ -7,7 +7,6 @@ import "ModalPages"
 import "SettingsPages"
 import "SetupPages"
 import "model"
-import "TabBarPages"
 import "Plugins"
 import "UserPages"
 import "CanvasTemplates"
@@ -151,11 +150,11 @@ App {
                 Component {id: viewCastingPage; ViewCastingPage {id: viewCastingNav; onUpdateCastingApplicant: dataModel.updateCastingApplicant(accept_Reject, castingName, castingID, name, id)}}
                 Component {id: createCastingPageBase; CreateCasting {id: createCastingNav; onCreateCasting: dataModel.createCasting(title, seeking, location, date, time, details, image, paid, compensation)}}
 
-                Component {id: shootSetupPage; ShootSetupModal {id: shootSetupNav}} //base page for creating shoot
+                Component {id: shootSetupPage; EventSetupPage {id: shootSetupNav}} //base page for creating shoot
                 Component {id: shootOverviewPage; EventOverviewPage {id: shootOverviewNav}}
-                Component {id: shootConceptPage; ShootConceptPage {id: shootConceptNav}}
+                Component {id: shootConceptPage; EventConceptPage {id: shootConceptNav}}
                 Component {id: shootLocationPage; EventLocationPage {id: shootLocationNav}}
-                Component {id: shootTeamPage; ShootTeamPage {id: shootTeamNav}}
+                Component {id: shootTeamPage; EventTeamPage {id: shootTeamNav}}
             }
         }
         NavigationItem {icon: IconType.ellipsisv; title: "More"

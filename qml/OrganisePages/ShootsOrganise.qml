@@ -25,23 +25,28 @@ Page {
 
     Component {
         id: headerComp
+        Rectangle {
+            id: headerRect; width: organisePage.width; height: organisePage.height / 4; color: "white"
         Column {
-            width: organisePage.width; height: organisePage.height / 4
-            AppText {
-                id: setupText; width: parent.width; horizontalAlignment: Text.AlignHCenter; text: "<b>Tap to set up a shoot"
-            }
+            anchors.fill: parent
+            spacing: 1.4
+            Rectangle {width: parent.width; height: parent.height*0.1; color: "white"}
+            AppText {id: setupText; width: parent.width; height: parent.height*0.1 ; horizontalAlignment: Text.AlignHCenter; text: "<b>Tap to set up a shoot"}
             IconButton {
-                id: addIcon; icon: IconType.plus; scale: 4;
+                id: addIcon; icon: IconType.plus; scale: 2; anchors.horizontalCenter: parent.horizontalCenter; height: parent.height*0.4
                 onClicked: organiseStack.push(shootSetupPage, {pageEditable: true})
             }
             Rectangle {color: "black"; width: parent.width * 0.8; height: 1; anchors.horizontalCenter: parent.horizontalCenter}
-            Rectangle {height: dp(Theme.navigationBar.height) /2; width: parent.width}
-            AppText {text: "<b>My Shoots" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); }
+            Rectangle {width: parent.width; height: parent.height*0.1; color: "white"}
+            AppText {text: "<b>My Shoots" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15); height: parent.height*0.1}
+            Rectangle {width: parent.width; height: parent.height*0.1; color: "white"}
+
+        }
         }
     }
 
     AppListView {
-        width: parent.width; height: parent.height; header: headerComp; headerPositioning: ListView.PullBackHeader
+        anchors.fill: parent; header: headerComp; headerPositioning: ListView.PullBackHeader
         model: sortedModel; emptyText.text: "You have no events!"
         delegate: AppCard {
             id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
@@ -57,28 +62,6 @@ Page {
             actions: Row {
                 IconButton {icon: IconType.sharealt}
                 AppButton {text: "View Details"; flat: true; onClicked: organiseStack.push(shootSetupPage, {pageEditable: false, eventID: model.id})}
-            }
-        }
-    }
-    AppModal {
-        id: eventSetupModal; fullscreen: true; pushBackContent: navigationRoot
-        NavigationStack {
-            ShootSetupModal {
-                title: "CREATE EVENT"; clip: true
-                rightBarItem: TextButtonBarItem {
-                    text: "Close"; textItem.font.pixelSize: sp(16); onClicked: eventSetupModal.close()
-                }
-            }
-        }
-    }
-    AppModal {
-        id: viewEventModal; fullscreen: true; pushBackContent: navigationRoot
-        NavigationStack {
-            ViewEventDetails {
-                title: "EVENT NAME"; clip: true
-                rightBarItem: TextButtonBarItem {
-                    text: "Close"; textItem.font.pixelSize: sp(16); onClicked: viewEventModal.close()
-                }
             }
         }
     }

@@ -100,15 +100,17 @@ DISTFILES += \
     qml/ModalPages/SavedUsers.qml \
     qml/ModalPages/SearchModal.qml \
     qml/ModalPages/SearchResults.qml \
-    qml/ModalPages/ShootDetailModal.qml \
-    qml/ModalPages/ShootSetupModal.qml \
-    qml/ModalPages/ViewEventDetails.qml \
     qml/ModalPages/ViewPostModal.qml \
     qml/Notifications.qml \
     qml/Organise.qml \
     qml/OrganisePages/CalendarOrganise.qml \
     qml/OrganisePages/CastingsOrganise.qml \
     qml/OrganisePages/CreateCasting.qml \
+    qml/OrganisePages/EventConceptPage.qml \
+    qml/OrganisePages/EventLocationPage.qml \
+    qml/OrganisePages/EventOverviewPage.qml \
+    qml/OrganisePages/EventSetupPage.qml \
+    qml/OrganisePages/EventTeamPage.qml \
     qml/OrganisePages/InvoiceOrganise.qml \
     qml/OrganisePages/ShootsOrganise.qml \
     qml/OrganisePages/ViewCastingPage.qml \
@@ -126,13 +128,5 @@ DISTFILES += \
     qml/SettingsPages/SecuritySettings.qml \
     qml/SetupPages/InitialSetupPage.qml \
     qml/SetupPages/RegisterPage.qml \
-    qml/TabBarPages/EventLocationPage.qml \
-    qml/TabBarPages/EventOverviewPage.qml \
-    qml/TabBarPages/ShootConceptPage.qml \
-    qml/TabBarPages/ShootTeamPage.qml \
-    qml/TabBarPages/ViewEventOverview.qml \
-    qml/TabBarPages/ViewShootConcept.qml \
-    qml/TabBarPages/ViewShootLocation.qml \
-    qml/TabBarPages/ViewShootTeam.qml \
     qml/UserProfile.qml \
     qml/model/DataModel.qml

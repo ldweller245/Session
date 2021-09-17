@@ -223,53 +223,6 @@ Item {
     property var inboxJson: [{}]
     property var notificationJson: [{}]
     property var savedForLaterJson: [{}]
-    property var myShootsJson: [
-        {"e1234567890": {
-                eventCreator: "u1234",
-                eventName: "Katie's BHA",
-                eventDate: "1653053810",
-                eventTime: "08:00",
-                keyContacts: ["u1234", "u3456"],
-                overview: "We're working on my 2021 BHA avant garde shoot! looking for organic textures and bright colours as shown in moodboards! This will be a super fun day so bring lots of energy!",
-                coverImage: "",
-                moodboard: ["","",""],
-                locationAddress: "Flat 59, Basque Court, Garter Way, London, SE16 6XD",
-                locationMap: "51.477928, -0.001545",
-
-                "team": [{id: "u1234", name: "Katie", role: "hairstylist"},{id: "u2345", name: "Edward", role: "model"},{id: "u3456", name: "Jo", role: "hairstylist"},{id: "u4567", name: "Julie", role: "Photographer"}]
-            }
-        },
-        {"e1234567892": {
-                eventCreator: "u2345",
-                eventName: "Jo's BHA",
-                eventDate: "1653053810",
-                eventTime: "14:00",
-                keyContacts: ["u1234", "u3456"],
-                overview: "We're working on my 2021 BHA avant garde shoot! looking for organic textures and bright colours as shown in moodboards! This will be a super fun day so bring lots of energy!",
-                coverImage: "",
-                moodboard: ["","",""],
-                locationAddress: "Flat 59, Basque Court, Garter Way, London, SE16 6XD",
-                locationMap: "51.477928, -0.001545",
-
-                "team": [{id: "u1234", name: "Katie", role: "hairstylist"},{id: "u2345", name: "Edward", role: "model"},{id: "u3456", name: "Jo", role: "hairstylist"},{id: "u4567", name: "Julie", role: "Photographer"}]
-            }
-        },
-        {"e1234567893": {
-                eventCreator: "u1234",
-                eventName: "Katie's FAME Finale",
-                eventDate: "1653053810",
-                eventTime: "08:00",
-                keyContacts: ["u1234", "u3456"],
-                overview: "We're working on my 2021 BHA avant garde shoot! looking for organic textures and bright colours as shown in moodboards! This will be a super fun day so bring lots of energy!",
-                coverImage: "",
-                moodboard: ["","",""],
-                locationAddress: "Flat 59, Basque Court, Garter Way, London, SE16 6XD",
-                locationMap: "51.477928, -0.001545",
-
-                "team": [{id: "u1234", name: "Katie", role: "hairstylist"},{id: "u2345", name: "Edward", role: "model"},{id: "u3456", name: "Jo", role: "hairstylist"},{id: "u4567", name: "Julie", role: "Photographer"}]
-            }
-        }
-    ]
     //
     //
     // registration section
@@ -543,7 +496,9 @@ Item {
         let eventData =  {
             "eventCreator": {
                 "name": userData.name,
-                "id": userData.id
+                "username": userData.username,
+                "id": userData.id,
+                "profile_pic": userData.profile_Pic_URL
             },
             "eventName": event_name,
             "eventDate": event_date,

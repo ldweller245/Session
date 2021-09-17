@@ -47,12 +47,19 @@ Page {
                 // event title container
                 width: parent.width
                 height: eventTitle.height
+                AppText {
+                    // event title
+                    id: eventTitleText
+                    text: shootData.title
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    visible: !pageEditable
+                }
                 AppTextField {
                     // event title
                     id: eventTitle
                     placeholderText: "Enter event name"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    enabled: pageEditable
+                    visible: pageEditable
                 }
             }
             Rectangle {width: spacerW; height: spacerH}
@@ -62,14 +69,22 @@ Page {
                     id: dateText
                     padding: dp(15)
                 }
+                AppText {
+                    id: dateTextFieldText
+                    text: new Date(shootData.date).toDateString()
+                    enabled: false
+                    visible: !pageEditable
+                }
                 AppTextField {
                     id: dateTextField
                     placeholderText: new Date().toDateString()
                     enabled: false
+                    visible: pageEditable
                 }
                 IconButton {
                     id: dateIconButton
                     icon: IconType.calendar
+                    visible: pageEditable
                     onClicked: {
                         nativeUtils.displayDatePicker()
                     }
@@ -89,20 +104,28 @@ Page {
                     id: timeText
                     padding: dp(15)
                 }
+                AppText {
+                    id: timeTextFieldText
+                    text: shootData.time
+                    visible: !pageEditable
+                }
                 AppTextField {
                     id: timeTextField
                     placeholderText: "select time"
                     enabled: false
+                    visible: pageEditable
                     text: timeTumblerSelection = undefined ? "" : timeTumblerSelection
                 }
                 IconButton {
                     id: timeIconButton
                     icon: IconType.clocko
+                    visible: pageEditable
                     onClicked: timeTumblerModal.open()
                 }
             }
             Rectangle {width: spacerW; height: spacerH}
             Column {
+                visible: !pageEditable
                 width: overviewItem.width
                 AppText {
                     text: "Key Contact: "
@@ -143,6 +166,15 @@ Page {
                         anchors.fill: parent
                         contentWidth: width
                         contentHeight: appTextEdit.height
+                        AppText {
+                            id: appTextEditText
+                            width: parent.width
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            height: Math.max(appTextEditText.contentHeight, flick.height)
+                            verticalAlignment: TextEdit.AlignTop
+                            text: shootData.overview
+                            visible: !pageEditable
+                        }
                         AppTextEdit {
                             id: appTextEdit
                             width: parent.width
@@ -154,14 +186,14 @@ Page {
                             cursorInViewBottomPadding: dp(25)
                             cursorInViewTopPadding: dp(25)
                             flickable: flick
-                            text: "test1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\ntest8\ntest9\ntest10"
+                            visible: pageEditable
+                            placeholderText: " Give us the details of the event!"
                         }
                     }
                     ScrollIndicator {
                         flickable: flick
                     }
                 }
-
             }
             Rectangle {width: spacerW; height: spacerH}
         }
@@ -174,8 +206,5 @@ Page {
 
             }
         }
-
-
     }
-
 }
