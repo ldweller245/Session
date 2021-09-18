@@ -4,286 +4,144 @@ import Felgo 3.0
 Page {
     id: teamItem
 
+    //unused at current
     property var hairArray: []
     property var makeupArray: []
     property var wardrobeArray: []
     property var photoArray: []
     property var modelArray: []
-
     property var currentArr
-
-
     property var sectionArr: ["Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]
-
     property var teamData: {
         "team": [
                     {"id": "u1234", "name": "Katie", "role": "Hair"},
-                    {"id": "u2345", "name": "Edward", "role": "Model"},
-                    {"id": "u3456", "name": "Jo", "role": "Hair"},
-                    {"id": "u4567", "name": "Julie", "role": "Photographer"}
+                    {"id": "u2345", "name": "Edward", "role": "Model"}
                 ]
     }
+    //unused at current
 
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: teamItem.width
 
+    property var jsonData: [{"id": 1, "name": "Katie", "role": "Hair"},{"id": 2,"name": "Jo", "role": "Hair"},{"id": 3,"name": "Tracey", "role": "Photography"},{"id": 4,"name": "Edward", "role": "Model"},{"id": 5,"name": "Turtle", "role": "Director"}]
+
+    JsonListModel {
+        id: jsonModel
+        source: shootSetupModal.jsonData
+        keyField: "id"
+        fields: ["id", "name", "role"]
+    }
+    SortFilterProxyModel {
+        id: sortedModel
+        Component.onCompleted: sourceModel = jsonModel
+        sorters: StringSorter { id: typeSorter; roleName: "role"; ascendingOrder: true }
+    }
+
     Component {
         id: headerItem
-        Column {
+        // add underline?
+        Rectangle {
             width: parent.width; height: spacerH*2
             AppText {text: "Team:"; padding: dp(15)}
-            Rectangle {color: "black"; width: parent.width * 0.8; height: 1; anchors.horizontalCenter: parent.horizontalCenter}
-        }
-    }
-    Component {
-        id: searchHeader
-        AppTextField {id: makeupTeamText; scale: 0.95; width: parent.width; placeholderText: "@"; height: AppTextField.height; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "makeup"
-                if(makeupTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(makeupTeamText.text); app.searchArrChanged()}
-                else if(makeupTeamText.length === 0) {searchArr = []}
-            }
-        }
-    }
-    Component {
-        id: searchFooter
-        SimpleRow {
-            IconButton {anchors.centerIn: parent; icon: IconType.times
-                onClicked: {suggestionsList.hide()}
-            }
-        }
-    }
-    Component {
-        id: footerItem
-        SimpleRow {
-            IconButton {anchors.centerIn: parent; icon: IconType.plus
-                onClicked: {suggestionsList.show()}
-            }
-        }
-        AppListView {
-          id: suggestionsList
-          model: searchArr
-
-          property real rowHeight: dp(30)
-          property int fontPixelSize: sp(12)
-
-          header: searchHeader
-          footer: searchFooter
-          height: 0
-          visible: false
-          clip: true
-          boundsBehavior: Flickable.StopAtBounds
-          delegate: SimpleRow {
-            height: suggestionsList.rowHeight
-            text: modelData
-            onSelected: {suggestionsList.hide()}
-          }
-          PropertyAnimation {
-            id: showHideAnimation
-            target: suggestionsList
-            property: "height"
-            duration: 300
-          }
-          function show() {if (!visible) {visible = true; showHideAnimation.to = suggestionsList.rowHeight * 4; showHideAnimation.start()}}
-          function hide() {if (visible) {visible = false; showHideAnimation.to = 0; showHideAnimation.start()}}
         }
     }
 
-    Repeater {
-        model: sectionArr
+    AppListView {
+        id: teamList
+        anchors.fill: parent
+        model: sortedModel
+        header: headerItem
+        section.property: "role"; section.delegate: SimpleSection { }
         delegate: Column {
-            width: teamItem.width
-            AppText {
+            width: parent.width
+            id: column
+            SimpleRow {
+                id: delegateRow
+                text: model.name; detailText: model.role
+                enabled: false; showDisclosure: false
+
+                imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
+                image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
+
+                Rectangle {
+                    height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
+                    IconButton {icon: IconType.envelope}
+                }
+
+                style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
+            }
+            Column {
+                id: footerColumn
+                //add buttonItem
                 width: teamItem.width
-                height: dp(Theme.navigationBar.height)
-                text: modelData
-                font.bold: true
-            }
-
-            AppListView {
-                id: teamList
-                width: parent.width
-                height: teamList.height
-                model: pageEditable === true ? "" : teamData
-                header: headerItem
-                footer: pageEditable === true ? footerItem : undefined
-                delegate: SimpleRow {
-                    id: delegateRow
-                    text: modelData.name
-                    detailText: modelData.role
-                    enabled: false
-                    showDisclosure: false
-
-                    imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
-                    image.radius: image.width/2
-                    image.fillMode: Image.PreserveAspectCrop
-
-                    Rectangle {
-                        height: parent.height
-                        width: height
-                        anchors.right: parent.right
-                        color: "transparent"
-                        IconButton {
-                            icon: IconType.envelope
-                        }
-                    }
-                    style: StyleSimpleRow {
-                        showDisclosure: false
-                        backgroundColor: "transparent"
-                    }
-                }
-            }
-        }
-    }
-
-    Column {
-        id: contentCol; width: parent.width
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {text: "Add your hair team"; padding: dp(15); height: Text.height}
-        AppTextField {
-            id: hairTeamText; scale: 0.95; width: parent.width; height: AppTextField.height; placeholderText: "@"; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "hair";
-                if(hairTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(hairTeamText.text); app.searchArrChanged()}
-                else if(hairTeamText.length === 0) {searchArr = []}
-            }
-        }
-        Rectangle {
-            width: parent.width; height: dp(Theme.navigationBar.height); radius: dp(3)
-            AppListView {
-                width: parent.width; height: parent.height; orientation: ListView.Horizontal; spacing: dp(15); model: hairArray
-                delegate: Rectangle {
-                    scale: 0.96; width: teamItem.width / 3; height: parent.height; color: "lightgrey"
-                    Row {
-                        width: parent.width; height: parent.height
-                        IconButton {id: closeIcon; icon: IconType.times;
-                            onClicked: {let index = hairArray.indexOf(modelData.name); hairArray.splice(index, 1); teamItem.hairArrayChanged()}
-                        }
-                        AppText {padding: dp(10); maximumLineCount: 1; width: parent.width - closeIcon.width; elide: Text.ElideRight; wrapMode: Text.WrapAnywhere; text: modelData.name}
-                    }
-                }
-            }
-        }
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {text: "Add your makeup team"; padding: dp(15); height: Text.height}
-        AppTextField {id: makeupTeamText; scale: 0.95; width: parent.width; placeholderText: "@"; height: AppTextField.height; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "makeup"
-                if(makeupTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(makeupTeamText.text); app.searchArrChanged()}
-                else if(makeupTeamText.length === 0) {searchArr = []}
-            }
-        }
-        Rectangle {
-            width: parent.width; height: dp(Theme.navigationBar.height); radius: dp(3)
-            AppListView {
-                width: parent.width; height: parent.height; orientation: ListView.Horizontal; spacing: dp(15); model: makeupArray
-                delegate: Rectangle {
-                    scale: 0.96; width: teamItem.width / 3; height: parent.height; color: "lightgrey"
-                    Row {
-                        width: parent.width; height: parent.height
-                        IconButton {id: closeIconMUA; icon: IconType.times;
-                            onClicked: {let index = makeupArray.indexOf(modelData.name); makeupArray.splice(index, 1); teamItem.makeupArrayChanged()}
-                        }
-                        AppText {padding: dp(10); maximumLineCount: 1; width: parent.width - closeIconMUA.width; elide: Text.ElideRight; wrapMode: Text.WrapAnywhere; text: modelData.name}
-                    }
-                }
-            }
-        }
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {text: "Add your wardrobe team"; padding: dp(15); height: Text.height}
-        AppTextField {id: wardrobeTeamText; scale: 0.95; width: parent.width; placeholderText: "@"; height: AppTextField.height; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "wardrobe"
-                if(wardrobeTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(wardrobeTeamText.text); app.searchArrChanged()}
-                else if(wardrobeTeamText.length === 0) {searchArr = []}
-            }
-        }
-        Rectangle {
-            width: parent.width; height: dp(Theme.navigationBar.height); radius: dp(3)
-            AppListView {
-                width: parent.width; height: parent.height; orientation: ListView.Horizontal; spacing: dp(15); model: wardrobeArray
-                delegate: Rectangle {
-                    scale: 0.96; width: teamItem.width / 3; height: parent.height; color: "lightgrey"
-                    Row {
-                        width: parent.width; height: parent.height
-                        IconButton {id: closeIconWardrobe; icon: IconType.times;
-                            onClicked: {let index = wardrobeArray.indexOf(modelData.name); wardrobeArray.splice(index, 1); teamItem.wardrobeArrayChanged()}
-                        }
-                        AppText {padding: dp(10); maximumLineCount: 1; width: parent.width - closeIconWardrobe.width; elide: Text.ElideRight; wrapMode: Text.WrapAnywhere; text: modelData.name}
-                    }
-                }
-            }
-        }
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {text: "Add your photography team"; padding: dp(15); height: Text.height}
-        AppTextField {id: photoTeamText; scale: 0.95; width: parent.width; placeholderText: "@"; height: AppTextField.height; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "photo"
-                if(photoTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(photoTeamText.text); app.searchArrChanged()}
-                else if(photoTeamText.length === 0) {searchArr = []}
-            }
-        }
-        Rectangle {
-            width: parent.width; height: dp(Theme.navigationBar.height); radius: dp(3)
-            AppListView {
-                width: parent.width; height: parent.height; orientation: ListView.Horizontal; spacing: dp(15); model: photoArray
-                delegate: Rectangle {
-                    scale: 0.96; width: teamItem.width / 3; height: parent.height; color: "lightgrey"
-                    Row {
-                        width: parent.width; height: parent.height
-                        IconButton {id: closeIconPhoto; icon: IconType.times;
-                            onClicked: {let index = photoArray.indexOf(modelData.name); photoArray.splice(index, 1); teamItem.photoArrayChanged()}
-                        }
-                        AppText { padding: dp(10); maximumLineCount: 1; width: parent.width - closeIconPhoto.width; elide: Text.ElideRight; wrapMode: Text.WrapAnywhere; text: modelData.name}
-                    }
-                }
-            }
-        }
-        Rectangle {width: spacerW; height: spacerH}
-        AppText {text: "Add your models"; padding: dp(15); height: Text.height}
-        AppTextField {id: modelTeamText; scale: 0.95; width: parent.width; placeholderText: "@"; height: AppTextField.height; inputMethodHints: Qt.ImhSensitiveData
-            onTextEdited: {
-                currentArr = "model"
-                if(modelTeamText.length > 0){searchFlickable.visible = true; dataModel.searchUsers(modelTeamText.text); app.searchArrChanged()}
-                else if(modelTeamText.length === 0) {searchArr = []}
-            }
-        }
-        Rectangle {
-            width: parent.width; height: dp(Theme.navigationBar.height); radius: dp(3)
-            AppListView {
-                width: parent.width; height: parent.height; orientation: ListView.Horizontal; spacing: dp(15); model: modelArray
-                delegate: Rectangle {
-                    scale: 0.96; width: teamItem.width / 3; height: parent.height; color: "lightgrey"
-                    Row {
-                        width: parent.width; height: parent.height
-                        IconButton {id: closeIconModel; icon: IconType.times;
-                            onClicked: {let index = modelArray.indexOf(modelData.name); modelArray.splice(index, 1); teamItem.modelArrayChanged()}
-                        }
-                        AppText {padding: dp(10); maximumLineCount: 1; width: parent.width - closeIconModel.width; elide: Text.ElideRight; wrapMode: Text.WrapAnywhere; text: modelData.name}
-                    }
-                }
-            }
-        }
-        Rectangle {width: spacerW; height: spacerH*2}
-    }
-    AppFlickable {
-        z:5; id: searchFlickable; contentHeight: hairSearchColumn.height; width: parent.width/2;height: width; anchors.right: parent.right; visible: searchArr.length === 0 ? false: true; opacity: visible === true ? 1 : 0
-        Behavior on opacity {NumberAnimation {duration: 400; easing.type: Easing.InOutBack}}
-        Column {
-            id: hairSearchColumn; width: parent.width; anchors.right: parent.right; height: searchArr.length === 0 ? 0 : SimpleRow.height*searchArr.length
-            Repeater {
-                model: searchArr
+                visible: column.ListView.section !== column.ListView.nextSection
                 SimpleRow {
-                    text: modelData.name;
-                    onSelected: {
-                        if(currentArr === "hair"){hairArray.push(modelData); hairTeamText.text = ""; teamItem.hairArrayChanged()}
-                        else if (currentArr === "makeup"){makeupArray.push(modelData); makeupTeamText.text = ""; teamItem.makeupArrayChanged()}
-                        else if(currentArr === "wardrobe") {wardrobeArray.push(modelData); wardrobeTeamText.text = ""; teamItem.wardrobeArrayChanged()}
-                        else if(currentArr === "photo") {photoArray.push(modelData); photoTeamText.text = ""; teamItem.photoArrayChanged()}
-                        else if(currentArr === "model") {modelArray.push(modelData); modelTeamText.text = ""; teamItem.modelArrayChanged()}
-                        searchFlickable.visible = false
+                    id: footer
+                    //add page editable to visible
+                    IconButton {id: addTeamIcon; icon: IconType.plus; state: "base"; z: 6
+                        onClicked: {searchBar.visible === true ? searchBar.visible = false : searchBar.visible = true; addTeamIcon.state === "base" ? addTeamIcon.state = "searching" : addTeamIcon.state = "base"}
+                        states: [
+                            State {name: "base"
+                                PropertyChanges {target: addTeamIcon; rotation: 0}
+                                AnchorChanges { target: addTeamIcon; anchors.horizontalCenter: parent.horizontalCenter}
+                            },
+                            State {
+                                name: "searching"
+                                PropertyChanges {target: addTeamIcon; rotation: 405}
+                                AnchorChanges { target: addTeamIcon; anchors.right: parent.right}
+                            }
+                        ]
+                        transitions: [
+                            Transition {
+                                to: "*"
+                                RotationAnimation {property: "rotation"; target: addTeamIcon;easing.type: Easing.InOutBack; duration: 1000}
+                                AnchorAnimation {easing.type: Easing.InOutBack; duration: 1000}
+                            }
+                        ]
                     }
                 }
+                Column {
+                    id: searchBar
+                    width: parent.width
+                    state: "base"
+                    visible: false
+                    states: [
+                        State {name: "base"
+                            PropertyChanges {target: searchBar; visible: false}
+                        },
+                        State {
+                            name: "searching"
+                            PropertyChanges {target: searchBar; visible: true}
+                        }
+                    ]
+                    transitions: [
+                        Transition {
+                            to: "*"
+                            NumberAnimation {property: "visible"; easing.type: Easing.InOutBack; target: searchBar; duration: 1000}
+                        }
+                    ]
+                    Row {
+                        width: parent.width; height: searchText.height;
+                        Rectangle {
+                            height: parent.height; width: height; color: "white"
+                            Icon {icon: IconType.search; anchors.centerIn: parent}
+                        }
+                        AppTextField {
+                            id: searchText; width: parent.width; height: AppTextField.height; placeholderText: "Search team members!"; inputMethodHints: Qt.ImhSensitiveData; backgroundColor: "white"
+                            onTextEdited: {
+                                if(searchText.length > 0){dataModel.searchUsers(searchText.text); app.searchArrChanged()}
+                                else if(searchText.length === 0) {searchArr = []}
+                            }
+                        }
+                    }
+                    Repeater {
+                        model: searchArr
+                        delegate: SimpleRow {id: delegate; text: modelData.name; onSelected: exploreStack.push(otherUserComp, {userID: modelData.id})}
+                    }
+                }
+                //searchTextField
+                //QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+
             }
         }
     }
