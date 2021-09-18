@@ -18,6 +18,7 @@ Page {
                     {"id": "u2345", "name": "Edward", "role": "Model"}
                 ]
     }
+        SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
     //unused at current
 
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
@@ -36,13 +37,23 @@ Page {
         Component.onCompleted: sourceModel = jsonModel
         sorters: StringSorter { id: typeSorter; roleName: "role"; ascendingOrder: true }
     }
-
     Component {
         id: headerItem
         // add underline?
         Rectangle {
             width: parent.width; height: spacerH*2
             AppText {text: "Team:"; padding: dp(15)}
+        }
+    }
+
+    Column {
+        anchors.fill: parent
+        Repeater {
+            model: sectionArr
+            AppText {
+                text: modelData
+            }
+
         }
     }
 
