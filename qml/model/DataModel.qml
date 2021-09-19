@@ -191,7 +191,7 @@ Item {
             else {
                 storage.uploadFile(rprofileImagePath, uuid + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
                     if(!finished) {
-                    } else if (finished && success) {remoteFilePath = downloadUrl; addToNameList(uuid, rusername) ; db.setUserValue("details", regUserDetails); db.setValue("userData/"+uuid+"/profile_Pic_URL", remoteFilePath); userData = regDetails; registerPage.visible = false; loginPage.visible = false}
+                    } else if (finished && success) {remoteFilePath = downloadUrl; addToNameList(uuid, rusername, downloadUrl) ; db.setUserValue("details", regUserDetails); db.setValue("userData/"+uuid+"/profile_Pic_URL", remoteFilePath); userData = regDetails; registerPage.visible = false; loginPage.visible = false}
                 })
             }
         }
@@ -345,8 +345,13 @@ Item {
     function resetPassword(email) {
         firebaseAuth.sendPasswordResetMail(email)
     }
-    function addToNameList(id, userName) {
-        db.setValue("public/nameList/"+userName, id)
+    function addToNameList(id, userName, image) {
+        let data = {
+            "id": id,
+            "userName": userName,
+            "image": image
+        }
+        db.setValue("public/nameList/"+id, data)
     }
     function checkUsernameAvailability(name) {
         let searchKey = name.charAt(0)
@@ -558,7 +563,7 @@ Item {
                         if(success) {
                             searchArr = []
                             for(var i in value){
-                                searchArr.push({name: i, id: value[i]})
+                                searchArr.push({"name": value[i].name, "id": value[i].id, "image": value[i].image})
                             }
                             app.searchArrChanged()
                             console.log("<br><br>Read user value for key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)

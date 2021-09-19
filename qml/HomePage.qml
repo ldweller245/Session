@@ -105,7 +105,10 @@ Page {
             }
             Repeater {
                 model: searchArr
-                delegate: SimpleRow {id: delegate; text: modelData.name; onSelected: exploreStack.push(otherUserComp, {userID: modelData.id})}
+                delegate: SimpleRow {id: delegate; text: modelData.name; showDisclosure: false
+                    imageSource: model.image
+                    image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
+                    ; onSelected: exploreStack.push(otherUserComp, {userID: modelData.id})}
             }
             Rectangle {
                 width: parent.width; height: dp(Theme.navigationBar.height)

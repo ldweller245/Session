@@ -90,6 +90,7 @@ DISTFILES += \
     qml/Components/PlaceSearchSuggestionsPage.qml \
     qml/Components/SuggestionsList.qml \
     qml/Components/TimeTumbler.qml \
+    qml/Components/UserSearchDropdown.qml \
     qml/Create.qml \
     qml/HomePage.qml \
     qml/Inbox.qml \
