@@ -2,9 +2,10 @@ import QtQuick 2.0
 import Felgo 3.0
 import "../Components"
 
-Page {
+FlickablePage {
     id: teamItem
 
+    flickable.contentHeight: contentCol.height
     property var hairArray: []
     property var makeupArray: []
     property var wardrobeArray: []
@@ -17,16 +18,17 @@ Page {
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: teamItem.width
 
-    AppFlickable {
-        anchors.fill: parent; contentHeight: contentCol.height
         Column {
             id: contentCol
+            width: parent.width
             Rectangle {width: spacerW; height: spacerH}
             AppText {text:"Hair"}
             AppListView {
                 id: hairModel
                 model: hairArray
+                height: dp(40)
                 interactive: false
+                emptyText.text: "Add your hair team"
                 delegate: SimpleRow {
                     text: model.name;
                     enabled: false;
@@ -39,7 +41,9 @@ Page {
                 }
             }
             UserSearchDropdown {
+                Component.onCompleted: console.log("LOADED")
                 width: parent.width
+                height: dp(40)
                 onSearchStarted: {console.log("Hair"); currentArr = "Hair"}
                 onEndSearch: {teamItem.hairArrayChanged()}
             }
@@ -48,7 +52,9 @@ Page {
             AppListView {
                 id: makeupModel
                 model: makeupArray
+                height: dp(40)
                 interactive: false
+                emptyText.text: "Add your makeup team"
                 delegate: SimpleRow {
                     text: model.name;
                     enabled: false;
@@ -62,7 +68,8 @@ Page {
                 }
             }
             UserSearchDropdown {
-                width: parent.width
+                width: parent.width;                 height: dp(40)
+
                 onSearchStarted: {console.log("Makeup"); currentArr = "Makeup"}
                 onEndSearch: {teamItem.makeupArrayChanged()}
 
@@ -73,6 +80,9 @@ Page {
                 id: modelModel
                 model: modelArray
                 interactive: false
+                height: dp(40)
+
+                emptyText.text: "Add your models"
                 delegate: SimpleRow {
                     text: model.name;
                     enabled: false;
@@ -87,6 +97,8 @@ Page {
             }
             UserSearchDropdown {
                 width: parent.width
+                height: dp(40)
+
                 onSearchStarted: {console.log("Model"); currentArr = "Model"}
                 onEndSearch: {teamItem.modelArrayChanged()}
 
@@ -97,6 +109,9 @@ Page {
                 id: wardrobeModel
                 model: wardrobeArray
                 interactive: false
+                height: dp(40)
+
+                emptyText.text: "Add your wardrobe stylists"
                 delegate: SimpleRow {
                     text: model.name;
                     enabled: false;
@@ -110,6 +125,8 @@ Page {
                 }
             }
             UserSearchDropdown {
+                height: dp(40)
+
                 width: parent.width
                 onSearchStarted: {console.log("Wardrobe"); currentArr = "Wardrobe"}
                 onEndSearch: {teamItem.wardrobeArrayChanged()}
@@ -119,7 +136,10 @@ Page {
             AppListView {
                 id: photoModel
                 model: photoArray
+                height: dp(40)
+
                 interactive: false
+                emptyText.text: "Add your photography team"
                 delegate: SimpleRow {
                     text: model.name;
                     enabled: false;
@@ -134,10 +154,12 @@ Page {
             }
             UserSearchDropdown {
                 width: parent.width
+                height: dp(40)
+
                 onSearchStarted: {console.log("Photo"); currentArr = "Photo"}
                 onEndSearch: {teamItem.photoArrayChanged()}
             }
             Rectangle {width: spacerW; height: spacerH}
         }
     }
-}
+

@@ -351,7 +351,7 @@ Item {
             "userName": userName,
             "image": image
         }
-        db.setValue("public/nameList/"+id, data)
+        db.setValue("public/nameList/"+userName, data)
     }
     function checkUsernameAvailability(name) {
         let searchKey = name.charAt(0)
@@ -566,7 +566,7 @@ Item {
                                 searchArr.push({"name": value[i].name, "id": value[i].id, "image": value[i].image})
                             }
                             app.searchArrChanged()
-                            console.log("<br><br>Read user value for key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)
+                            console.log("<br><br>Search Key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)
                         }
                     })
     }
