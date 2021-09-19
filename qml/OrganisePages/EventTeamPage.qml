@@ -11,6 +11,7 @@ Page {
     property var photoArray: []
     property var modelArray: []
     property var currentArr
+
     property var sectionArr: ["Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]
     property var teamData: {
         "team": [
@@ -18,7 +19,7 @@ Page {
                     {"id": "u2345", "name": "Edward", "role": "Model"}
                 ]
     }
-        SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
+        //SortFilterProxyModel {id: hairSortedModel; Component.onCompleted: {app.userFeedChanged();sourceModel = jsonModel} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
     //unused at current
 
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
@@ -35,8 +36,18 @@ Page {
     SortFilterProxyModel {
         id: sortedModel
         Component.onCompleted: sourceModel = jsonModel
-        sorters: StringSorter { id: typeSorter; roleName: "role"; ascendingOrder: true }
+        sorters: [
+            StringSorter { id: typeSorter; roleName: "role"; ascendingOrder: true },
+            StringSorter { id: nameSorter; roleName: "name"; ascendingOrder: true }
+        ]
     }
+
+    SortFilterProxyModel {id: sortedModel0; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
+    SortFilterProxyModel {id: sortedModel1; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Makeup"; }}}
+    SortFilterProxyModel {id: sortedModel2; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Model"; }}}
+    SortFilterProxyModel {id: sortedModel3; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Wardrobe"; }}}
+    SortFilterProxyModel {id: sortedModel4; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Photographer"; }}}
+
     Component {
         id: headerItem
         // add underline?
@@ -45,7 +56,6 @@ Page {
             AppText {text: "Team:"; padding: dp(15)}
         }
     }
-
     Column {
         anchors.fill: parent
         Repeater {
@@ -53,33 +63,27 @@ Page {
             AppText {
                 text: modelData
             }
-
-        }
-    }
-
-    AppListView {
-        id: teamList
-        anchors.fill: parent
-        model: sortedModel
-        header: headerItem
-        section.property: "role"; section.delegate: SimpleSection { }
-        delegate: Column {
-            width: parent.width
-            id: column
-            SimpleRow {
-                id: delegateRow
-                text: model.name; detailText: model.role
-                enabled: false; showDisclosure: false
-
-                imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
-                image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
-
-                Rectangle {
-                    height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.envelope}
+            AppListView {
+                id: teamList
+                anchors.fill: parent
+                model: sortedModel
+                header: headerItem
+                delegate: Column {
+                    width: parent.width
+                    id: column
+                    SimpleRow {
+                        id: delegateRow
+                        text: model.name; detailText: model.role
+                        enabled: false; showDisclosure: false
+                        imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
+                        image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
+                        Rectangle {
+                            height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
+                            IconButton {icon: IconType.envelope}
+                        }
+                        style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
+                    }
                 }
-
-                style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
             Column {
                 id: footerColumn
@@ -90,7 +94,7 @@ Page {
                     id: footer
                     //add page editable to visible
                     IconButton {id: addTeamIcon; icon: IconType.plus; state: "base"; z: 6
-                        onClicked: {searchBar.visible === true ? searchBar.visible = false : searchBar.visible = true; addTeamIcon.state === "base" ? addTeamIcon.state = "searching" : addTeamIcon.state = "base"}
+                        onClicked: {console.log(column.ListView.section); searchBar.visible === true ? searchBar.visible = false : searchBar.visible = true; addTeamIcon.state === "base" ? addTeamIcon.state = "searching" : addTeamIcon.state = "base"}
                         states: [
                             State {name: "base"
                                 PropertyChanges {target: addTeamIcon; rotation: 0}
@@ -150,9 +154,6 @@ Page {
                         delegate: SimpleRow {id: delegate; text: modelData.name; onSelected: exploreStack.push(otherUserComp, {userID: modelData.id})}
                     }
                 }
-                //searchTextField
-                //QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
-
             }
         }
     }
