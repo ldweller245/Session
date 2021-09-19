@@ -42,11 +42,11 @@ Page {
         ]
     }
 
-    SortFilterProxyModel {id: sortedModel0; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
-    SortFilterProxyModel {id: sortedModel1; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Makeup"; }}}
-    SortFilterProxyModel {id: sortedModel2; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Model"; }}}
-    SortFilterProxyModel {id: sortedModel3; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Wardrobe"; }}}
-    SortFilterProxyModel {id: sortedModel4; Component.onCompleted: {sourceModel = sectionArr} filters: ExpressionFilter {expression: {model.tag === "Photographer"; }}}
+    SortFilterProxyModel {id: sortedModel0; Component.onCompleted: {sourceModel = hairArray} filters: ExpressionFilter {expression: {model.tag === "Hair"; }}}
+    SortFilterProxyModel {id: sortedModel1; Component.onCompleted: {sourceModel = makeupArray} filters: ExpressionFilter {expression: {}}}
+    SortFilterProxyModel {id: sortedModel2; Component.onCompleted: {sourceModel = modelArray} filters: ExpressionFilter {expression: {}}}
+    SortFilterProxyModel {id: sortedModel3; Component.onCompleted: {sourceModel = wardrobeArray} filters: ExpressionFilter {expression: {}}}
+    SortFilterProxyModel {id: sortedModel4; Component.onCompleted: {sourceModel = photoArray} filters: ExpressionFilter {expression: {}}}
 
     Component {
         id: headerItem
