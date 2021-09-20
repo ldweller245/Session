@@ -6,8 +6,7 @@ Page {
     id: imagePickerPage
     ImagePicker {
         id: imagePicker; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1;
-        onSelectionChanged: if(selectedCount === 1){imagePicker.clearSelection()}
+        onSelectionChanged: if(selectedCount === 1){imagePicker.clearSelection()}        
         onSelectedCountChanged: {imagePath = selection.toString(); imagePathID = selection.toString(); if(selectedCount === 0) {imagePath = undefined }}
-
     }
 }

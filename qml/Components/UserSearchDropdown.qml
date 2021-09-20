@@ -1,10 +1,10 @@
 import QtQuick 2.0
 import Felgo 3.0
 
-Item {
-    id: page
+AppListView {
+    id: root
 
-    property real rowHeight: dp(30)
+    property real rowHeight: searchText.height
     property int fontPixelSize: sp(12)
 
     signal searchStarted()
@@ -14,48 +14,62 @@ Item {
     visible: false
     clip: true
 
+    boundsBehavior: Flickable.StopAtBounds
 
+    header: headerComponent
 
-    Column {
-        id: footerColumn
-        width: parent.width
+    model: searchArr
+
+    delegate: SimpleRow {
+        text: modelData.name;
+        height: root.rowHeight
+        showDisclosure: false
+        imageSource: model.image
+        image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
+        onSelected: {
+            if(currentArr === "Hair"){hairArray.push(modelData); searchText.text = ""; }
+            else if (currentArr === "Makeup"){makeupArray.push(modelData); searchText.text = ""; }
+            else if(currentArr === "Wardrobe") {wardrobeArray.push(modelData); searchText.text = "";}
+            else if(currentArr === "Photo") {photoArray.push(modelData); searchText.text = ""; }
+            else if(currentArr === "Model") {modelArray.push(modelData); searchText.text = ""; }
+        }}
+
+    PropertyAnimation {
+        id: showHideAnimation
+
+        target: root
+
+        property: "height"
+        duration: 300
+    }
+
+    function show() {
+        if (!visible) {
+            visible = true
+            showHideAnimation.to = root.rowHeight * 4
+            showHideAnimation.start()
+        }
+    }
+
+    function hide() {
+        if (visible) {
+            visible = false
+            showHideAnimation.to = 0
+            showHideAnimation.start()
+        }
+    }
+
+    Component {
+        id: headerComponent
         Rectangle {
-            width: footerColumn.width
-            height: footer.height
-            SimpleRow {
-                id: footer
-                //add page editable to visible
-                IconButton {id: addTeamIcon; state: "base"; z: 6;
-                    onClicked: {console.log("clicked"); page.searchStarted(); searchBar.visible === true ? searchBar.visible = false : searchBar.visible = true; addTeamIcon.state === "base" ? addTeamIcon.state = "searching" : addTeamIcon.state = "base"; searchBar.state === "base" ? searchBar.state = "searching" : searchBar.state = "base"}
-                    states: [
-                        State {name: "base"
-                            PropertyChanges {target: addTeamIcon; rotation: 0}
-                            AnchorChanges { target: addTeamIcon; anchors.horizontalCenter: parent.horizontalCenter}
-                            PropertyChanges {target: addTeamIcon; icon: IconType.plus}
-                        },
-                        State {
-                            name: "searching"
-                            PropertyChanges {target: addTeamIcon; rotation: 360}
-                            AnchorChanges { target: addTeamIcon; anchors.left: parent.left}
-                            PropertyChanges {target: addTeamIcon; icon: IconType.search}
-                        }
-                    ]
-                    transitions: [
-                        Transition {
-                            to: "*"
-                            RotationAnimation {property: "rotation"; target: addTeamIcon;easing.type: Easing.InOutBack; duration: 1000}
-                            AnchorAnimation {easing.type: Easing.InOutBack; duration: 1000}
-                            PropertyAnimation {property: "icon"; target: addTeamIcon; duration: 1000; easing.type: Easing.InOutBack}
-
-                        }
-                    ]
+            width: root.width
+            height: searchText.height
+            AppTextField {
+                id: searchText; z:5 ; width: parent.width - addTeamIcon; placeholderText: "Search team members!"; inputMethodHints: Qt.ImhSensitiveData; backgroundColor: "white"
+                onTextEdited: {
+                    if(searchText.length > 0){dataModel.searchUsers(searchText.text); app.searchArrChanged()}
+                    else if(searchText.length === 0) {searchArr = []}
                 }
-            }
-            Column {
-                id: searchBar
-                width: parent.width - IconButton.width
-                state: "base"
-                visible: false
                 states: [
                     State {name: "base"
                         PropertyChanges {target: searchBar; visible: false}
@@ -71,57 +85,35 @@ Item {
                         NumberAnimation {property: "visible"; easing.type: Easing.InOutBack; target: searchBar; duration: 1000}
                     }
                 ]
-                Row {
-                    width: parent.width; height: searchText.height;
-                    AppTextField {
-                        id: searchText; z:5 ; width: parent.width; height: AppTextField.height; placeholderText: "Search team members!"; inputMethodHints: Qt.ImhSensitiveData; backgroundColor: "white"
-                        onTextEdited: {
-                            if(searchText.length > 0){dataModel.searchUsers(searchText.text); app.searchArrChanged()}
-                            else if(searchText.length === 0) {searchArr = []}
-                        }
+            }
+            IconButton {id: addTeamIcon; state: "base";
+                onClicked: {console.log("clicked"); root.searchStarted(); searchBar.visible === true ? searchBar.visible = false : searchBar.visible = true; addTeamIcon.state === "base" ? addTeamIcon.state = "searching" : addTeamIcon.state = "base"; searchBar.state === "base" ? searchBar.state = "searching" : searchBar.state = "base"}
+                states: [
+                    State {name: "base"
+                        PropertyChanges {target: addTeamIcon; rotation: 0}
+                        AnchorChanges { target: addTeamIcon; anchors.horizontalCenter: parent.horizontalCenter}
+                        PropertyChanges {target: addTeamIcon; icon: IconType.plus}
+                    },
+                    State {
+                        name: "searching"
+                        PropertyChanges {target: addTeamIcon; rotation: 360}
+                        AnchorChanges { target: addTeamIcon; anchors.left: parent.left}
+                        PropertyChanges {target: addTeamIcon; icon: IconType.search}
+
                     }
-                }
-                Repeater {
-                    model: searchArr
-                    //need to push to array or emit signal
-                    delegate: SimpleRow {id: delegate; text: modelData.name;
-                        showDisclosure: false
-                        imageSource: model.image
-                        image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
-                        onSelected: {
-                            if(currentArr === "Hair"){hairArray.push(modelData); searchText.text = ""; }
-                            else if (currentArr === "Makeup"){makeupArray.push(modelData); searchText.text = ""; }
-                            else if(currentArr === "Wardrobe") {wardrobeArray.push(modelData); searchText.text = ""; page.wardrobeArrayChanged()}
-                            else if(currentArr === "Photo") {photoArray.push(modelData); searchText.text = ""; page.photoArrayChanged()}
-                            else if(currentArr === "Model") {modelArray.push(modelData); searchText.text = ""; }
-                        }}
-                }
+                ]
+                transitions: [
+                    Transition {
+                        to: "*"
+                        RotationAnimation {property: "rotation"; target: addTeamIcon;easing.type: Easing.InOutBack; duration: 1000}
+                        AnchorAnimation {easing.type: Easing.InOutBack; duration: 1000}
+                        PropertyAnimation {property: "icon"; target: addTeamIcon; duration: 1000; easing.type: Easing.InOutBack}
+
+                    }
+                ]
             }
         }
-
-    }
-    PropertyAnimation {
-        id: showHideAnimation
-
-        target: page
-
-        property: "height"
-        duration: 300
-    }
-
-    function show() {
-      if (!visible) {
-        visible = true
-        showHideAnimation.to = page.rowHeight * 4
-        showHideAnimation.start()
-      }
-    }
-
-    function hide() {
-      if (visible) {
-        visible = false
-        showHideAnimation.to = 0
-        showHideAnimation.start()
-      }
     }
 }
+
+

@@ -107,6 +107,8 @@ Page {
                 model: searchArr
                 delegate: SimpleRow {id: delegate; text: modelData.name; showDisclosure: false
                     imageSource: modelData.image
+                    image.height: parent.height
+                    image.width: height
                     image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                     ; onSelected: exploreStack.push(otherUserComp, {userID: modelData.id})}
             }

@@ -141,7 +141,7 @@ App {
                 Component {id:shootOrganisePage; ShootsOrganise {id: shootsOrganiseNav}}
                 Component {id: calendarOrganisePage; CalendarOrganise {id: calendarOrganiseNav;
                         onAddCalendarItem: dataModel.addCalendarItem(date, name, time, location, details)
-                        onEditCalendarItem: dataModel.editCalendarItem(id, calendarItem)
+                        onEditCalendarItem: dataModel.editCalendarItem(date, name, time, location, details, id)
                         onDeleteCalendarItem: dataModel.removeCalendarItem(id)
                     }
                 }

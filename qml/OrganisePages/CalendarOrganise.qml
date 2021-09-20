@@ -14,7 +14,7 @@ Page {
     title: "CALENDAR"
 
     signal addCalendarItem(var date, var name, var time, var location, var details)
-    signal editCalendarItem (var id, var calendarItem)
+    signal editCalendarItem (var date, var name, var time, var location, var details, var id)
     signal deleteCalendarItem(var id)
 
     property var jsonArray: Object.values(dataModel.calendarData)
@@ -25,11 +25,11 @@ Page {
         keyField: "id"
         fields: ["id", "creation_date", "date", "details", "location", "name", "time"]
     }
-        SortFilterProxyModel {
-            id: sortedModel; Component.onCompleted: {sourceModel = jsonModel}
-            filters: ExpressionFilter {id: calendarDateFilter; expression: model.date  === calendar.selectedDate.getTime(); enabled: true}
-            sorters: RoleSorter {roleName: "time"; ascendingOrder: false}
-        }
+    SortFilterProxyModel {
+        id: sortedModel; Component.onCompleted: {sourceModel = jsonModel}
+        filters: ExpressionFilter {id: calendarDateFilter; expression: model.date  === calendar.selectedDate.getTime(); enabled: true}
+        sorters: RoleSorter {roleName: "time"; ascendingOrder: false}
+    }
     Flow {
         id: row; anchors.fill: parent; spacing: 10; layoutDirection: Qt.RightToLeft
         Calendar {
@@ -166,12 +166,21 @@ Page {
                             Rectangle {color: "black"; height: parent.height * 0.8; width: 1; anchors.verticalCenter: parent.verticalCenter}
                             IconButton {
                                 height: parent.height; width: parent.width/4; icon: IconType.edit
-                                onClicked: {}
+                                onClicked: {
+                                    eventDate = model.date
+                                    eventTitle = model.title
+                                    eventTime = model.time
+                                    eventLocation = model.location
+                                    eventDetails = model.details
+                                    eventID = model.id
+
+
+                                    eventEditable = true; createCalendarItemModal.open()}
                             }
                             Rectangle {color: "black"; height: parent.height * 0.8; width: 1; anchors.verticalCenter: parent.verticalCenter}
                             IconButton {
                                 height: parent.height; width: parent.width/4; icon: IconType.externallink
-                                onClicked: {}
+                                onClicked: {eventEditable = false; createCalendarItemModal.open()}
                             }
                         }
                     }
@@ -179,7 +188,15 @@ Page {
             }
         }
     }
-    FloatingActionButton {visible: true; icon: IconType.plus; onClicked: createCalendarItemModal.open()}
+    property var eventDate
+    property var eventTitle
+    property var eventTime
+    property var eventLocation
+    property var eventDetails
+    property var eventID
+    property bool eventEditable: false
+
+    FloatingActionButton {visible: true; icon: IconType.plus; onClicked: {eventEditable = true; createCalendarItemModal.open()}}
     AppModal {
         id: createCalendarItemModal; fullscreen: false; modalHeight: calendarPage.height*0.8
         NavigationStack {
@@ -187,12 +204,41 @@ Page {
                 id: eventItemPage
                 clip: true
                 leftBarItem: TextButtonBarItem {
-                    text: "Cancel"; textItem.font.pixelSize: sp(16); onClicked: createCalendarItemModal.close()
+                    text: "Cancel"; textItem.font.pixelSize: sp(16); onClicked: {
+                        eventEditable = false;
+                        eventDate = undefined
+                        eventTitle = undefined
+                        eventTime = undefined
+                        eventLocation = undefined
+                        eventDetails = undefined
+                        eventID = undefined
+
+                        createCalendarItemModal.close()
+                    }
                 }
                 rightBarItem: TextButtonBarItem {
-                    text: "Save"; textItem.font.pixelSize: sp(16); onClicked:{
-                        if(calendarEventTitle.length === 0) {nativeUtils.displayMessageBox(qsTr("You need to add a title"))}
-                        else {calendarPage.addCalendarItem(new Date(calendar.selectedDate).getTime(), calendarEventTitle.text, timeTextField.text, searchTextField.text, appTextEdit.text); createCalendarItemModal.close()}
+                    visible: eventEditable
+                    text: eventEditable === true? "Save Changes" : "Save"; textItem.font.pixelSize: sp(16); onClicked:{
+                        if(calendarEventTitle.length === 0) {
+                            nativeUtils.displayMessageBox(qsTr("You need to add a title"))
+                        }
+                        else {
+                            if(eventEditable === true) {
+                                calendarPage.editCalendarItem(new Date(eventDate).getTime(), eventTitle, eventTime, eventLocation, eventDetails)
+                            }
+                            else {
+                                calendarPage.addCalendarItem(new Date(calendar.selectedDate).getTime(), calendarEventTitle.text, timeTextField.text, searchTextField.text, appTextEdit.text, eventID);
+                            }
+                            eventEditable = false;
+                            createCalendarItemModal.close();
+                            eventEditable = false;
+                            eventDate = undefined
+                            eventTitle = undefined
+                            eventTime = undefined
+                            eventID = undefined
+                            eventLocation = undefined
+                            eventDetails = undefined
+                        }
                     }
                 }
                 AppFlickable {
@@ -201,6 +247,7 @@ Page {
                         id: addEventCol; width: parent.width
                         Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)/2; color: "transparent"}
                         AppText {
+                            visible: eventEditable
                             horizontalAlignment: Text.AlignHCenter; width: parent.width; font.bold: true; text: "Create an event for: <br>" + new Date(calendar.selectedDate).toDateString()
                         }
                         Rectangle {color: "black"; width: parent.width * 0.8; height: 1; anchors.horizontalCenter: parent.horizontalCenter}
@@ -210,7 +257,7 @@ Page {
                         Row {
                             width: parent.width
                             AppText {padding: dp(15)}
-                            AppTextField {id: calendarEventTitle; placeholderText: "Event name";}
+                            AppTextField {id: calendarEventTitle; placeholderText: "Event name"; text: eventTitle === undefined ? "" : eventTitle + "<br>" + new Date(eventDate).toDateString(); clickEnabled: eventEditable}
                         }
                         Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)/2; color: "transparent"}
                         AppText {width: parent.width; text: "<b>TIME" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15)}
@@ -218,8 +265,8 @@ Page {
                         Row {
                             width: calendarPage.width
                             AppText {id: timeText; padding: dp(15)}
-                            AppTextField {id: timeTextField; placeholderText: "Start time"; enabled: false; text: timeTumblerSelection === undefined ? "" : timeTumblerSelection}
-                            IconButton {id: timeIconButton; icon: IconType.clocko; onClicked: timeTumblerModal.open()}
+                            AppTextField {id: timeTextField; placeholderText: "Start time"; enabled: false; text: if(eventTime === undefined){""}else {timeTumblerSelection === undefined ? "" : timeTumblerSelection} clickEnabled: eventEditable}
+                            IconButton {id: timeIconButton; icon: IconType.clocko; onClicked: timeTumblerModal.open(); visible: eventEditable}
                         }
                         Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)/2; color: "transparent"}
                         AppText {width: parent.width; text: "<b>LOCATION" + "&nbsp;&nbsp;&nbsp;>"; leftPadding: dp(15)}
@@ -232,6 +279,7 @@ Page {
                                 Column {
                                     anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height;width: parent.width
                                     AppTextField {
+                                        text: eventLocation === undefined? "" : eventLocation; clickEnabled: eventEditabley
                                         id: searchTextField; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
                                         onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
                                         onDisplayTextChanged: {
@@ -243,6 +291,7 @@ Page {
                                         Component.onCompleted: {font.pixelSize = sp(16)}
                                     }
                                     SuggestionsList {
+                                        visible: eventEditable
                                         id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
                                         onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
                                     }
@@ -259,6 +308,7 @@ Page {
                                 AppFlickable {
                                     id: flick; anchors.fill: parent; contentWidth: width; contentHeight: appTextEdit.height
                                     AppTextEdit {
+                                        text: eventDetails === undefined? "" : eventDetails
                                         id: appTextEdit; width: parent.width; wrapMode: Text.WrapAtWordBoundaryOrAnywhere; height: Math.max(appTextEdit.contentHeight, flick.height); verticalAlignment: TextEdit.AlignTop; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); flickable: flick
                                         placeholderText: " Any details?"
                                     }

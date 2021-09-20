@@ -18,6 +18,8 @@ FlickablePage {
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: teamItem.width
 
+
+
         Column {
             id: contentCol
             width: parent.width

@@ -40,14 +40,13 @@ Item {
     property var calendarData: []
     property var shootData: []
 
-
     property var userID: userData.id
 
-    readonly property string realtimeUserData: "userData/" + userData.id + "/"
-    readonly property string realtimeMasterFeed: "masterFeed/"
-    readonly property string realtimeUserFeed: "userFeeds/" + userData.id
-    readonly property string realtimeChats: "chats/"
-    readonly property string realtimeOtherUserDetails: "userData/" + otherUserID
+    property string realtimeUserData: "userData/" + userData.id + "/"
+    property string realtimeMasterFeed: "masterFeed/"
+    property string realtimeUserFeed: "userFeeds/" + userData.id
+    property string realtimeChats: "chats/"
+    property string realtimeOtherUserDetails: "userData/" + otherUserID
 
     function sHA256(s){
         var chrsz   = 8;
@@ -151,9 +150,10 @@ Item {
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
+
     FirebaseConfig {id: firebaseConfig; storageBucket: "session-10d53.appspot.com";  projectId: "session-10d53"; databaseUrl: "https://session-10d53-default-rtdb.europe-west1.firebasedatabase.app/"; apiKey: Qt.platform.os === "android" ? "AIzaSyClEiWZ5tOnHpB0kl19W4guYMZXBw5k6Hw": "AIzaSyCWy_CbVSdDFJGwtTvhiNJYtK3VA6Ehj4Q"; applicationId:  Qt.platform.os === "android" ? "1:627724626656:android:74443461c4df304ccc7e85": "1:627724626656:ios:1a1ec445bbaf1efbcc7e85"}
     FirebaseDatabase {
-        id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
+        id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  value + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
         realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeUserFeed, realtimeChats, realtimeOtherUserDetails];
         onRealtimeValueChanged: {
@@ -541,8 +541,8 @@ Item {
     function editEvent() {
 
     }
-    function deleteEvent() {
-
+    function deleteEvent(eventID) {
+        db.setValue("userData/"+userData.id+"/shoots/"+eventID, null)
     }
     //end Events Functions
     //
@@ -694,6 +694,15 @@ Item {
         db.setValue("userData/"+userData.id+"/chats/"+chatID, null)
     }
     function getChat (userID) {
+
+
+        /*
+1) check chat exists
+2) if it does retreive the data
+3) if it does not CREATE a chat
+
+
+        */
         //userData/edd/chats/123456/0 --- edd123
         //                          1 --- kati456
         
@@ -751,8 +760,14 @@ Item {
     function removeCalendarItem(id){
         db.setValue("userData/"+userData.id+"/calendar/"+id, null)
     }
-    function editCalendarItem(id, calendarItem){
-        db.setValue("userData/"+userData.id+"/calendar/"+id, calendarItem)
+    function editCalendarItem(date, name, time, location, details,id){
+        db.setValue("userData/"+userData.id+"/calendar/"+id+"/date", date)
+        db.setValue("userData/"+userData.id+"/calendar/"+id+"/title", name)
+        db.setValue("userData/"+userData.id+"/calendar/"+id+"/time", time)
+        db.setValue("userData/"+userData.id+"/calendar/"+id+"/location", location)
+        db.setValue("userData/"+userData.id+"/calendar/"+id+"/details", details)
+
+
     }
     // end Calendar functions
     //
