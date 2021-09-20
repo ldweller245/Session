@@ -3,8 +3,18 @@ import Felgo 3.0
 
 Item {
     id: page
+
+    property real rowHeight: dp(30)
+    property int fontPixelSize: sp(12)
+
     signal searchStarted()
     signal endSearch()
+
+    height: 0
+    visible: false
+    clip: true
+
+
 
     Column {
         id: footerColumn
@@ -22,12 +32,11 @@ Item {
                             PropertyChanges {target: addTeamIcon; rotation: 0}
                             AnchorChanges { target: addTeamIcon; anchors.horizontalCenter: parent.horizontalCenter}
                             PropertyChanges {target: addTeamIcon; icon: IconType.plus}
-
                         },
                         State {
                             name: "searching"
                             PropertyChanges {target: addTeamIcon; rotation: 360}
-                            AnchorChanges { target: addTeamIcon; anchors.right: parent.right}
+                            AnchorChanges { target: addTeamIcon; anchors.left: parent.left}
                             PropertyChanges {target: addTeamIcon; icon: IconType.search}
                         }
                     ]
@@ -65,7 +74,7 @@ Item {
                 Row {
                     width: parent.width; height: searchText.height;
                     AppTextField {
-                        id: searchText; width: parent.width; height: AppTextField.height; placeholderText: "Search team members!"; inputMethodHints: Qt.ImhSensitiveData; backgroundColor: "white"
+                        id: searchText; z:5 ; width: parent.width; height: AppTextField.height; placeholderText: "Search team members!"; inputMethodHints: Qt.ImhSensitiveData; backgroundColor: "white"
                         onTextEdited: {
                             if(searchText.length > 0){dataModel.searchUsers(searchText.text); app.searchArrChanged()}
                             else if(searchText.length === 0) {searchArr = []}
@@ -91,5 +100,28 @@ Item {
         }
 
     }
+    PropertyAnimation {
+        id: showHideAnimation
 
+        target: page
+
+        property: "height"
+        duration: 300
+    }
+
+    function show() {
+      if (!visible) {
+        visible = true
+        showHideAnimation.to = page.rowHeight * 4
+        showHideAnimation.start()
+      }
+    }
+
+    function hide() {
+      if (visible) {
+        visible = false
+        showHideAnimation.to = 0
+        showHideAnimation.start()
+      }
+    }
 }
