@@ -279,7 +279,7 @@ Page {
                                 Column {
                                     anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height;width: parent.width
                                     AppTextField {
-                                        text: eventLocation === undefined? "" : eventLocation; clickEnabled: eventEditabley
+                                        text: eventLocation === undefined? "" : eventLocation; clickEnabled: eventEditable
                                         id: searchTextField; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
                                         onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
                                         onDisplayTextChanged: {

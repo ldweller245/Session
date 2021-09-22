@@ -153,7 +153,7 @@ Item {
 
     FirebaseConfig {id: firebaseConfig; storageBucket: "session-10d53.appspot.com";  projectId: "session-10d53"; databaseUrl: "https://session-10d53-default-rtdb.europe-west1.firebasedatabase.app/"; apiKey: Qt.platform.os === "android" ? "AIzaSyClEiWZ5tOnHpB0kl19W4guYMZXBw5k6Hw": "AIzaSyCWy_CbVSdDFJGwtTvhiNJYtK3VA6Ehj4Q"; applicationId:  Qt.platform.os === "android" ? "1:627724626656:android:74443461c4df304ccc7e85": "1:627724626656:ios:1a1ec445bbaf1efbcc7e85"}
     FirebaseDatabase {
-        id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  value + " for key " + key)}else {console.debug("Error with message: "  + value)}}
+        id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
         realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeUserFeed, realtimeChats, realtimeOtherUserDetails];
         onRealtimeValueChanged: {
@@ -563,7 +563,7 @@ Item {
                         if(success) {
                             searchArr = []
                             for(var i in value){
-                                searchArr.push({"name": value[i].name, "id": value[i].id, "image": value[i].image})
+                                searchArr.push({"name": value[i].userName, "id": value[i].id, "image": value[i].image})
                             }
                             app.searchArrChanged()
                             console.log("<br><br>Search Key", key, "<br><br>from DB:", JSON.stringify(searchArr)+ "searchArrLength: "+searchArr.length)
