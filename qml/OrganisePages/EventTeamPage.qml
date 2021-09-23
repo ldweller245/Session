@@ -8,13 +8,14 @@ FlickablePage {
     signal searchStarted()
     signal endSearch()
 
+    property var tabIndex: tabControl.currentIndex
+
+    onTabIndexChanged:  {
+    }
+
 
     flickable.contentHeight: contentCol.height
-    property var hairArray: []
-    property var makeupArray: []
-    property var wardrobeArray: []
-    property var photoArray: []
-    property var modelArray: []
+
     property var currentArr
 
     property var sectionArr: ["Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]

@@ -5,10 +5,22 @@ import "../Components"
 Page {
     id: overviewItem
 
-    signal createEvent(var eventName, var eventOrganiser, var eventDate, var eventTime, var eventOver, var coverImage, var eventConcept, var eventLocation, var eventTeam)
-
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: overviewItem.width
+
+    property var tabIndex: tabControl.currentIndex
+
+    onTabIndexChanged:  {
+        eventName = eventTitle.text
+        eventDate = new Date(dateTextField.text).getTime()
+        eventTime = timeTextField.text
+        eventDetails = appTextEdit.text
+        /*
+          cover image
+          key contact
+        */
+    }
+
 
     AppFlickable {
         anchors.fill: parent

@@ -6,7 +6,6 @@ Page {
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: shootConceptPage.width
 
-    property var moodboards: []
 
     AppFlickable {
         anchors.fill: parent; contentHeight: pageEditable === true ? addBoardsCol.height : viewBoards.height

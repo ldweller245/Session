@@ -495,7 +495,7 @@ Item {
     //
     //
     //Event(shoots) Functions
-    function createEvent(event_name, event_organiser, event_date, event_time, event_overview, cover_image, event_concept, event_location, event_team) {
+    function createEvent(event_name, cover_image, event_date, event_time, event_details, event_location, event_moodboards, event_team ) {
         let eventID = "e-uid"+uniqueID()
 
         let eventData =  {
@@ -513,19 +513,14 @@ Item {
                 "name2": userData.name,"id2": userData.id
                 //other User{"name": "userData.name,"id": "userData.id"}
             },
-            "overview": event_overview,
+            "overview": event_details,
             "coverImage": cover_image,
-            "moodboard": ["","",""],
+            "moodboard": event_moodboards,
             "location": {
                 "address": "",//address
                 "map": "51.477928, -0.001545"
             },
-            "team": [
-                {"id": "u1234", "name": "Katie", "role": "hairstylist"},
-                {"id": "u2345", "name": "Edward", "role": "model"},
-                {"id": "u3456", "name": "Jo", "role": "hairstylist"},
-                {"id": "u4567", "name": "Julie", "role": "Photographer"}
-            ]
+            "team": event_team
         }
         db.setValue("userData/"+userData.id+"/shoots/"+eventID, eventData)
     }

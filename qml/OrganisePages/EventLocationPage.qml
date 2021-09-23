@@ -9,6 +9,13 @@ import "../Components"
 
 Page {
     id: locationItem
+
+    property var tabIndex: tabControl.currentIndex
+    onTabIndexChanged: {
+        eventLocation = searchTextField.text
+        //change to lon/lat coords
+    }
+
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: locationItem.width
 
