@@ -44,7 +44,7 @@ Page {
                     }
                     SuggestionsList {
                         id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
-                        onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
+                        onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion; console.log("GEO COORDS: "+ geocodeModel.get(suggestion))}
                     }
                 }
             }
@@ -63,16 +63,23 @@ Page {
             //view location
             id: mapCol
             width: parent.width
-            visible: !pageEditable
             Rectangle {width: spacerW; height: spacerH}
-            AppText {text: "Location: <br>" + shootData.location; padding: dp(15); width: parent.width; height: Text.height}
+            AppText {text: "Location: <br>" + shootData.location.address; padding: dp(15); width: parent.width; height: Text.height}
             Rectangle {
                 width: parent.width; height: width
                 AppMap {
                     anchors.fill: parent
-                    center: QtPositioning.coordinate(51.477928, -0.001545)
+                    enableUserPosition: true
+                    showUserPosition: true
                     zoomLevel: 19
                     plugin: MapBoxPlugin {}
+
+
+                    Component.onCompleted: {
+                           if(userPositionAvailable &&shootData.location.map === undefined){
+                             center = userPosition.coordinate}
+                           else {center = QtPositioning.coordinate(shootData.location.map) }
+                         }
                 }
             }
             Rectangle {width: spacerW; height: spacerH}

@@ -509,9 +509,10 @@ Item {
             "eventDate": event_date,
             "eventTime": event_time,
             "keyContacts": {
-                "name": userData.name,"id": userData.id,
-                "name2": userData.name,"id2": userData.id
-                //other User{"name": "userData.name,"id": "userData.id"}
+                "name": userData.name,
+                "username": userData.username,
+                "id": userData.id,
+                "profile_pic": userData.profile_Pic_URL
             },
             "overview": event_details,
             "coverImage": cover_image,

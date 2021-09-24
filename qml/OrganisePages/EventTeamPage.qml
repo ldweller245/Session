@@ -38,25 +38,31 @@ FlickablePage {
         }
         AppListView {
             id: hairModel
-            model: hairArray
+            model: pageEditable ? hairArray : shootData.team.hair
             emptyText.text: "Add your hair team"
             spacing: 3
             height: searchText.height+ (searchText.height*hairModel.count)
 
             delegate: SimpleRow {
                 text: modelData.name;
-                enabled: false;
                 imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash}
+                    IconButton {icon: IconType.trash; onClicked: {
+                            if(pageEditable === true) {
+                            let index = hairArray.indexOf(modelData.name); hairArray.splice(index, 1); shootSetupModal.hairArrayChanged()
+                            } else {
+                                let index = shootData.team.hair.indexOf(modelData.name); shootData.team.hair.splice(index, 1)
+                            }
+                        }
+                    }
                 }
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
         }
         Rectangle {
             width: teamItem.width
-
+            visible: pageEditable
             height: searchText.height
             IconButton {id: addTeamIcon; state: "base";
                 onClicked: {console.log("clicked");
@@ -118,6 +124,7 @@ FlickablePage {
             }
         }
         Repeater {
+            visible: pageEditable
             model: if(currentArr === "Hair"){searchArr}
             enabled: currentArr === "Hair"
             delegate: SimpleRow {id: delegate; text: modelData.name; showDisclosure: false
@@ -140,22 +147,28 @@ FlickablePage {
         }
         AppListView {
             id: makeupModel
-            model: makeupArray
+            model: pageEditable ? makeupArray : shootData.team.makeup
             emptyText.text: "Add your mua team"
             spacing: 3
             height: makeupSearchText.height+ (makeupSearchText.height*makeupModel.count)
             delegate: SimpleRow {
                 text: modelData.name;
-                enabled: false;
                 imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash}
+                    IconButton {icon: IconType.trash; onClicked: {
+                            if(pageEditable === true) {
+                            let index = makeupArray.indexOf(modelData.name); makeupArray.splice(index, 1); shootSetupModal.makeupArrayChanged()
+                            } else {
+                                let index = shootData.team.makeup.indexOf(modelData.name); shootData.team.makeup.splice(index, 1)
+                            }
+                        }}
                 }
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
         }
         Rectangle {
+            visible: pageEditable
             width: teamItem.width
 
             height: makeupSearchText.height
@@ -219,6 +232,7 @@ FlickablePage {
             }
         }
         Repeater {
+            visible: pageEditable
             model: if(currentArr === "Makeup"){searchArr}
             enabled: currentArr === "Makeup"
             delegate: SimpleRow {id: delegateMakeup; text: modelData.name; showDisclosure: false
@@ -242,24 +256,30 @@ FlickablePage {
         }
         AppListView {
             id: wardrobeModel
-            model: wardrobeArray
+            model: pageEditable ? wardrobeArray : shootData.team.wardrobe
             emptyText.text: "Add your wardrobe team"
             spacing: 3
             height: wardrobeSearchText.height+ (wardrobeSearchText.height*wardrobeModel.count)
 
             delegate: SimpleRow {
                 text: modelData.name;
-                enabled: false;
                 imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash}
+                    IconButton {icon: IconType.trash; onClicked: {
+                            if(pageEditable === true) {
+                            let index = wardrobeArray.indexOf(modelData.name); wardrobeArray.splice(index, 1); shootSetupModal.wardrobeArrayChanged()
+                            } else {
+                                let index = shootData.team.wardrobe.indexOf(modelData.name); shootData.team.wardrobe.splice(index, 1)
+                            }
+                        } }
                 }
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
         }
         Rectangle {
             width: teamItem.width
+            visible: pageEditable
 
             height: wardrobeSearchText.height
             IconButton {id: wardrobeTeamIcon; state: "base";
@@ -322,6 +342,7 @@ FlickablePage {
             }
         }
         Repeater {
+            visible: pageEditable
             model: if(currentArr === "Wardrobe") {searchArr}
             enabled: currentArr === "Wardrobe"
             delegate: SimpleRow {text: modelData.name; showDisclosure: false
@@ -345,23 +366,29 @@ FlickablePage {
         }
         AppListView {
             id: photoModel
-            model: photoArray
+            model: pageEditable ? photoArray : shootData.team.photo
             emptyText.text: "Add your photography team"
             spacing: 3
             height: photoSearchText.height+ (photoSearchText.height*photoModel.count)
 
             delegate: SimpleRow {
                 text: modelData.name;
-                enabled: false;
                 imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash}
+                    IconButton {icon: IconType.trash; onClicked: {
+                            if(pageEditable === true) {
+                            let index = photoArray.indexOf(modelData.name); photoArray.splice(index, 1); shootSetupModal.photoArrayChanged()
+                            } else {
+                                let index = shootData.team.photo.indexOf(modelData.name); shootData.team.photo.splice(index, 1)
+                            }
+                        } }
                 }
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
         }
         Rectangle {
+            visible: pageEditable
             width: teamItem.width
 
             height: photoSearchText.height
@@ -426,6 +453,7 @@ FlickablePage {
             }
         }
         Repeater {
+            visible: pageEditable
             model: if(currentArr === "Photography") {searchArr}
             enabled: currentArr === "Photography"
             delegate: SimpleRow {text: modelData.name; showDisclosure: false
@@ -449,7 +477,7 @@ FlickablePage {
         }
         AppListView {
             id: modelModel
-            model: modelArray
+            model: pageEditable ? modelArray : shootData.team.model
             emptyText.text: "Add your models"
             spacing: 3
             height: modelSearchText.height+ (modelSearchText.height*modelModel.count)
@@ -460,14 +488,20 @@ FlickablePage {
                 imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash}
+                    IconButton {icon: IconType.trash; onClicked: {
+                            if(pageEditable === true) {
+                            let index = modelArray.indexOf(modelData.name); modelArray.splice(index, 1); modelSetupModal.makeupArrayChanged()
+                            } else {
+                                let index = shootData.team.model.indexOf(modelData.name); shootData.team.model.splice(index, 1)
+                            }
+                        }}
                 }
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
             }
         }
         Rectangle {
             width: teamItem.width
-
+            visible: pageEditable
             height: modelSearchText.height
             IconButton {id: modelTeamIcon; state: "base";
                 onClicked: {console.log("clicked");
@@ -530,6 +564,7 @@ FlickablePage {
             }
         }
         Repeater {
+            visible: pageEditable
             model: if(currentArr === "Model"){searchArr}
             enabled: currentArr === "Model"
             delegate: SimpleRow {text: modelData.name; showDisclosure: false

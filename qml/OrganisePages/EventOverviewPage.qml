@@ -43,6 +43,7 @@ Page {
                 AppImage {
                     id: coverImage
                     width: parent.width
+                    source: shootData.coverImage
                     height: Image.height
                     fillMode: Image.PreserveAspectFit
                     visible: pageEditable
@@ -62,7 +63,7 @@ Page {
                 AppText {
                     // event title
                     id: eventTitleText
-                    text: shootData.title
+                    text: shootData.eventName
                     anchors.horizontalCenter: parent.horizontalCenter
                     visible: !pageEditable
                 }
@@ -83,7 +84,7 @@ Page {
                 }
                 AppText {
                     id: dateTextFieldText
-                    text: new Date(shootData.date).toDateString()
+                    text: new Date(shootData.eventDate).toDateString()
                     enabled: false
                     visible: !pageEditable
                 }
@@ -118,7 +119,7 @@ Page {
                 }
                 AppText {
                     id: timeTextFieldText
-                    text: shootData.time
+                    text: shootData.eventTime
                     visible: !pageEditable
                 }
                 AppTextField {
@@ -143,20 +144,23 @@ Page {
                     text: "Key Contact: "
                     padding: dp(15)
                 }
-                SwipeOptionsContainer {
-                    id: container
+                Row {
+                    width: overviewItem.width
                     SimpleRow {
-                        imageSource: "https://payload.cargocollective.com/1/10/333868/13868492/6496-20-005-f2_670.jpeg"
-                        text: "Katie Prescott"
-                        detailText: "Hair"
-                        enabled: true
-                        showDisclosure: true
+                        id: contactRow
+                        width: parent.width - messageContact.width
+                        imageSource: shootData.eventCreator.profile_pic
+                        text: shootData.eventCreator.username
+                        showDisclosure: false
                         image.radius: image.width/2
                         image.fillMode: Image.PreserveAspectCrop
-                        style: StyleSimpleRow {
-                            showDisclosure: false
-                            backgroundColor: "transparent"
-                        }
+
+                    }
+                    IconButton {
+                        id: messageContact
+                        height: contactRow.height
+                        width: height
+                        icon: IconType.envelope
                     }
                 }
             }
