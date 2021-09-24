@@ -31,7 +31,7 @@ Page {
                 //cover image frame
                 width: overviewItem.width
                 height: overviewItem.height / 3
-                color: "lightgrey"
+                color: pageEditable ? "lightgrey" : "transparent"
                 AppText {
                     // cover image select text
                     id: coverImageText
@@ -44,9 +44,9 @@ Page {
                     id: coverImage
                     width: parent.width
                     source: shootData.coverImage
-                    height: Image.height
+                    height: parent.height
                     fillMode: Image.PreserveAspectFit
-                    visible: pageEditable
+                    clip: true
                 }
 
                 Icon {
@@ -56,6 +56,7 @@ Page {
                     visible: pageEditable
                 }
             }
+            Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)/3}
             Rectangle {
                 // event title container
                 width: parent.width

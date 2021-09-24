@@ -19,87 +19,84 @@ Page {
     readonly property real spacerH: dp(Theme.navigationBar.height)/2
     readonly property real spacerW: locationItem.width
 
-    AppFlickable {
+    property var selectedLocation: "search your location"
+
+
+    property int mapTypeIndex: 6
+    Column {
         anchors.fill: parent
-        contentHeight: pageEditable === true ? addLocationCol.height : mapCol.height
-        Column {
-            //add location
-            id: addLocationCol
-            width: parent.width; visible: pageEditable
-            Rectangle {width: spacerW; height: spacerH}
-            Item {
-                width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
-                Column {
-                    anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height; width: parent.width
-                    AppTextField {
-                        id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
-                        onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
-                        onDisplayTextChanged: {
-                            if (searchTextField.displayText.length > 2 && searchTextField.focus) {
-                                suggenstionModel.searchTerm = searchTextField.displayText.toString();suggenstionModel.update()}
-                            else if(searchTextField.displayText.length === 0) {suggestionsList.hide()}
+        Rectangle {width: spacerW; height: spacerH / 2}
+        AppText {width: parent.width; padding: dp(15); text: "<b>Location" + "&nbsp;&nbsp;&nbsp;>"}
+        AppText {width: parent.width; height: Text.height; padding: dp(15); text: pageEditable ? selectedLocation : shootData.location.address}
+        Rectangle {
+            height: parent.height - y; width: parent.width
+            AppMap {
+                id: map
+                anchors.fill: parent; activeMapType: supportedMapTypes[6]; zoomLevel: 19
+
+                plugin: MapBoxPlugin {}
+
+                QL.MapQuickItem {
+                    id: marker
+                    anchorPoint {x: sourceItem.width / 2; y: sourceItem.height}
+                    sourceItem: Icon {icon: IconType.mapmarker; color: "black"; size: dp(30)}
+                }
+                Component.onCompleted: {
+                    if(userPositionAvailable &&shootData.location.map === undefined){
+                        center = userPosition.coordinate}
+                    else {center = QtPositioning.coordinate(shootData.location.map) }
+                }
+            }
+
+            QL.GeocodeModel {
+                id: geocodeModel
+                plugin: MapBoxPlugin {geocoding: true}
+                autoUpdate: true
+                onLocationsChanged: {map.center = get(0).coordinate; map.zoomLevel = 19; marker.coordinate = map.center}
+            }
+
+            QL.PlaceSearchModel {
+                id: suggenstionModel
+                plugin:  MapBoxPlugin {geocoding: true}
+                onStatusChanged: {
+                    if (status == QL.PlaceSearchSuggestionModel.Ready) {suggestionsList.show()}
+                }
+            }
+            AppPaper {
+                height: searchTextField.height + suggestionsList.height
+                anchors {top: parent.top; topMargin: dp(10); left: parent.left; right: parent.right; margins: dp(10)}
+                AppTextField {
+                    id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Search for place")
+                    //Perform search when typed term is accepted
+                    onAccepted: {
+                        focus = false
+                        if (text != "") {
+                            geocodeModel.query = text
                         }
-                        onFocusChanged: {if (!focus) {suggestionsList.hide()}}
-                        Component.onCompleted: {font.pixelSize = sp(16)}
                     }
-                    SuggestionsList {
-                        id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
-                        onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion; console.log("GEO COORDS: "+ geocodeModel.get(suggestion))}
+                    //Update suggestions model when typed text changed
+                    onDisplayTextChanged: {
+                        console.log()
+                        if (searchTextField.displayText.length > 3 && searchTextField.focus) {
+                            suggenstionModel.searchTerm = searchTextField.displayText.toString()
+                            suggenstionModel.update()
+                        }
+                    }
+                    //Hide suggestions when focus is lost
+                    onFocusChanged: {if (!focus) {suggestionsList.hide()}}
+                    Component.onCompleted: {font.pixelSize = sp(16)}
+                }
+                SuggestionsList {
+                    id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel
+                    anchors {top: searchTextField.bottom; horizontalCenter: parent.horizontalCenter}
+                    onProposalSelected: {
+                        searchTextField.focus = false
+                        searchTextField.text = suggestion
+                        geocodeModel.query = suggestion
+                        selectedLocation = suggestion
                     }
                 }
             }
-
-            Rectangle {
-                width: parent.width; height: width
-                AppMap {
-                    anchors.fill: parent
-                    center: QtPositioning.coordinate(51.477928, -0.001545)
-                    zoomLevel: 19
-                    plugin: MapBoxPlugin {}
-                }
-            }
         }
-        Column {
-            //view location
-            id: mapCol
-            width: parent.width
-            Rectangle {width: spacerW; height: spacerH}
-            AppText {text: "Location: <br>" + shootData.location.address; padding: dp(15); width: parent.width; height: Text.height}
-            Rectangle {
-                width: parent.width; height: width
-                AppMap {
-                    anchors.fill: parent
-                    enableUserPosition: true
-                    showUserPosition: true
-                    zoomLevel: 19
-                    plugin: MapBoxPlugin {}
-
-
-                    Component.onCompleted: {
-                           if(userPositionAvailable &&shootData.location.map === undefined){
-                             center = userPosition.coordinate}
-                           else {center = QtPositioning.coordinate(shootData.location.map) }
-                         }
-                }
-            }
-            Rectangle {width: spacerW; height: spacerH}
-        }
-    }
-
-    QL.GeocodeModel {id: geocodeModel; plugin: MapBoxPlugin {geocoding: true} autoUpdate: true
-        onLocationsChanged: {
-            console.log("count: " + count)
-            for(var i = 0; i < count; i++){
-                var address = get(i).address
-                var fullText
-                fullText = "str: "+ address.street + " City: " + address.city + " Country: " + address.country
-
-                console.log("get: " + fullText + "<br>")
-            }
-        }
-    }
-    QL.PlaceSearchModel {
-        id: suggenstionModel; plugin:  MapBoxPlugin {geocoding: true}
-        onStatusChanged: {if (status == QL.PlaceSearchSuggestionModel.Ready) {suggestionsList.show()}}
     }
 }
