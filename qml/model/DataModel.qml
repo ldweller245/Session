@@ -196,6 +196,19 @@ Item {
             }
         }
         onLoggedIn: {
+            console.log()
+            console.log()
+            console.log()
+            console.log()
+            console.log()
+            console.log()
+            db.getValue("masterFeed",{}, function(success, key, value){if(success){console.log("Master Feed: " + JSON.stringify(value))}})
+            console.log()
+            console.log()
+            console.log()
+            console.log()
+            console.log()
+            console.log()
             userData = [];
             allCastingData = []
             db.getUserValue("details/id", {
