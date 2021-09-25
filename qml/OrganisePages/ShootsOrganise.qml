@@ -51,7 +51,7 @@ Page {
         delegate: AppCard {
             id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
             header: SimpleRow {
-                text: model.eventName; detailText: model.eventDate; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop; onSelected: organiseStack.push(shootSetupPage,{pageEditable: false, eventID: model.id})
+                text: model.eventName; detailText: new Date(model.eventDate).toDateString(); image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop; onSelected: organiseStack.push(shootSetupPage,{pageEditable: false, eventID: model.id})
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
 
             }

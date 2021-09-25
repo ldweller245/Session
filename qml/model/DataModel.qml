@@ -196,7 +196,7 @@ Item {
             }
         }
         onLoggedIn: {
-            db.addRealtimeValueKey()
+            //db.addRealtimeValueKey()
             console.log()
             console.log()
             console.log()

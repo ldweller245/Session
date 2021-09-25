@@ -13,7 +13,6 @@ FlickablePage {
     onTabIndexChanged:  {
     }
 
-
     flickable.contentHeight: contentCol.height
 
     property var currentArr
@@ -37,12 +36,10 @@ FlickablePage {
                 text: modelData.name; imageSource: modelData.image; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
                 Rectangle {
                     height: parent.height; width: height; anchors.right: parent.right; color: "transparent"
-                    IconButton {icon: IconType.trash; onClicked: {
-                            if(pageEditable === true) {
-                            let index = hairArray.indexOf(modelData.name); hairArray.splice(index, 1); shootSetupModal.hairArrayChanged()
-                            } else {
-                                let index = shootData.team.hair.indexOf(modelData.name); shootData.team.hair.splice(index, 1)
-                            }
+                    IconButton {icon: IconType.trash;
+                        onClicked: {
+                            if(pageEditable === true) {let index = hairArray.indexOf(modelData.name); hairArray.splice(index, 1); shootSetupModal.hairArrayChanged()}
+                            else {let index = shootData.team.hair.indexOf(modelData.name); shootData.team.hair.splice(index, 1)}
                         }
                     }
                 }

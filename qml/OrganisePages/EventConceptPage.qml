@@ -16,7 +16,7 @@ Page {
             Rectangle {width: spacerW; height: spacerH}
             AppText {width: parent.width; padding: dp(15); horizontalAlignment: Text.AlignHCenter; text: "Keep your event moodboard & inspirations here for your team to see!"}
             Rectangle {width: spacerW; height: spacerH}
-            IconButton {scale: 3; icon: IconType.upload; anchors.horizontalCenter: parent.horizontalCenter}
+            IconButton {scale: 3; icon: IconType.upload; anchors.horizontalCenter: parent.horizontalCenter; onClicked: imagePickerModal.open()}
             Repeater {
                 model: moodboards
                 delegate: AppImage {

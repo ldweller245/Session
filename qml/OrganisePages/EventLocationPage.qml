@@ -44,7 +44,7 @@ Page {
             Behavior on height {NumberAnimation {duration: 1000; easing.type: Easing.InOutBack}}
             AppMap {
                 id: map
-                anchors.fill: parent; activeMapType: mapType; zoomLevel: 19
+                anchors.fill: parent; activeMapType: supportedMapTypes[mapType]; zoomLevel: 19
                 //supportedMapTypes[6]
 
                 plugin: MapBoxPlugin {}

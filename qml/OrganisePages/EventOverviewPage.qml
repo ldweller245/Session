@@ -183,12 +183,11 @@ Page {
                         id: flick
                         anchors.fill: parent
                         contentWidth: width
-                        contentHeight: appTextEdit.height
+                        contentHeight: pageEditable === true ? appTextEdit.height : appTextEditText.height
                         AppText {
                             id: appTextEditText
                             width: parent.width
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                            height: Math.max(appTextEditText.contentHeight, flick.height)
                             verticalAlignment: TextEdit.AlignTop
                             text: shootData.overview
                             visible: !pageEditable
