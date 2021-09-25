@@ -49,11 +49,12 @@ Page {
                     clip: true
                 }
 
-                Icon {
+                IconButton {
                     icon: IconType.edit
                     anchors{bottom: parent.bottom; right: parent.right}
                     anchors.margins: dp(15)
                     visible: pageEditable
+                    onClicked: imagePickerModal.open()
                 }
             }
             Rectangle {width: parent.width; height: dp(Theme.navigationBar.height)/3}
@@ -221,6 +222,22 @@ Page {
         NavigationStack {
             TimeTumbler {
 
+            }
+        }
+    }
+
+    AppModal {
+        id: imagePickerModal; fullscreen: true; pushBackContent: navigationRoot
+        NavigationStack {
+            ImagePickerPage {
+                id: imagePicker; title: "CHOOSE IMAGE"; clip: true
+                rightBarItem: TextButtonBarItem {
+                    text: "Select"; textItem.font.pixelSize: sp(16)
+                    onClicked: {
+                        coverImage.source = imagePath
+                        imagePickerModal.close()
+                    }
+                }
             }
         }
     }

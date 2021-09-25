@@ -51,12 +51,13 @@ Page {
         delegate: AppCard {
             id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
             header: SimpleRow {
-                text: "BHA Avant Garde"; detailText: "Organiser: Katie Prescott"; enabled: false; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop
+                text: model.eventName; detailText: model.eventDate; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop; onSelected: organiseStack.push(shootSetupPage,{pageEditable: false, eventID: model.id})
                 style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}
+
             }
             media: Rectangle {
                 width: parent.width; height: organisePage.height / 3
-                AppImage {width: parent.width; height: parent.height; fillMode: Image.PreserveAspectFit; source: "../../assets/MapTest.PNG"}
+                AppImage {width: parent.width; height: parent.height; fillMode: Image.PreserveAspectFit; source: model.coverImage !== undefined ? model.coverImage : "../../assets/SESSIONlogo.png"}
                 AppButton{text: "View Map"; anchors.bottom: parent.bottom; anchors.right: parent.right; flat: false; anchors.margins: dp(15)}
             }
             actions: Row {

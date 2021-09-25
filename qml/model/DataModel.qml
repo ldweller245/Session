@@ -498,32 +498,51 @@ Item {
     function createEvent(event_name, cover_image, event_date, event_time, event_details, event_location, event_moodboards, event_team ) {
         let eventID = "e-uid"+uniqueID()
 
-        let eventData =  {
-            "eventCreator": {
-                "name": userData.name,
-                "username": userData.username,
-                "id": userData.id,
-                "profile_pic": userData.profile_Pic_URL
-            },
-            "eventName": event_name,
-            "eventDate": event_date,
-            "eventTime": event_time,
-            "keyContacts": {
-                "name": userData.name,
-                "username": userData.username,
-                "id": userData.id,
-                "profile_pic": userData.profile_Pic_URL
-            },
-            "overview": event_details,
-            "coverImage": cover_image,
-            "moodboard": event_moodboards,
-            "location": {
-                "address": "",//address
-                "map": "51.477928, -0.001545"
-            },
-            "team": event_team
+        let dbCoverImage
+        var dbMoodboards = []
+
+        function constructPost(d) {
+            let eventData =  {
+                "id": eventID,
+                "creationDate": Date.now(),
+                "eventName": event_name,
+                "eventCreator": {"name": userData.name, "username": userData.username, "id": userData.id, "profile_pic": userData.profile_Pic_URL},
+                "eventDate": event_date, "eventTime": event_time,
+                "keyContacts": {"name": userData.name, "username": userData.username, "id": userData.id, "profile_pic": userData.profile_Pic_URL},
+                "overview": event_details,
+                "coverImage": dbCoverImage, "moodboard": dbMoodboards,
+                "location": {"address": "", "map": "51.477928, -0.001545"},
+                "team": event_team
+            }
+            db.setValue("userData/"+userData.id+"/shoots/"+eventID, eventData)
         }
-        db.setValue("userData/"+userData.id+"/shoots/"+eventID, eventData)
+        if(cover_image !== undefined) {
+            storage.uploadFile(cover_image, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+                if(!finished) {} else if (finished && success) {
+                    dbCoverImage = downloadUrl
+                    if(event_moodboards.length > 0){
+                        for (var i in event_moodboards) {
+                            storage.uploadFile(i, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+                                if(!finished) {} else if (finished && success) {
+                                    dbMoodboards.push(downloadUrl)
+                                }
+                            })
+                        }
+                        constructPost()
+                    }
+                }
+            })
+        } else if(event_moodboards.length > 0){
+            for (var i in event_moodboards) {
+                storage.uploadFile(i, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
+                    if(!finished) {} else if (finished && success) {
+                        dbMoodboards.push(downloadUrl)
+                    }
+                })
+            }
+            constructPost()
+        }
+        else {constructPost()}
     }
     function getEvent(eventID) {
         let data = Object.values(userData.shoots)
@@ -678,7 +697,7 @@ Item {
             }
         }
         db.setValue("chats/"+chatID+"/thread/"+messageID, messageContent)
-    } 
+    }
     function deleteMessage(chatID, messageID) {
         db.setValue("chats/"+chatID+"/thread/"+messageID, null)
     }

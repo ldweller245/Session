@@ -21,18 +21,31 @@ Page {
 
     property var selectedLocation: "search your location"
 
+    property int mapType: 0
+
 
     property int mapTypeIndex: 6
     Column {
+        id: contentCol
+
+        AppButton {
+            onClicked: {
+                mapType = mapType + 1
+            }
+        }
+
         anchors.fill: parent
         Rectangle {width: spacerW; height: spacerH / 2}
         AppText {width: parent.width; padding: dp(15); text: "<b>Location" + "&nbsp;&nbsp;&nbsp;>"}
         AppText {width: parent.width; height: Text.height; padding: dp(15); text: pageEditable ? selectedLocation : shootData.location.address}
         Rectangle {
+            id: mapRect
             height: parent.height - y; width: parent.width
+            Behavior on height {NumberAnimation {duration: 1000; easing.type: Easing.InOutBack}}
             AppMap {
                 id: map
-                anchors.fill: parent; activeMapType: supportedMapTypes[6]; zoomLevel: 19
+                anchors.fill: parent; activeMapType: mapType; zoomLevel: 19
+                //supportedMapTypes[6]
 
                 plugin: MapBoxPlugin {}
 

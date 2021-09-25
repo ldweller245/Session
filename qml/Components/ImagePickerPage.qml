@@ -4,9 +4,12 @@ import "../CanvasTemplates"
 
 Page {
     id: imagePickerPage
+
+    property var selectionArray: []
+
     ImagePicker {
         id: imagePicker; columns: 2; anchors.fill: parent; maximumNumberOfSelection: 1;
-        onSelectionChanged: if(selectedCount === 1){imagePicker.clearSelection()}        
+        onSelectionChanged: selectionArray.length === 1 ? selectionArray = [] && selectionArray.push(selection.toString()) : selectionArray.push(selection.toString())
         onSelectedCountChanged: {imagePath = selection.toString(); imagePathID = selection.toString(); if(selectedCount === 0) {imagePath = undefined }}
     }
 }
