@@ -21,18 +21,8 @@ Page {
 
     property var selectedLocation: "search your location"
 
-    property int mapType: 0
-
-
-    property int mapTypeIndex: 6
     Column {
         id: contentCol
-
-        AppButton {
-            onClicked: {
-                mapType = mapType + 1
-            }
-        }
 
         anchors.fill: parent
         Rectangle {width: spacerW; height: spacerH / 2}
@@ -44,7 +34,7 @@ Page {
             Behavior on height {NumberAnimation {duration: 1000; easing.type: Easing.InOutBack}}
             AppMap {
                 id: map
-                anchors.fill: parent; activeMapType: supportedMapTypes[mapType]; zoomLevel: 19
+                anchors.fill: parent; activeMapType: supportedMapTypes[6]; zoomLevel: 19
                 //supportedMapTypes[6]
 
                 plugin: MapBoxPlugin {}

@@ -21,7 +21,7 @@ Page {
                 model: moodboards
                 delegate: AppImage {
                     width: parent.width; height: Image.height; scale: 0.96
-                    source: modelData[index]
+                    source: modelData
                 }
             }
         }
