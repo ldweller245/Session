@@ -40,6 +40,7 @@ Page {
                     onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}}
                 MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
             }
+            Rectangle {width: page.width; height: dp(Theme.navigationBar.height)/2}
             Item {
                 width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
                 Column {
@@ -65,7 +66,6 @@ Page {
                 width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
                 Column {
                     id: locationDescriptionCol; anchors.fill: parent
-                    Rectangle {width: parent.width; height: dp(Theme.navigationBar.height); color: "transparent"}
                     Rectangle {
                         width: parent.width; height: parent.height - searchTextField.height; color: "#fff"
                         Rectangle {width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor}

@@ -15,8 +15,8 @@ Page {
         eventDate = new Date(dateTextField.text).getTime()
         eventTime = timeTextField.text
         eventDetails = appTextEdit.text
+        coverImage = eventCoverImage.source
         /*
-          cover image
           key contact
         */
     }
@@ -30,6 +30,9 @@ Page {
             Rectangle {
                 //cover image frame
                 width: overviewItem.width
+                border.width: 1
+                border.color: "black"
+                radius: dp(5)
                 height: overviewItem.height / 3
                 color: pageEditable ? "lightgrey" : "transparent"
                 AppText {
@@ -41,14 +44,13 @@ Page {
                     visible: pageEditable
                 }
                 AppImage {
-                    id: coverImage
+                    id: eventCoverImage
                     width: parent.width
-                    source: shootData.coverImage
+                    source: pageEditable ? undefined : shootData.coverImage
                     height: parent.height
                     fillMode: Image.PreserveAspectFit
                     clip: true
                 }
-
                 IconButton {
                     icon: IconType.edit
                     anchors{bottom: parent.bottom; right: parent.right}
@@ -178,7 +180,7 @@ Page {
                     border.width: dp(1)
                     width: parent.width
                     scale: 0.93
-                    height: overviewItem.height / 6
+                    height: overviewItem.height / 5
                     AppFlickable {
                         id: flick
                         anchors.fill: parent
@@ -191,6 +193,7 @@ Page {
                             verticalAlignment: TextEdit.AlignTop
                             text: shootData.overview
                             visible: !pageEditable
+                            padding: dp(15)
                         }
                         AppTextEdit {
                             id: appTextEdit
@@ -233,7 +236,7 @@ Page {
                 rightBarItem: TextButtonBarItem {
                     text: "Select"; textItem.font.pixelSize: sp(16)
                     onClicked: {
-                        coverImage.source = imagePath
+                        eventCoverImage.source = imagePath
                         imagePickerModal.close()
                     }
                 }

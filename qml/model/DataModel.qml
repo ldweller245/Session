@@ -39,6 +39,7 @@ Item {
     property var allCastingData: []
     property var calendarData: []
     property var shootData: []
+    property var castingFeed: []
 
     property var userID: userData.id
 
@@ -196,7 +197,6 @@ Item {
             }
         }
         onLoggedIn: {
-            //db.addRealtimeValueKey()
             console.log()
             console.log()
             console.log()
@@ -221,7 +221,10 @@ Item {
                                             getFeed(userData.id)
                                             allCastingData = userData.castings
                                             calendarData = userData.calendar
-                                            console.log("CALENDAR DATA: "+ JSON.stringify(userData.calendar) + "<br><br>")
+                                            db.addRealtimeValueKey(realtimeUserData)
+                                            db.addRealtimeValueKey(realtimeMasterFeed)
+                                            db.addRealtimeValueKey(realtimeUserFeed)
+                                            db.addRealtimeValueKey(realtimeChats)
                                         }
                                     })
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
@@ -804,6 +807,18 @@ Item {
     //
     //
     // Casting Functions
+    function populateCastings(value) {
+        for(var i = 0; i < 100; i++){
+
+        }
+        for(var x in value) {
+            if(value[x].location < 1000 && castingFeed.length > 100){
+                castingFeed.push(x)
+            }
+        }
+
+    }
+
     function getCasting(castingID) {
         let data = Object.values(allCastingData)
         data.forEach(function(item) {

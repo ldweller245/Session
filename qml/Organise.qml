@@ -10,6 +10,7 @@ Page {
         anchors.fill: parent
         Grid {
             columns: 2; anchors.fill: parent
+            scale: 0.9
             Rectangle {
                 width: organisePage.width/2; height: organisePage.height/2
                 MouseArea {anchors.fill: parent; onClicked: {console.log("clicked"); organiseStack.push(shootOrganisePage)}}
