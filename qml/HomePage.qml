@@ -46,9 +46,6 @@ Page {
             Column {
                 id: col; spacing: dp(5); width: parent.width/2
                 Repeater {
-                    ListView.populate: Transition {
-                        NumberAnimation { properties: "x,y"; duration: 1000 }
-                    }
                     Behavior on y {
                         NumberAnimation {properties: "y"; duration: 1000 }
                     }

@@ -43,11 +43,10 @@ Item {
 
     property var userID: userData.id
 
-    property string realtimeUserData: "userData/" + userData.id + "/"
+    property string realtimeUserData: "userData" + "/" + uuid
     property string realtimeMasterFeed: "masterFeed/"
-    property string realtimeUserFeed: "userFeeds/" + userData.id
+    property string realtimeUserFeed: "userFeeds/" + uuid
     property string realtimeChats: "chats/"
-    property string realtimeOtherUserDetails: "userData/" + otherUserID
 
     function sHA256(s){
         var chrsz   = 8;
@@ -156,34 +155,22 @@ Item {
     FirebaseDatabase {
         id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
-        realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeUserFeed, realtimeChats, realtimeOtherUserDetails];
+        realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeChats];
         onRealtimeValueChanged: {
-            if(key === realtimeUserData) {
-                console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
-                userData = []; userData = value;
-            }
-            else if(key === realtimeMasterFeed) {
-                masterFeed = []; masterFeed = value
-            }
-            else if(key === realtimeUserFeed) {
-                console.log("<br><br><br><br>REALTIME_USER_FEED_UPDATE<br><br><br><br>")
-                userFeed.push(value[i]); app.userFeedChanged();
-            }
-            else if(key === realtimeChats) {
-            }
-            else if(key === realtimeOtherUserDetails) {
-                otherUserData = value
-                dataModel.otherUserDataChanged()
-            }
+            if(key === realtimeUserData);
+            console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
+            userData = value;
+            console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
+            app.userDataChanged()
+            /*if(key === realtimeMasterFeed);
+            console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>")
+            masterFeed = value;
+            app.masterFeedChanged()
+            if(key === realtimeChats);*/
+
         }
         onFirebaseReady: {
-            //remember to delete
-            //remember to delete
-            //remember to delete
-            firebaseAuth.logoutUser()
-            //remember to delete
-            //remember to delete
-            //remember to delete
+
         }
     }
     FirebaseAuth {id: firebaseAuth; config: firebaseConfig;
@@ -197,41 +184,25 @@ Item {
             }
         }
         onLoggedIn: {
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            db.getValue("masterFeed",{}, function(success, key, value){if(success){console.log("Master Feed: " + JSON.stringify(value))}})
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            console.log()
-            userData = [];
-            allCastingData = []
-            db.getUserValue("details/id", {
-                            }, function(success, key, value) {
-                                if(success) {
-                                    db.getValue("userData/"+value, {}, function(success, key, value){
-                                        if(success){
-                                            userData = value
-                                            getFeed(userData.id)
-                                            allCastingData = userData.castings
-                                            calendarData = userData.calendar
-                                            db.addRealtimeValueKey(realtimeUserData)
-                                            db.addRealtimeValueKey(realtimeMasterFeed)
-                                            db.addRealtimeValueKey(realtimeUserFeed)
-                                            db.addRealtimeValueKey(realtimeChats)
-                                        }
-                                    })
-                                    db.setValue("userData/"+value+"/lastActive", Date.now())
-                                }
-                            })
             console.debug("User login " + success + " - " + message);
-            if(success) {registerPage.visible = false; loginPage.visible = false}
+            if(success) {
+                db.getUserValue("details/id", {
+                                }, function(success, key, value) {
+                                    if(success) {
+                                        getFeed(value)
+                                        uuid = value
+                                        console.log("UUID:<br>" + uuid)
+                                        db.setValue("userData/"+value+"/lastActive", Date.now())
+                                        db.getValue("userData/"+value, {}, function(success, key, value){
+                                            if(success){
+                                                userData = value
+                                                allCastingData = userData.castings
+                                                calendarData = userData.calendar
+                                            }
+                                        })
+                                    }
+                                })
+                registerPage.visible = false; loginPage.visible = false}
             getMasterFeed()
         }
     }
