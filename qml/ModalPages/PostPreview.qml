@@ -24,7 +24,7 @@ Page {
             id: card; width: parent.width; margin: dp(15); paper.radius: dp(5)
             header: SimpleRow {imageSource: userData.profile_Pic_URL; image.radius: image.width/2; image.fillMode: Image.PreserveAspectCrop; text: userData.username; detailText: userData.role; enabled: false; style: StyleSimpleRow {showDisclosure: false; backgroundColor: "transparent"}}
             media: Rectangle {
-                width: parent.width; height: width/2; color: "lightgrey"
+                width: parent.width; height: previewData.image === undefined ? width/2 : selectedImage.height; color: "lightgrey"
                 AppText {text: "No Image Selected"; anchors.centerIn: parent}
                 AppImage {id: selectedImage; source: previewData.image; width: parent.width; height: Image.height; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit}
             }

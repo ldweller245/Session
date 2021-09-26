@@ -46,6 +46,12 @@ Page {
             Column {
                 id: col; spacing: dp(5); width: parent.width/2
                 Repeater {
+                    ListView.populate: Transition {
+                        NumberAnimation { properties: "x,y"; duration: 1000 }
+                    }
+                    Behavior on y {
+                        NumberAnimation {properties: "y"; duration: 1000 }
+                    }
                     id: evenModelView; model: sortedModelEven;
                     delegate: AppCard {
                         id: evenImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
@@ -64,6 +70,7 @@ Page {
                 id: oddCol; spacing: dp(5); width: parent.width/2
                 Repeater {
                     id: oddModelView; model: sortedModelOdd;
+
                     delegate: AppCard {
                         id: oddImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
                         media: AppImage {

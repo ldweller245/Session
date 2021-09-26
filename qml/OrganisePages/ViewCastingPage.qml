@@ -117,14 +117,11 @@ Page {
                                     Icon {anchors.fill: parent; icon: IconType.check}
                                     MouseArea {anchors.fill: parent; onClicked: {viewCastingPage.updateCastingApplicant(true, castingData.title, castingData.id, modelData.username, modelData.id)}}
                                 }
-
                             }
                         }
                     }
                 }
             }
         }
-
-
     }
 }
