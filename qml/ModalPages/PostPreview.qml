@@ -26,7 +26,7 @@ Page {
             media: Rectangle {
                 width: parent.width; height: previewData.image === undefined ? width/2 : selectedImage.height; color: "lightgrey"
                 AppText {text: "No Image Selected"; anchors.centerIn: parent}
-                AppImage {id: selectedImage; source: previewData.image; width: parent.width; height: Image.height; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit}
+                AppImage {id: selectedImage; source: previewData.image; width: parent.width; height: imageToPost !== undefined || "" || " " || "undefined" ? Image.height : parent.width; anchors.centerIn: parent; autoTransform: true; smooth: true; fillMode: Image.PreserveAspectFit}
             }
             content: Column {
                 id: detailCol; width: parent.width

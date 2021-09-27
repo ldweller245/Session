@@ -42,7 +42,7 @@ Page {
             }
             Rectangle {width: page.width; height: dp(Theme.navigationBar.height)/2}
             Item {
-                width: parent.width; height: searchTextField.displayText.length > 0 ? dp(Theme.navigationBar.height)*2 + suggestionsList.height : dp(Theme.navigationBar.height)*2
+                width: parent.width; height: searchTextField.text.length > 0 ? dp(Theme.navigationBar.height) + suggestionsList.height : dp(Theme.navigationBar.height)
                 Column {
                     anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height; width: parent.width
                     AppTextField {
@@ -79,6 +79,8 @@ Page {
                     }
                 }
             }
+            Rectangle {width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor}
+
             Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()} IconButton {icon: IconType.plus; onClicked: addTeamModal.open()}}
         }
     }

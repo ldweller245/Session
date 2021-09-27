@@ -157,16 +157,17 @@ Item {
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
         realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeChats];
         onRealtimeValueChanged: {
-            if(key === realtimeUserData);
-            console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
-            userData = value;
+            if(key === realtimeUserData)
+                console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
+            userData = value
             console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
-            app.userDataChanged()
-            /*if(key === realtimeMasterFeed);
-            console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>")
+            app.userDataChanged();
+            if(key === realtimeMasterFeed)
+                console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>")
             masterFeed = value;
             app.masterFeedChanged()
-            if(key === realtimeChats);*/
+            if(key === realtimeChats)
+                console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>");
 
         }
         onFirebaseReady: {
@@ -329,6 +330,7 @@ Item {
         console.log("logged out")
         registerPage.visible = true
         loginPage.visible = true
+        exploreStack.popAllExceptFirst()
     }
     function resetPassword(email) {
         firebaseAuth.sendPasswordResetMail(email)
