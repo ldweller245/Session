@@ -61,6 +61,13 @@ Page {
                             width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username
                             MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
                         }
+                        actions: Row {
+                            IconButton {
+                                var likedList = Object.keys(model.liked_by.list)
+                                icon: {likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
+                                onClicked: {likedList.indexOf(userData.id) ? dataModel.likePost(model.id, false, model.liked_by.count, model.owner.id) : dataModel.likePost(model.id, true, model.liked_by.count, model.owner.id)}
+                            }
+                        }
                     }
                 }
             }
@@ -68,7 +75,6 @@ Page {
                 id: oddCol; spacing: dp(5); width: parent.width/2
                 Repeater {
                     id: oddModelView; model: sortedModelOdd;
-
                     delegate: AppCard {
                         id: oddImage; width: (parent.width)-dp(2); margin: dp(5); paper.radius: dp(5); scale: 0.96;
                         media: AppImage {
@@ -78,6 +84,13 @@ Page {
                         content: AppText{
                             width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.owner.username;
                             MouseArea {anchors.fill: parent; onClicked: exploreStack.push(otherUserComp, {userID: model.owner.id})}
+                        }
+                        actions: Row {
+                            IconButton {
+                                var likedList = Object.keys(model.liked_by.list)
+                                icon: {likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
+                                onClicked: {likedList.indexOf(userData.id) ? dataModel.likePost(model.id, false, model.liked_by.count, model.owner.id) : dataModel.likePost(model.id, true, model.liked_by.count, model.owner.id)}
+                            }
                         }
                     }
                 }

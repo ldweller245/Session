@@ -146,7 +146,6 @@ Item {
         s = uUtf8Encode(s);
         return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
     }
-
     function uniqueID() {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()))
     }
@@ -380,6 +379,29 @@ Item {
                     )
     }
     function getMasterFeed() {
+
+        var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], // base array
+            pos = 3;//starting position
+            interval = 3;//how often to insert
+
+        while (pos < array.length) {
+            array.splice(pos, 0, 'item');
+            pos += interval;
+        }
+
+        /*
+          get userfeed length?
+          if length is less than X(?) insert more 'master feed discover'
+          if follows is less than X(?) insert more 'master feed discover'
+          u = userfeed
+          l = length
+          f = follows
+
+          limitToFirst = Math.ceil(u)/3
+
+
+          */
+
         /*db.getValue("masterFeed/", {
                         //orderByValue: true,  //order by value before limiting and filtering
                         //startAt: 5,          //return only values greater than or equal to 5
@@ -456,12 +478,30 @@ Item {
         db.setUserValue(postID, null)
         db.setUserValue("feedCount", updateFeedCount)
     }
-    function likePost(postID) {
-        let likeCount
-        let liked_by_me_value
-        db.getUserValue(/*posts/postID/likecount*/)
-        //success,key, value; liked_by_me === true ? likeCount = likeCount -1 && liked_by_me_value = false : likeCount = likeCount +1 && liked_by_me_value = false
-        db.setUserValue(/*set like count && liked_by_me_value */)
+    function likePost(postID,like, count, owner) {
+        let data = {"username": userData.username,"image": userData.profile.Pic.URL,"id": userData.id}
+        if(like === true) count = count+1; else count = count-1;
+        db.setValue("userFeeds/"+userData.id+"/"+postID+"/liked_by/count", count)
+        db.setValue("masterFeed/"+postID+"/liked_by/count", count)
+
+        if(like === true) {
+            db.setValue("userFeeds/"+userData.id+"/"+postID+"/liked_by/list/"+userData.id, data)
+            db.setValue("masterFeed/"+postID+"/liked_by/list/"+userData.id, data)
+
+            if(userID === owner) {
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID+"/liked_by/count", count)
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID+"/liked_by/list/"+userData.id, data)
+            }
+        }
+        else if(like === false) {
+            db.setValue("userFeeds/"+userData.id+"/"+postID+"/liked_by/list/"+userData.id, null)
+            db.setValue("masterFeed/"+postID+"/liked_by/list/"+userData.id, null)
+
+            if(userID === owner) {
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID+"/liked_by/count", count)
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID+"/liked_by/list/"+userData.id, null)
+            }
+        }
     }
     function getPost(postID) {
         let data =  Object.values(userFeed)
