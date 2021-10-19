@@ -63,8 +63,9 @@ Page {
                         }
                         actions: Row {
                             IconButton {
-                                var likedList = Object.keys(model.liked_by.list)
-                                icon: {likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
+                                icon: {
+                                    var likedList = Object.keys(model.liked_by.list)
+                                    likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
                                 onClicked: {likedList.indexOf(userData.id) ? dataModel.likePost(model.id, false, model.liked_by.count, model.owner.id) : dataModel.likePost(model.id, true, model.liked_by.count, model.owner.id)}
                             }
                         }
@@ -87,8 +88,9 @@ Page {
                         }
                         actions: Row {
                             IconButton {
-                                var likedList = Object.keys(model.liked_by.list)
-                                icon: {likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
+                                icon: {
+                                    var likedList = Object.keys(model.liked_by.list)
+                                    likedList.indexOf(userData.id) ? IconType.heart : IconType.hearto}
                                 onClicked: {likedList.indexOf(userData.id) ? dataModel.likePost(model.id, false, model.liked_by.count, model.owner.id) : dataModel.likePost(model.id, true, model.liked_by.count, model.owner.id)}
                             }
                         }

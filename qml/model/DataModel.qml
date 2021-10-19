@@ -25,8 +25,9 @@ Item {
     signal nameAvailable
     signal postSuccess
 
+    property var loggedIn
+
     property var remoteFilePath
-    property var uuid
     property var rrole; property var rgender; property var rfirstname; property var rsurname; property var rusername; property var remail; property var rpassword; property var rbaseLocation; property var rexperience; property var rtfp; property var rspecialities; property var rage; property var rheightCM; property var rethnicity; property var rhairColor; property var rhairLength; property var rskinColor; property var reyeColor; property var rshoeSize; property var rwaist; property var rhips; property var rinseam; property var rsuitSize; property var rtattoo; property var rpiercing; property var rprofileImagePath; property var rbio; property var rbust; property var rdressSize
     property var regDetails: []
     property var regUserDetails: []
@@ -45,7 +46,7 @@ Item {
 
     property string realtimeUserData: "userData" + "/" + uuid
     property string realtimeMasterFeed: "masterFeed/"
-    property string realtimeUserFeed: "userFeeds/" + uuid
+    property string realtimeUserFeed: "userFeeds"+ "/" + uuid
     property string realtimeChats: "chats/"
 
     function sHA256(s){
@@ -160,20 +161,32 @@ Item {
                 console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
             userData = value
             console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
-            app.userDataChanged();
+            app.userDataChanged()
+            console.log("<br><br><br><br>REALTIME_USER_DATA_END<br><br><br><br>");
             if(key === realtimeMasterFeed)
                 console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>")
-            masterFeed = value;
+            masterFeed = value
             app.masterFeedChanged()
+            console.log("<br><br><br><br>MASTER_FEED_END<br><br><br><br>");
+            if(key === realtimeUserFeed)
+                userFeed = value
+            app.userFeedChanged();
             if(key === realtimeChats)
                 console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>");
 
         }
         onFirebaseReady: {
+            console.log("DB_READY")
+            //firebaseAuth.logoutUser()
 
         }
     }
     FirebaseAuth {id: firebaseAuth; config: firebaseConfig;
+        onAuthenticatedChanged: if(authenticated) {
+                                    dataModel.loggedIn = true
+                                } else {
+                                    dataModel.loggedIn = false
+                                }
         onUserRegistered: {
             if(!success) {nativeUtils.displayMessageBox(qsTr("Somethings gone wrong!"), qsTr("Seems like: %1").arg(message), 1)}
             else {
@@ -184,28 +197,46 @@ Item {
             }
         }
         onLoggedIn: {
-            console.debug("User login " + success + " - " + message);
-            if(success) {
-                db.getUserValue("details/id", {
-                                }, function(success, key, value) {
-                                    if(success) {
-                                        getFeed(value)
-                                        uuid = value
-                                        console.log("UUID:<br>" + uuid)
-                                        db.setValue("userData/"+value+"/lastActive", Date.now())
-                                        db.getValue("userData/"+value, {}, function(success, key, value){
-                                            if(success){
-                                                userData = value
-                                                allCastingData = userData.castings
-                                                calendarData = userData.calendar
-                                            }
-                                        })
-                                    }
-                                })
-                registerPage.visible = false; loginPage.visible = false}
+            if(!success) nativeUtils.displayMessageBox(qsTr("Oh no!"), qsTr("Seems like: %1").arg(message), 1)
+            db.getUserValue("details/id", {
+                                    }, function(success, key, value) {
+                                        if(success){
+                                            var userPass = value
+                                            console.log("USERSURNAME LOG: " + userPass)
+                                        } else if (value === undefined) {
+                                            console.log("userpass undefined")
+                                        }
+                                    })
+
+
+
+            db.getUserValue("details/id", {
+                            }, function(success, key, value) {
+                                if(success){
+                                    uuid = value
+                                    console.log("userID log uuid: " + value)
+                                    db.getValue("userData/"+uuid, {
+                                                }, function(success, key, value){
+                                                    if(success){
+                                                        userData = value
+                                                        console.log("UUID:<br>" + userData.id)
+                                                        allCastingData = userData.castings
+                                                        calendarData = userData.calendar
+                                                        registerPage.visible = false; loginPage.visible = false
+                                                        db.setValue("userData/"+value+"/lastActive", Date.now())
+                                                    }
+                                                })
+
+                                    db.setValue("userData/"+value+"/lastActive", Date.now())
+                                    console.debug("loadingData NOW!")
+                                    getFeed(uuid);
+
+                                }})
+
             getMasterFeed()
         }
     }
+
     FirebaseStorage {id: storage; config: firebaseConfig}
 
     property var inboxJson: [{}]
@@ -326,6 +357,7 @@ Item {
     }
     function logoutUser() {
         firebaseAuth.logoutUser()
+        dataModel.loggedIn = false
         console.log("logged out")
         registerPage.visible = true
         loginPage.visible = true
@@ -379,10 +411,10 @@ Item {
                     )
     }
     function getMasterFeed() {
-
+        var interval
         var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], // base array
-            pos = 3;//starting position
-            interval = 3;//how often to insert
+        pos = 3;//starting position
+        interval = 3;//how often to insert
 
         while (pos < array.length) {
             array.splice(pos, 0, 'item');

@@ -12,10 +12,13 @@ Page {
     function isOdd(n) {
         return Math.abs(n % 2) == 1;
     }
+    property var jsonArray: Object.values(userData.feed_posts)
+
+
 
     JsonListModel {
         id: userJsonModel
-        source: userFeed
+        source: jsonArray
         keyField: "id"
         fields: ["id", "downloadUrl", "dimensions", "liked_by", "owner", "post_description", "tag", "team", "timestamp"]
     }
