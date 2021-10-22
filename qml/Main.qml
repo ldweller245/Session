@@ -30,6 +30,9 @@ App {
     }
     FontLoader {id: arialFont; source: "../fonts/Gravity-Book.otf"}
 
+    signal imagePosted
+    //onImagePosted: postPageComp.imagePosted()
+
     property var imagePath
     property var imagePathID
     property var viewPostID
@@ -37,7 +40,6 @@ App {
     property var otherUserID
 
     property var uuid
-
 
     property var otherUserData: dataModel.otherUserJson[otherUserID]
     property var searchArr: [] //user search list
@@ -81,7 +83,11 @@ App {
 
     property var arr: [{"Hair": "Hairstylists"}, {"Makeup": "Makeup Artists"}, {"Wardrobe":"Clothes Stylists"}, {"Photographer": "Photographers"}, {"Model":"Models"},{"Studio": "Locations"}]
 
-    DataModel {id: dataModel; onPostSuccess: postPage.team = []; onNameAvailable: registerPage.checkComplete()}
+    DataModel {id: dataModel;
+        onPostSuccess: app.imagePosted();
+        onNameAvailable: registerPage.checkComplete()
+        onUpdatedFeed: {homePageNav.showNew()}
+    }
     LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
     InitialSetupPage {id: loginPage; z: 24; visible: dataModel.loggedIn === true ? false : true ;onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
     RegisterPage {z: 23; id: registerPage; visible: false; onRegisterUser: dataModel.registerUser(role, gender, firstname, surname, username, email, password, baseLocation, experience, tfp,specialities, age, heightCM, ethnicity, hairColor, hairLength, skinColor, eyeColor, shoeSize, waist, hips, inseam, suitSize, tattoo, piercing, profileImagePath,bio, bust,dressSize)}

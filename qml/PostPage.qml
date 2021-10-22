@@ -13,9 +13,11 @@ Page {
     property var imageToPost
     property var imageSourceWidth
     property var imageSourceHeight
-    property var team:[]
+    property var team:[]    
 
     signal postImage(var postImagePath, var imageHeight, var imageWidth, var imageDescription, var team, var location, var tag)
+
+    //function imagePosted() {team = [];imageToPost = undefined; imageSourceHeight = undefined; imageSourceWidth = undefined; appTextEdit.text = ""; searchTextField.text = ""}
 
     Connections {
         target: nativeUtils
@@ -23,14 +25,16 @@ Page {
     }
     rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
-        onClicked: {if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
-            else if(appTextEdit.length > 0) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
+        onClicked: {
+            if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
+            else if(appTextEdit.length < 1) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
             else if(team.length === 0) {nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)}
             else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}
     }
     AppFlickable {
         id: flickable; anchors.fill: parent; contentHeight: contentCol.height
         Column {
+            //Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
             id: contentCol; width: parent.width
             Rectangle {
                 width: parent.width; height: imageToPost !== undefined ? selectedImage.height : width/2; color: "lightgrey"
@@ -68,7 +72,6 @@ Page {
                     id: locationDescriptionCol; anchors.fill: parent
                     Rectangle {
                         width: parent.width; height: parent.height - searchTextField.height; color: "#fff"
-                        Rectangle {width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor}
                         AppFlickable {
                             id: flickText;anchors.fill: parent ; contentWidth: width; contentHeight: appTextEdit.height
                             AppTextEdit {
@@ -79,9 +82,10 @@ Page {
                     }
                 }
             }
-            Rectangle {width: parent.width; height: px(1); anchors.bottom: parent.bottom; color: Theme.listItem.dividerColor}
+            Rectangle {width: parent.width; height: px(1); color: Theme.listItem.dividerColor}
 
             Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()} IconButton {icon: IconType.plus; onClicked: addTeamModal.open()}}
+            Rectangle {width: parent.width; height: px(1); color: Theme.listItem.dividerColor}
         }
     }
     AppButton {

@@ -14,8 +14,6 @@ Page {
     }
     property var jsonArray: Object.values(userData.feed_posts)
 
-
-
     JsonListModel {
         id: userJsonModel
         source: jsonArray
@@ -71,7 +69,7 @@ Page {
                 Item {
                     anchors.fill: parent
                     AppFlickable {
-                        anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
+                        anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2
                         Row {
                             id: scrollRow; width: parent.width
                             Column {

@@ -25,6 +25,8 @@ Item {
     signal nameAvailable
     signal postSuccess
 
+    signal updatedFeed
+
     property var loggedIn
 
     property var remoteFilePath
@@ -45,8 +47,11 @@ Item {
     property var userID: userData.id
 
     property string realtimeUserData: "userData" + "/" + uuid
-    property string realtimeMasterFeed: "masterFeed/"
+    property string realtimeUserCalendar: "userData"+ "/" + uuid + "/" + "calendar"
+    property string realtimeUserCastings: "userData"+ "/" + uuid + "/" + "castings"
+    property string realtimeUserShoots: "userData"+ "/" + uuid + "/" + "shoots"
     property string realtimeUserFeed: "userFeeds"+ "/" + uuid
+    property string realtimeMasterFeed: "masterFeed/"
     property string realtimeChats: "chats/"
 
     function sHA256(s){
@@ -155,7 +160,7 @@ Item {
     FirebaseDatabase {
         id: db; config: firebaseConfig; onReadCompleted: {if(success) {console.debug("Read value " +  JSON.stringify(value) + " for key " + key)}else {console.debug("Error with message: "  + value)}}
         onWriteCompleted: {if(success) {console.debug("Successfully wrote to DB")}else {console.debug("Write failed with error: " + message)}}
-        realtimeValueKeys: [realtimeUserData, realtimeMasterFeed, realtimeChats];
+        realtimeValueKeys: [realtimeUserData, realtimeChats, realtimeUserFeed, realtimeUserCalendar, realtimeUserCastings, realtimeUserShoots];
         onRealtimeValueChanged: {
             if(key === realtimeUserData)
                 console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
@@ -163,16 +168,23 @@ Item {
             console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
             app.userDataChanged()
             console.log("<br><br><br><br>REALTIME_USER_DATA_END<br><br><br><br>");
-            if(key === realtimeMasterFeed)
-                console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>")
-            masterFeed = value
-            app.masterFeedChanged()
-            console.log("<br><br><br><br>MASTER_FEED_END<br><br><br><br>");
+
             if(key === realtimeUserFeed)
+                dataModel.updatedFeed()
                 userFeed = value
             app.userFeedChanged();
+
             if(key === realtimeChats)
                 console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>");
+
+            if(key === realtimeUserCalendar)
+                console.log("<br><br><br><br>CALENDAR_FEED_UPDATE<br><br><br><br>");
+
+            if(key === realtimeUserCastings)
+                console.log("<br><br><br><br>CASTINGS_FEED_UPDATE<br><br><br><br>");
+
+            if(key === realtimeUserShoots)
+                console.log("<br><br><br><br>SHOOTS_FEED_UPDATE<br><br><br><br>");
 
         }
         onFirebaseReady: {
@@ -199,14 +211,14 @@ Item {
         onLoggedIn: {
             if(!success) nativeUtils.displayMessageBox(qsTr("Oh no!"), qsTr("Seems like: %1").arg(message), 1)
             db.getUserValue("details/id", {
-                                    }, function(success, key, value) {
-                                        if(success){
-                                            var userPass = value
-                                            console.log("USERSURNAME LOG: " + userPass)
-                                        } else if (value === undefined) {
-                                            console.log("userpass undefined")
-                                        }
-                                    })
+                            }, function(success, key, value) {
+                                if(success){
+                                    var userPass = value
+                                    console.log("USERSURNAME LOG: " + userPass)
+                                } else if (value === undefined) {
+                                    console.log("userpass undefined")
+                                }
+                            })
 
 
 
@@ -219,21 +231,17 @@ Item {
                                                 }, function(success, key, value){
                                                     if(success){
                                                         userData = value
-                                                        console.log("UUID:<br>" + userData.id)
                                                         allCastingData = userData.castings
                                                         calendarData = userData.calendar
                                                         registerPage.visible = false; loginPage.visible = false
                                                         db.setValue("userData/"+value+"/lastActive", Date.now())
                                                     }
                                                 })
-
                                     db.setValue("userData/"+value+"/lastActive", Date.now())
                                     console.debug("loadingData NOW!")
                                     getFeed(uuid);
 
                                 }})
-
-            getMasterFeed()
         }
     }
 
@@ -353,7 +361,6 @@ Item {
     }
     function loginUser(email, password) {
         firebaseAuth.loginUser(email, password)
-        updateFeed()
     }
     function logoutUser() {
         firebaseAuth.logoutUser()
@@ -406,49 +413,61 @@ Item {
                             userFeed = [];
                             userFeed = value
                             app.userFeedChanged()
+                            getMasterFeed()
+
                         }
                     }
                     )
     }
-    function getMasterFeed() {
+    function insertMasterFeed(interv){
+
         var interval
-        var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], // base array
-        pos = 3;//starting position
-        interval = 3;//how often to insert
+        var arrPos = 0;
+        var array = userFeed, // base array
+        pos = 4;//starting position
+        interval = interv;//how often to insert
 
         while (pos < array.length) {
-            array.splice(pos, 0, 'item');
+            array.splice(pos, 0, masterFeed[arrPos]);
             pos += interval;
+            arrPos = arrPos +1;
         }
+        userFeed = array
+        app.userFeedChanged();
 
-        /*
-          get userfeed length?
-          if length is less than X(?) insert more 'master feed discover'
-          if follows is less than X(?) insert more 'master feed discover'
-          u = userfeed
-          l = length
-          f = follows
-
-          limitToFirst = Math.ceil(u)/3
+    }
+    //100 userFeed items = 20 masterFeed items
 
 
-          */
-
-        /*db.getValue("masterFeed/", {
-                        //orderByValue: true,  //order by value before limiting and filtering
-                        //startAt: 5,          //return only values greater than or equal to 5
-                        //endAt: 1000,         //return only values less than or equal to 1000
-                        //limitToFirst: 2     //return only first 10 sub-keys/values
-                    }, function(success, key, value) {
-                        if(success) {
-                            for(var i in value) {
-                                masterFeed.push(value[i])
+    function getMasterFeed() {
+        if(userFeed.length !== 0) {
+            let endAtInt = Math.ceil(userFeed.length/5)
+            db.getValue("masterFeed/", {
+                            "orderByValue": true,
+                            "startAt": 1,
+                            "endAt": endAtInt,
+                        }, function(success, key, value) {
+                            if(success) {
+                                masterFeed = value
+                                app.masterFeedChanged()
+                                insertMasterFeed(5)
                             }
-                            app.masterFeedChanged()
-                            console.log("MASTER FEED: <br><br>" +JSON.stringify(masterFeed)+"<br><br><br><br><br>")
-                        }
-                    }
-                    )*/
+                        })
+        }
+        else if(userFeed.length === 0) {
+            let endAtInt = 50
+            db.getValue("masterFeed/", {
+                            "orderByValue": true,
+                            "startAt": 1,
+                            "endAt": endAtInt,
+                        }, function(success, key, value) {
+                            if(success) {
+                                masterFeed = value
+                                app.masterFeedChanged()
+                                insertMasterFeed(1)
+                            }
+                        })
+        }
     }
     //end Feed Functions
     //
@@ -459,11 +478,9 @@ Item {
     function createPost(postImagePath, img_height, img_width, post_description, team, location, tag) {
         let updateFeedCount = userData.feedCount +1
         let postID = "p-uid"+uniqueID() + "-" + uniqueID()
-
         storage.uploadFile(postImagePath, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
             if(!finished) {} else if (finished && success) {
-                db.setValue("userData/"+ userData.id+"/feedCount/", updateFeedCount)
-                let userPost = {
+                var userPost = {
                     "id": postID,
                     "dimensions":{
                         "height":img_height,
@@ -487,16 +504,23 @@ Item {
                     "tag": tag,
                     "location": location
                 }
-                db.setValue("masterFeed/"+postID, userPost)
-                db.setValue("userFeeds/"+userData.id+"/"+postID, userPost)
-                db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost)
+                console.log("completed post data:<br>" + JSON.stringify(userPost))
+                db.setUserValue("feed_posts/"+postID, userPost)
+
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost);
+                db.setValue("userData/"+ userData.id+"/feedCount/", updateFeedCount);
+                db.setValue("masterFeed/"+postID, userPost);
+                db.setValue("userFeeds/"+userData.id+"/"+postID, userPost);
                 fanPosts(userPost, postID)
+
+
                 // add posted complete anim
                 navigationRoot.currentIndex = 0;
-                dataModel.postSuccess()
+                //dataModel.postSuccess()
             }
         })
     }
+
     function editPost(postID, post_description, team, location, tag) {
         db.setValue("userData/"+uuid+"feed_posts/"+postID+"/", {
                         "post_description" : post_description,
@@ -782,9 +806,9 @@ Item {
         */
         //userData/edd/chats/123456/0 --- edd123
         //                          1 --- kati456
-        
+
         let chats = userData.chats
-        
+
         chats.forEach(function(item) {
             if(item.length ===2 && item[0] === userData.id && item[1]===userID || item.length ===2 && item[1] === userData.id && item[0]===userID) {
                 db.getValue("chats/"+item, {

@@ -12,6 +12,47 @@ Page {
 
     function isEven(n) {return n % 2 == 0;}
     function isOdd(n) {return Math.abs(n % 2) == 1;}
+    function showNew() {
+        showNewButton.state = "reanchored"
+    }
+
+    AppButton {
+        id: showNewButton
+        z: 6
+        text: "new posts"
+        minimumWidth: parent.width/2
+        anchors.topMargin: dp(15)
+        state: "base"
+        anchors.horizontalCenter: parent.horizontalCenter
+        radius: dp(5)
+        backgroundColor: Qt.rgba(0,0,0,0.50)
+        textColor: "white"
+        onClicked: {
+            showNewButton.state = "base"
+            flickable.contentY = 0
+
+        }
+        states: [
+            State {
+                name: "base"
+                AnchorChanges { target: showNewButton; anchors.top: undefined}
+                AnchorChanges { target: showNewButton; anchors.bottom: scrollModel.top}
+
+            },
+            State {
+                name: "reanchored"
+                AnchorChanges { target: showNewButton; anchors.bottom: undefined}
+                AnchorChanges { target: showNewButton; anchors.top: scrollModel.bottom }
+            }
+        ]
+
+        transitions: Transition {
+            // smoothly reanchor myRect and move into new position
+            NumberAnimation {property: "visible"; easing.type: Easing.InOutBack; target: showNewButton; duration: 1000}
+            AnchorAnimation { duration: 800; easing.type: Easing.InOutBack}
+        }
+    }
+
 
     JsonListModel {
         id: jsonModel; source: jsonArray; keyField: "id"
@@ -28,7 +69,10 @@ Page {
         sorters: RoleSorter {roleName: "timestamp"; ascendingOrder: false}
     }
     rightBarItem: IconButtonBarItem {
-        icon: IconType.search; onClicked: {searchUserModal.visible === true ? searchUserModal.visible = false : searchUserModal.visible = true}
+        icon: IconType.search;
+        onClicked: {
+            searchUserModal.visible === true ? searchUserModal.visible = false : searchUserModal.visible = true
+        }
     }
 
     AppListView {
@@ -40,6 +84,7 @@ Page {
         }
     }
     AppFlickable {
+        id: flickable
         anchors.fill: parent; contentHeight: scrollRow.height + dp(Theme.navigationBar.height)*2; anchors.topMargin: scrollModel.height
         Row {
             id: scrollRow; width: parent.width
