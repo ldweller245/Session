@@ -26,10 +26,19 @@ Page {
     rightBarItem: TextButtonBarItem {
         text: "UPLOAD"; textItem.font.pixelSize: sp(16);
         onClicked: {
-            if(imageToPost === undefined) {nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))}
-            else if(appTextEdit.length < 1) {nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))}
-            else if(team.length === 0) {nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)}
-            else {page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role)}}
+            if(imageToPost === undefined) {
+                nativeUtils.displayMessageBox(qsTr("Hey!"), qsTr("What sort of post doesn't have an image!?"))
+            }
+            if(appTextEdit.length < 1) {
+                nativeUtils.displayMessageBox(qsTr("C'mon"), qsTr("Tell us about the look!"))
+            }
+            if(team.length === 0) {
+                nativeUtils.displayMessageBox(qsTr("Don't leave your team out!"), qsTr("Are you sure you want to post without tagging your team?"), 2)
+            }
+            else {
+                page.postImage(imageToPost, imageSourceHeight, imageSourceWidth, appTextEdit.text, team, searchTextField.text, userData.role);
+            }
+        } //onClicked end
     }
     AppFlickable {
         id: flickable; anchors.fill: parent; contentHeight: contentCol.height

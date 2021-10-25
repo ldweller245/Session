@@ -163,16 +163,16 @@ Item {
         realtimeValueKeys: [realtimeUserData, realtimeChats, realtimeUserFeed, realtimeUserCalendar, realtimeUserCastings, realtimeUserShoots];
         onRealtimeValueChanged: {
             if(key === realtimeUserData)
-                console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
+            //    console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
             userData = value
-            console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
-            app.userDataChanged()
-            console.log("<br><br><br><br>REALTIME_USER_DATA_END<br><br><br><br>");
+            //console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
+            app.userDataChanged();
+            //console.log("<br><br><br><br>REALTIME_USER_DATA_END<br><br><br><br>")
 
             if(key === realtimeUserFeed)
-                dataModel.updatedFeed()
                 userFeed = value
             app.userFeedChanged();
+            dataModel.updatedFeed()
 
             if(key === realtimeChats)
                 console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>");
@@ -219,9 +219,6 @@ Item {
                                     console.log("userpass undefined")
                                 }
                             })
-
-
-
             db.getUserValue("details/id", {
                             }, function(success, key, value) {
                                 if(success){
@@ -231,6 +228,11 @@ Item {
                                                 }, function(success, key, value){
                                                     if(success){
                                                         userData = value
+                                                        firstname = userData.firstname
+                                                        surname = userData.surname
+                                                        useremail = userData.email
+                                                        role = userData.role
+                                                        username = userData.username
                                                         allCastingData = userData.castings
                                                         calendarData = userData.calendar
                                                         registerPage.visible = false; loginPage.visible = false
@@ -244,7 +246,6 @@ Item {
                                 }})
         }
     }
-
     FirebaseStorage {id: storage; config: firebaseConfig}
 
     property var inboxJson: [{}]
@@ -392,8 +393,6 @@ Item {
     //end registration functions
     //
     //
-    //
-    //
     //Feed Functions
     function updateFeed() {
         /*
@@ -413,14 +412,12 @@ Item {
                             userFeed = [];
                             userFeed = value
                             app.userFeedChanged()
-                            getMasterFeed()
-
+                            //getMasterFeed()
                         }
                     }
                     )
     }
     function insertMasterFeed(interv){
-
         var interval
         var arrPos = 0;
         var array = userFeed, // base array
@@ -436,9 +433,6 @@ Item {
         app.userFeedChanged();
 
     }
-    //100 userFeed items = 20 masterFeed items
-
-
     function getMasterFeed() {
         if(userFeed.length !== 0) {
             let endAtInt = Math.ceil(userFeed.length/5)
@@ -472,12 +466,11 @@ Item {
     //end Feed Functions
     //
     //
-    //
-    //
     //post Functions
     function createPost(postImagePath, img_height, img_width, post_description, team, location, tag) {
         let updateFeedCount = userData.feedCount +1
         let postID = "p-uid"+uniqueID() + "-" + uniqueID()
+
         storage.uploadFile(postImagePath, userData.id + Date.now() + ".png", function(progress, finished, success, downloadUrl) {
             if(!finished) {} else if (finished && success) {
                 var userPost = {
@@ -505,22 +498,33 @@ Item {
                     "location": location
                 }
                 console.log("completed post data:<br>" + JSON.stringify(userPost))
-                db.setUserValue("feed_posts/"+postID, userPost)
-
-                db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost);
-                db.setValue("userData/"+ userData.id+"/feedCount/", updateFeedCount);
-                db.setValue("masterFeed/"+postID, userPost);
-                db.setValue("userFeeds/"+userData.id+"/"+postID, userPost);
+                db.setValue("masterFeed/"+postID, userPost, {
+                }, function(success, message) {
+                  if(success) {console.log("successfully written masterFeed")}
+                  else {console.log("masterfeed write error:", message)}
+                })
+                db.setValue("userFeeds/"+userData.id+"/"+postID, userPost,{
+                }, function(success, message) {
+                  if(success) {console.log("successfully written userfeed")}
+                  else {console.log("userfeed write error:", message)}
+                })
+                db.setValue("userData/"+userData.id+"/feedCount", updateFeedCount, {
+                }, function(success, message) {
+                  if(success) {console.log("successfully written feedcount")}
+                  else {console.log("feedcount write error:", message)}
+                })
+                db.setValue("userData/"+userData.id+"/feed_posts/"+postID, userPost, {
+                }, function(success, message) {
+                  if(success) {console.log("successfully written userPost")}
+                  else {console.log("userPost write error:", message)}
+                })
                 fanPosts(userPost, postID)
-
-
                 // add posted complete anim
                 navigationRoot.currentIndex = 0;
                 //dataModel.postSuccess()
             }
         })
     }
-
     function editPost(postID, post_description, team, location, tag) {
         db.setValue("userData/"+uuid+"feed_posts/"+postID+"/", {
                         "post_description" : post_description,
@@ -576,8 +580,6 @@ Item {
         }
     }
     //end Post Functions
-    //
-    //
     //
     //
     //Event(shoots) Functions
@@ -646,8 +648,6 @@ Item {
         db.setValue("userData/"+userData.id+"/shoots/"+eventID, null)
     }
     //end Events Functions
-    //
-    //
     //
     //
     // User Functions
@@ -840,8 +840,6 @@ Item {
     // end IM functions
     //
     //
-    //
-    //
     //Calendar Functions
     function getCalendarData() {
     }
@@ -873,8 +871,6 @@ Item {
     // end Calendar functions
     //
     //
-    //
-    //
     // Casting Functions
     function populateCastings(value) {
         for(var i = 0; i < 100; i++){
@@ -887,7 +883,6 @@ Item {
         }
 
     }
-
     function getCasting(castingID) {
         let data = Object.values(allCastingData)
         data.forEach(function(item) {

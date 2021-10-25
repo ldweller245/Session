@@ -40,6 +40,11 @@ App {
     property var otherUserID
 
     property var uuid
+    property var firstname
+    property var surname
+    property var useremail
+    property var role
+    property var username
 
     property var otherUserData: dataModel.otherUserJson[otherUserID]
     property var searchArr: [] //user search list
@@ -221,7 +226,9 @@ App {
     AppModal {
         id: settingsModal; pushBackContent: navigationRoot
         NavigationStack {
-            SettingsPage {onLogoutUser: {dataModel.logoutUser(); console.log("mainlogoutuser")} title: "SETTINGS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
+            SettingsPage {
+                onLogoutUser: {dataModel.logoutUser();settingsModal.close();
+                    console.log("mainlogoutuser")} title: "SETTINGS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
         }
     }
 }

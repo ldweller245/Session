@@ -17,27 +17,20 @@ Page {
     }
 
     AppButton {
-        id: showNewButton
-        z: 6
-        text: "new posts"
-        minimumWidth: parent.width/2
-        anchors.topMargin: dp(15)
+        id: showNewButton; z: 6
+        text: "new posts"; textColor: "white"
+        minimumWidth: parent.width/2; anchors.topMargin: dp(15); anchors.horizontalCenter: parent.horizontalCenter
+        radius: dp(5); backgroundColor: Qt.rgba(0,0,0,0.50)
         state: "base"
-        anchors.horizontalCenter: parent.horizontalCenter
-        radius: dp(5)
-        backgroundColor: Qt.rgba(0,0,0,0.50)
-        textColor: "white"
         onClicked: {
             showNewButton.state = "base"
             flickable.contentY = 0
-
         }
         states: [
             State {
                 name: "base"
                 AnchorChanges { target: showNewButton; anchors.top: undefined}
                 AnchorChanges { target: showNewButton; anchors.bottom: scrollModel.top}
-
             },
             State {
                 name: "reanchored"
@@ -45,15 +38,10 @@ Page {
                 AnchorChanges { target: showNewButton; anchors.top: scrollModel.bottom }
             }
         ]
-
         transitions: Transition {
-            // smoothly reanchor myRect and move into new position
-            NumberAnimation {property: "visible"; easing.type: Easing.InOutBack; target: showNewButton; duration: 1000}
             AnchorAnimation { duration: 800; easing.type: Easing.InOutBack}
         }
     }
-
-
     JsonListModel {
         id: jsonModel; source: jsonArray; keyField: "id"
         fields: ["id", "owner", "downloadUrl","profile_Pic_URL", "tag", "timestamp","post_description", "team", "liked_by", "location"]
@@ -74,7 +62,6 @@ Page {
             searchUserModal.visible === true ? searchUserModal.visible = false : searchUserModal.visible = true
         }
     }
-
     AppListView {
         id: scrollModel; orientation: ListView.Horizontal; width: homePage.width; height: dp(Theme.tabBar.height); model: headerArr; anchors.top: parent.top; z: 2
         delegate: Rectangle {
