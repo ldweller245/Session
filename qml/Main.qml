@@ -86,12 +86,15 @@ App {
     property var rect12Scale: 0.9
     //END OF VARIABLES FOR CREATE SEGMENT
 
+    property var jsonArray: Object.values(userFeed)
+
+
     property var arr: [{"Hair": "Hairstylists"}, {"Makeup": "Makeup Artists"}, {"Wardrobe":"Clothes Stylists"}, {"Photographer": "Photographers"}, {"Model":"Models"},{"Studio": "Locations"}]
 
     DataModel {id: dataModel;
-        onPostSuccess: app.imagePosted();
+        onPostSuccess: app.jsonArrayChanged();
         onNameAvailable: registerPage.checkComplete()
-        onUpdatedFeed: {homePageNav.showNew()}
+        //onUpdatedFeed: {homePageNav.showNew()}
     }
     LoadingPage {z: 25; id: loaderPage; visible: loaderPage.opacity > 0.1 ? true : false; Timer {interval: 7000; running: true; repeat: false; onTriggered: loaderAnim.start()}}
     InitialSetupPage {id: loginPage; z: 24; visible: dataModel.loggedIn === true ? false : true ;onLoginUser: dataModel.loginUser(email, password); onResetPassword: dataModel.resetPassword(email)}
@@ -227,8 +230,8 @@ App {
         id: settingsModal; pushBackContent: navigationRoot
         NavigationStack {
             SettingsPage {
-                onLogoutUser: {dataModel.logoutUser();settingsModal.close();
-                    console.log("mainlogoutuser")} title: "SETTINGS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
+                onLogoutUser: {dataModel.logoutUser();settingsModal.close(); console.log("mainlogoutuser")}
+                title: "SETTINGS"; rightBarItem: TextButtonBarItem {text: "Close"; textItem.font.pixelSize: sp(16); onClicked: settingsModal.close()}}
         }
     }
 }

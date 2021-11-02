@@ -82,7 +82,10 @@ Page {
                                             width: parent.width; fillMode: Image.PreserveAspectFit; source: model.downloadUrl; autoTransform: true
                                             MouseArea {anchors.fill: parent; onPressAndHold:  PictureViewer.show(userProfilePage, model.downloadUrl); onReleased: PictureViewer.close()}
                                         }
-                                        content: AppText{width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.post_description}
+                                        content: AppText{
+                                            width: parent.width; padding: dp(15); maximumLineCount: 2; elide: Text.ElideRight; wrapMode: Text.Wrap; text: model.post_description
+                                            MouseArea {anchors.fill: parent; onClicked: exploreStack.push(viewPostComp, {postID: model.id})}
+                                        }
                                     }
                                 }
                             }

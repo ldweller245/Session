@@ -8,11 +8,11 @@ Page {
     title: "EXPLORE"
 
     property var headerArr: ["Everything", "Hair", "Makeup", "Model", "Wardrobe", "Photographer", "Studio"]
-    property var jsonArray: Object.values(userFeed)
 
     function isEven(n) {return n % 2 == 0;}
     function isOdd(n) {return Math.abs(n % 2) == 1;}
     function showNew() {
+        homePage.jsonArrayChanged()
         showNewButton.state = "reanchored"
     }
 

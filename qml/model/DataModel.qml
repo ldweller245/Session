@@ -163,26 +163,18 @@ Item {
         realtimeValueKeys: [realtimeUserData, realtimeChats, realtimeUserFeed, realtimeUserCalendar, realtimeUserCastings, realtimeUserShoots];
         onRealtimeValueChanged: {
             if(key === realtimeUserData)
-            //    console.log("<br><br><br><br>REALTIME_USER_DATA_UPDATE<br><br><br><br>")
-            userData = value
-            //console.log("USERDATAJSON<br><br>"+JSON.stringify(userData))
+                userData = value
             app.userDataChanged();
-            //console.log("<br><br><br><br>REALTIME_USER_DATA_END<br><br><br><br>")
-
             if(key === realtimeUserFeed)
                 userFeed = value
             app.userFeedChanged();
             dataModel.updatedFeed()
-
             if(key === realtimeChats)
                 console.log("<br><br><br><br>MASTER_FEED_UPDATE<br><br><br><br>");
-
             if(key === realtimeUserCalendar)
                 console.log("<br><br><br><br>CALENDAR_FEED_UPDATE<br><br><br><br>");
-
             if(key === realtimeUserCastings)
                 console.log("<br><br><br><br>CASTINGS_FEED_UPDATE<br><br><br><br>");
-
             if(key === realtimeUserShoots)
                 console.log("<br><br><br><br>SHOOTS_FEED_UPDATE<br><br><br><br>");
 
@@ -519,6 +511,7 @@ Item {
                   else {console.log("userPost write error:", message)}
                 })
                 fanPosts(userPost, postID)
+                //masterfeed, userfeeds, userdata, userdata.
                 // add posted complete anim
                 navigationRoot.currentIndex = 0;
                 //dataModel.postSuccess()
