@@ -53,11 +53,28 @@ Page {
                     onSourceChanged: {imageSourceWidth = sourceSize.width; imageSourceHeight = sourceSize.height}}
                 MouseArea {anchors.fill: parent; onClicked: imagePickerModal.open()}
             }
-            Rectangle {width: page.width; height: dp(Theme.navigationBar.height)/2}
+            Item {
+                z: 5; width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
+                Column {
+                    id: locationDescriptionCol; anchors.fill: parent
+                    Rectangle {
+                        width: parent.width; height: parent.height; color: "#fff"
+                        border.color: "black"
+                        border.width: 1
+                        AppFlickable {
+                            id: flickText;anchors.fill: parent ; contentWidth: width; contentHeight: appTextEdit.height
+                            AppTextEdit {
+                                onTextChanged: console.log(appTextEdit.length); inputMethodHints: Qt.ImhSensitiveData; id: appTextEdit; width: parent.width; height: Math.max(appTextEdit.contentHeight, flickText.height); padding: dp(10);
+                                placeholderText: "Tell us about the look!"; verticalAlignment: TextEdit.AlignTop; flickable: flickText; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            }
+                        }
+                    }
+                }
+            }
             Item {
                 width: parent.width; height: searchTextField.text.length > 0 ? dp(Theme.navigationBar.height) + suggestionsList.height : dp(Theme.navigationBar.height)
                 Column {
-                    anchors.fill: parent; z:5; height: searchTextField.height + suggestionsList.height; width: parent.width
+                    anchors.fill: parent; z:7; height: searchTextField.height + suggestionsList.height; width: parent.width
                     AppTextField {
                         id: searchTextField; width: parent.width; anchors.horizontalCenter: parent.horizontalCenter; leftPadding: Theme.navigationBar.defaultBarItemPadding; placeholderText: qsTr("Add Location")
                         onAccepted: {focus = false; if (text != "") {geocodeModel.query = text}}
@@ -70,27 +87,13 @@ Page {
                         Component.onCompleted: {font.pixelSize = sp(16)}
                     }
                     SuggestionsList {
+                        z:7
                         id: suggestionsList; rowHeight: searchTextField.height; width: parent.width; model: suggenstionModel; anchors {horizontalCenter: parent.horizontalCenter}
                         onProposalSelected: {searchTextField.focus = false; searchTextField.text = suggestion; geocodeModel.query = suggestion}
                     }
                 }
             }
-            Item {
-                width: parent.width; height: dp(150) + dp(Theme.navigationBar.height)
-                Column {
-                    id: locationDescriptionCol; anchors.fill: parent
-                    Rectangle {
-                        width: parent.width; height: parent.height - searchTextField.height; color: "#fff"
-                        AppFlickable {
-                            id: flickText;anchors.fill: parent ; contentWidth: width; contentHeight: appTextEdit.height
-                            AppTextEdit {
-                                onTextChanged: console.log(appTextEdit.length); inputMethodHints: Qt.ImhSensitiveData; id: appTextEdit; width: parent.width; height: Math.max(appTextEdit.contentHeight, flickText.height); padding: dp(10)
-                                placeholderText: "Tell us about the look!"; verticalAlignment: TextEdit.AlignTop; flickable: flickText; cursorInView: true; cursorInViewBottomPadding: dp(25); cursorInViewTopPadding: dp(25); wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                            }
-                        }
-                    }
-                }
-            }
+
             Rectangle {width: parent.width; height: px(1); color: Theme.listItem.dividerColor}
 
             Row {AppButton {text: "ADD TEAM"; flat: true; onClicked: addTeamModal.open()} IconButton {icon: IconType.plus; onClicked: addTeamModal.open()}}
